@@ -1,0 +1,58 @@
+r   1: A1=Mapping
+r   3: B3=Source: | C3=Principal Linelist, column 'Product Planning Group' | F3=Source: | G3=Principal Linelist, column 'Gender' | J3=Source: | K3=Principal Linelist, column 'Product Planning Group' | M3=Source: | N3=Principal Linelist, column 'Product Planning Group' | P3=Source: | Q3=Principal Linelist, column 'Model' | S3=Source: | T3=Principal Linelist, column 'Upper Material'
+r   4: B4=Division: | C4=Footwear, Accessories | F4=Division: | G4=Footwear, Accessories | J4=Division: | K4=Footwear, Accessories | M4=Division: | N4=Footwear, Accessories | P4=Division: | Q4=Footwear only | S4=Division: | T4=Footwear, Accessories
+r   5: B5=Attribute: | C5=BY Age/SAP Age | F5=Attribute: | G5=BY Gender/ SAP Gender | J5=Attribute: | K5=SAP Product Division | M5=Attribute: | N5=SAP Product Category/SAP Product Group | P5=Attribute: | Q5=Silhouette | S5=Attribute: | T5=Material
+r   7: B7=Product Planning Group | C7=SAP Age | D7=BY Age | F7=Gender | G7=BY Gender | H7=SAP Gender | J7=Product Planning Group | K7=SAP Product Division | M7=Product Planning Group | N7=SAP Product Category | P7=Model | Q7=Silhouette | S7=Upper Material | T7=Material
+r   8: B8=Active Adults EVA | C8=Adults | D8=Adults | F8=02 - Boys | G8=Boys | H8=Male | J8=Active Adults EVA | K8=F | M8=Active Adults EVA | N8=FSD | P8=Almina | Q8=Sandal | S8=Birko-Flor | T8=PU
+r   9: B9=Active Adults PU | C9=Adults | D9=Adults | F9=01 - Girls | G9=Girls | H9=Female | J9=Active Adults PU | K9=F | M9=Active Adults PU | N9=FSD | P9=Almina French Piping | Q9=Sandal | S9=Birko-Flor Birkibuc | T9=PU
+r  10: B10=Active Kids EVA | C10=Children | D10=Kids | F10=03 - Women | G10=Female | H10=Male | J10=Active Kids EVA | K10=F | M10=Active Kids EVA | N10=FSD | P10=Amsterdam BS | Q10=Clog | S10=Birko-Flor Embossed | T10=PU
+r  11: B11=Active Kids PU | C11=Children | D11=Kids | F11=04 - Men | G11=Male | H11=Female | J11=Active Kids PU | K11=F | M11=Active Kids PU | N11=FSD | P11=Andermatt | Q11=Chelsea | S11=Birko-Flor Patent | T11=PU
+r  12: B12=Classic Adults LEA | C12=Adults | D12=Adults | F12=05 - Unisex | G12=Unisex | H12=Unisex | J12=Classic Adults LEA | K12=F | M12=Classic Adults LEA | N12=FSD | P12=Andermatt Kids | Q12=Chelsea | S12=Cotton | T12=Fabrics
+r  13: B13=Classic Adults TEX | C13=Adults | D13=Adults | J13=Classic Adults TEX | K13=F | M13=Classic Adults TEX | N13=FSD | P13=Arizona Big Buckle | Q13=Sandal | S13=Cotton/Polyamid/Elastane | T13=Fabrics
+r  14: B14=Classic Kids LEA | C14=Children | D14=Kids | J14=Classic Kids LEA | K14=F | M14=Classic Kids LEA | N14=FSD | P14=Arizona Big Buckle PAP | Q14=Sandal | S14=Cotton/Polyamide/Elasthane | T14=Fabrics
+r  15: B15=Classic Kids TEX | C15=Children | D15=Kids | J15=Classic Kids TEX | K15=F | M15=Classic Kids TEX | N15=FSD | P15=Arizona Big Buckle Rivet Logo | Q15=Sandal | S15=EVA | T15=EVA
+r  16: B16=Homeshoes Adults | C16=Adults | D16=Adults | J16=Homeshoes Adults | K16=F | M16=Homeshoes Adults | N16=FSD | P16=Arizona Big Buckle Shearling | Q16=Sandal | S16=Felt | T16=Fabrics
+r  17: B17=Papillio | C17=Adults | D17=Adults | J17=Papillio | K17=F | M17=Papillio | N17=FSD | P17=Arizona Big Buckle Teddy Rivet Logo OS | Q17=Sandal | S17=Fur | T17=Fabrics
+r  18: B18=Professional Footwear | C18=Adults | D18=Adults | J18=Professional Footwear | K18=F | M18=Professional Footwear | N18=FSD | P18=Arizona Bold Gap | Q18=Sandal | S18=Fur(animals) | T18=Fabrics
+r  19: B19=Shoes Adults | C19=Adults | D19=Adults | J19=Shoes Adults | K19=F | M19=Shoes Adults | N19=FS0 | P19=Arizona BS | Q19=Sandal | S19=Leather | T19=Leather
+r  20: B20=Legwear Adults | C20=Adults | D20=Adults | J20=Legwear Adults | K20=J | M20=Legwear Adults | N20=JS0 | P20=Arizona CT | Q20=Sandal | S20=Leather/Textile/Felt | T20=Fabrics
+r  21: B21=Orthopedics | C21=Adults | D21=Adults | J21=Orthopedics | K21=J | M21=Orthopedics | N21=JIN | P21=Arizona CT W | Q21=Sandal | S21=Leder | T21=Leather
+r  22: B22=Shoe Care | C22=Adults | D22=Adults | J22=Shoe Care | K22=J | M22=Shoe Care | N22=JCE or JBR | P22=Arizona ESD | Q22=Sandal | S22=Microfiber | T22=PU
+r  23: P23=Arizona EVA | Q23=Sandal | S23=Microfiber-Synthetic-Mix | T23=PU
+r  24: P24=Arizona EVA Kids | Q24=Sandal | S24=Mischmaterial | T24=PU
+r  25: P25=Arizona Fell | Q25=Sandal | S25=Mixed Leather | T25=Leather
+r  26: P26=Arizona grooved | Q26=Sandal | S26=Natural Leather | T26=Leather
+r  27: P27=Arizona Kids BS | Q27=Sandal | S27=Natural Leather Coarsely | T27=Leather
+r  28: P28=Arizona PAP | Q28=Sandal | S28=Natural Leather Coated | T28=Leather
+r  29: P29=Arizona PAP Chunky | Q29=Sandal | S29=Natural Leather Embossed | T29=Leather
+r  30: P30=Arizona PAP Flex Platform | Q30=Sandal | S30=Natural Leather Nubuck | T30=Leather
+r  31: P31=Arizona PAP French Piping | Q31=Sandal | S31=Natural Leather Oiled | T31=Leather
+r  32: P32=Arizona PAP French Piping Flex Platform | Q32=Sandal | S32=Natural Leather Patent | T32=Leather
+r  33: P33=Arizona PAP French Piping Padded | Q33=Sandal | S33=Natural Leather/Fur | T33=Leather
+r  34: P34=Arizona PAP Platform | Q34=Sandal | S34=Natural Leather/Synthetics | T34=Leather
+r  35: P35=Arizona PROF | Q35=Sandal | S35=Natural Leather/Textile | T35=Leather
+r  36: P36=Arizona Rivet Logo | Q36=Sandal | S36=Nubuck Leather Embossed | T36=Nubuck
+r  37: P37=Arizona Rivet Logo Kids | Q37=Sandal | S37=Nubuck Leather Nubuck | T37=Nubuck
+r  38: P38=Arizona Shearling Kids | Q38=Sandal | S38=Nubuck Leather Oiled | T38=Nubuck
+r  39: P39=Arizona Split | Q39=Sandal | S39=Nubuck Leather/Suede | T39=Nubuck
+r  40: P40=Arizona Split Teddy Parts Rivet Logo | Q40=Sandal | S40=Nubuck Leather/Textile | T40=Fabrics
+r  41: P41=Arizona Teddy Rivet Logo Kids OS | Q41=Sandal | S41=Nubuk Leather | T41=Nubuck
+r  42: P42=Arosa | Q42=Sandal | S42=Nylon | T42=Fabrics
+r  43: P43=Atacama | Q43=Sandal | S43=Polyurethane | T43=PU
+r  44: P44=Barbados EVA | Q44=Slides | S44=Suede Leather | T44=Leather
+r  45: P45=Bend | Q45=Shoes | S45=Suede Leather Embossed | T45=Leather
+r  46: P46=Bend Decon Slip On | Q46=Shoes | S46=Suede Leather Nubuck | T46=Leather
+r  47: P47=Bend High Dip | Q47=Shoes | S47=Suede Leather/Fur | T47=Leather
+r  48: P48=Bend Low | Q48=Shoes | S48=Suede Leather/Textile | T48=Leather
+r  49: P49=Bend Low Decon | Q49=Shoes | S49=Synthetics | T49=PU
+r  50: P50=Bend Low Decon Pop | Q50=Shoes | S50=Synthetics/Textile | T50=Fabrics
+r  51: P51=Bend Low Dip | Q51=Shoes | S51=Synthetik | T51=Fabrics
+r  52: P52=Bend Mid | Q52=Shoes | S52=Textile | T52=Fabrics
+r  53: P53=Bend Mid Decon | Q53=Shoes | S53=Velvet | T53=Fabrics
+r  54: P54=Bend Mid Dip | Q54=Shoes | S54=Waxy Leather | T54=Leather
+r  55: P55=Bilbao | Q55=Sandal | S55=Waxy Leather Nubuck | T55=Leather
+r  56: P56=Birki Air | Q56=Backstrap | S56=Waxy Leather Oiled | T56=Leather
+r  57: P57=Birki Air 2.0 | Q57=Backstrap | S57=Wool | T57=Fabrics
+r  58: P58=Birmingham Lace Mid | Q58=Boot | S58=Wool/Textile | T58=Fabrics
+r  59: P59=Birmingham Slip On Mid | Q59=Chelsea | S59=Patent Leather | T59=Leather
+r  60: P60=Boston Big Buckle PAP | Q60=Clog | S60=Natural Fiber | T60=PU

@@ -1,0 +1,169 @@
+PIM Attribute Name
+(As MAA want it to be called in STEP)	PIM Attribute ID	Validation Base Type
+Occasion	AT_Occasion	LOV
+Fastening	AT_Fastening	LOV
+Collection 1	AT_Collection1	text
+Principal Age Code	AT_PrincipalAgeCode	text
+Ecom Product Name PH	AT_EComProductNamePH	text
+Royalty	AT_Royalty	regexp
+Principal Color Description PH	AT_ColorDescriptionPH	text
+Collection 2	AT_Collection2	text
+Certificate No. (SNI, K3L, UTTP)	AT_CertificateNumber	text
+Variant Description	AT_VariantDescription	text
+BY Gender	AT_BYGender	LOV
+Ecom Gender Description EN	AT_EcomGenderDescriptionEN	text
+Created on	AT_Createdon	legacyisodatetime
+Ecom Long Description ID	AT_LongDescriptionID	text
+Style	AT_Style	LOV
+Others	AT_Others	number
+Silhouette	AT_Silhouette	LOV
+Musical Box Components Qty	AT_MusicalBoxComponentsQty	LOV
+Merchandise Category	AT_MerchandiseCategory	text
+Label Cost	AT_LabelCost	regexp
+Main EAN Indicator	AT_MainEANIndicator	LOV
+Care Instruction VN	AT_CareInstructionVN	text
+Principal Gender Description	AT_PrincipalGenderDescription	text
+Country Size	AT_CountrySize	LOV
+Country of Origin	AT_CountryOrigin	LOV
+Style Type	AT_StyleType	LOV
+Internal Barcode	AT_InternalBarcode	regexp
+Brand Group	AT_BrandGroup	LOV
+Ecom Short Description VN	AT_ShortDescriptionVN	text
+Proposed Retail Price	AT_ProposedRetailPrice	number
+Marketing Fee	AT_MarketingFee	regexp
+Principal Style Code	AT_PrincipalStyleCode	text
+Product Weight	AT_ProductWeight	number
+FOB	AT_FOB	regexp
+Discount Bucket (Rounded)	AT_DiscountBucketRounded	number
+Pricing Distribution Channel	AT_PricingDistributionChannel	LOV
+Incoming Month	AT_IncomingMonth	regexp
+SAP Indicator	AT_SAPIndicator	LOV
+Color Group	AT_ColorGroup	LOV
+Ecom Short Description EN	AT_ShortDescriptionEN	text
+Principal Color Description MY	AT_ColorDescriptionMY	text
+Heel Type	AT_HeelType	LOV
+Ecom Product Name VN	AT_EComProductNameVN	text
+Ecom Short Description MY	AT_ShortDescriptionMY	text
+Principal Color Description VN	AT_ColorDescriptionVN	text
+Care Instruction ID	AT_CareInstructionID	text
+Principal Color Description	AT_PrincipalColorName	text
+Unit of Measurement (UoM)	AT_UOM	LOV
+Exchange Rate	AT_ExchangeRate	number
+Article Category	AT_SAPArticleCategory	LOV
+Fit	AT_Fit	LOV
+SPU Grouping Name	AT_SPUGroupingName	text
+Width	AT_Width	LOV
+Musical Box Article Description	AT_MusicalBoxArticleDescription	text
+Current Price	AT_CurrentPrice	regexp
+Material Type	AT_MaterialType	LOV
+BY Article Type	AT_BYArticleType	LOV
+HS Code	AT_HSCode	text
+SAP Age	AT_SAPAge	LOV
+Commission	AT_Commission	regexp
+Material - Upper	AT_MaterialUpper	LOV
+Care Instruction PH	AT_CareInstructionPH	text
+Price Range	AT_PriceRange	LOV
+SBU	AT_SBU	LOV
+Principal Gender Code	AT_PrincipalGenderCode	text
+Ecom Short Description TH	AT_ShortDescriptionTH	text
+Brand Category	AT_BrandCategory	LOV
+Ecom Product Name EN	AT_EComProductNameEN	text
+Ecom Long Description PH	AT_LongDescriptionPH	text
+Ecom Product Name MY	AT_EComProductNameMY	text
+EAN Category	AT_EANCategory	LOV
+Principal Barcode	AT_PrincipalBarcode	regexp
+Retail Price Currency	AT_RetailPriceCurrency	LOV
+SAP Size	AT_Size	LOV
+Safeguard Duty (ID Only)	AT_SafeguardDutyIdOnly	number
+BY Age	AT_BYAge	LOV
+Ecom Product Name TH	AT_EComProductNameTH	text
+FOB Currency	AT_FOBCurrency	LOV
+Principal Merchandise Hierarchy L2	AT_PrincipalMerchandiseHierarchyL2	text
+Principal Merchandise Hierarchy L3	AT_PrincipalMerchandiseHierarchyL3	text
+Technology Used	AT_TechnologyUsed	text
+Ecom Long Description EN	AT_LongDescriptionEN	text
+Principal Merchandise Hierarchy L1	AT_PrincipalMerchandiseHierarchyL1	text
+Ecom Indicator	AT_EcomIndicator	LOV
+Principal Color Description TH	AT_ColorDescriptionTH	text
+Principal Merchandise Hierarchy L4	AT_PrincipalMerchandiseHierarchyL4	text
+Golf Club Length	AT_GolfClubLength	LOV
+Care Instruction KH	AT_CareInstructionKH	text
+SAP Color	AT_Color	LOV
+Principal Merchandise Hierarchy L5	AT_PrincipalMerchandiseHierarchyL5	text
+Created by	AT_Createdby	text
+Pack Details	AT_PackDetails	LOV
+Company	AT_CompanyCode	LOV
+Country	AT_Country	LOV
+Principal Age Description	AT_PrincipalAgeDescription	text
+E-com Ages Category	AT_EComAgesCategory	LOV
+FG Barcode	AT_FGBarcode	regexp
+SAP Style Code	AT_SAPStyleCode	text
+Pattern/Print	AT_PatternPrint	LOV
+Principal Color Description KH	AT_ColorDescriptionKH	text
+Packaging Length	AT_PackagingLength	number
+Ecom Short Description KH	AT_ShortDescriptionKH	text
+Nature of Article	AT_NatureOfArticle	LOV
+Product Length X Width X Height (in CM)	AT_ProductLengthWidthHeight	text
+Haddad Office Charge	AT_HaddadOfficeCharge	regexp
+Brand Status	AT_BrandStatus	LOV
+Golf Club Loft	AT_GolfClubLoft	LOV
+Season	AT_Season	LOV
+Packaging Width	AT_PackagingWidth	number
+Variant	AT_Variant	text
+Royalty Deduction	AT_RoyaltyDeduction	regexp
+Article Status	AT_ArticleStatus	LOV
+Musical Box Article Code	AT_MusicalBoxArticleCode	text
+BCI	AT_BCI	LOV
+Ecom Product Name KH	AT_EComProductNameKH	text
+Generic	AT_Generic	text
+Ecom Long Description MY	AT_LongDescriptionMY	text
+Haddad Office Charge - Deduction	AT_HaddadOfficeChargeDeduction	regexp
+Suggested Retail Price	AT_SuggestedRetailPrice	number
+SPU Grouping	AT_SPUGrouping	text
+Ecom Long Description VN	AT_LongDescriptionVN	text
+E-com Size	AT_EComSize	text
+Interest	AT_Interest	LOV
+Vendor	AT_Vendor	LOV
+SGS	AT_SGS	regexp
+Ecom Long Description KH	AT_LongDescriptionKH	text
+Principal Size	AT_PrincipalSize	text
+Ecomm Concept	AT_EcommConcept	LOV
+Principal Color Code	AT_PrincipalColorCode	text
+Principal Color Description ID	AT_ColorDescriptionID	text
+Content	AT_Content	LOV
+Ecom Short Description ID	AT_ShortDescriptionID	text
+BY Indicator	AT_BYIndicator	LOV
+Principal Style Description	AT_PrincipalStyleDescription	text
+Care Instruction EN	AT_CareInstructionEN	text
+Main Vendor Identification	AT_MainVendorIdentification	text
+Care Instruction MY	AT_CareInstructionMY	text
+Brand Type	AT_BrandType	LOV
+MB Assortment Code	AT_MBAssortmentCode	LOV
+Packaging Weight	AT_PackagingWeight	number
+Care Instruction TH	AT_CareInstructionTH	text
+MB Style code	AT_MBStyleCode	text
+Musical Box UOM	AT_MusicalBoxUOM	LOV
+Generic Description	AT_GenericDescription	regexp
+Images Source	AT_ImagesSource	LOV
+Standardized Color	AT_StandardizedColor	LOV
+Ecomm Sales Channel	AT_EcommSalesChannel	LOV
+Freight Cost	AT_FreightCost	regexp
+Packaging Height	AT_PackagingHeight	number
+Image URL	AT_ImageURL	url
+Ecom Product Name ID	AT_EComProductNameID	text
+Material	AT_Material	LOV
+Brand	AT_Brand	LOV
+SAP Gender	AT_Gender	LOV
+Season Year	AT_SeasonYear	number
+Launching Date	AT_LaunchingDate	date
+SAP Product Flag	AT_SAPProductFlag	LOV
+Discount Bucket	AT_DiscountBucket	number
+Ecom Short Description PH	AT_ShortDescriptionPH	text
+Sports Category EN	AT_SportsCategoryEN	LOV
+Golf Club Flex	AT_GolfClubFlex	LOV
+Fabric	AT_Fabric	LOV
+Estimated Landed Cost	AT_EstimatedLandedCost	number
+Heel Height	AT_HeelHeight	LOV
+Original Price	AT_OriginalPrice	regexp
+AI Suggested Color	AT_AISuggestedColor	text
+Ecom Long Description TH	AT_LongDescriptionTH	text

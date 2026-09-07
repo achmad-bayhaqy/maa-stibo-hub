@@ -1,0 +1,18 @@
+r   1: A1=Inline | G1=License | N1=Principle | R1=License
+r   3: A3=Source: | B3=Linelist | G3=Source: | H3=RECAP SAMPLE DEVELOPMENT - LOT | N3=Source: | O3=Linelist | R3=Source: | S3=RECAP SAMPLE DEVELOPMENT - LOT
+r   4: A4=Division: | B4=Footwear, Apparel & Accessories | G4=Division: | H4=Footwear, Apparel & Accessories | N4=Division: | O4=Footwear | R4=Division: | S4=Footwear
+r   5: A5=Attribute: | B5=SAP Age & BY Gender & SAP Gender & BY Age | G5=Attribute: | H5=SAP Age & BY Gender | N5=Attribute: | O5=SAP Product Group & Category | R5=Attribute: | S5=SAP Product Group & Category
+r   8: A8=Gender | B8=SAP Gender | C8=SAP Age | D8=BY Gender | E8=BY Age | G8=Gender | H8=SAP Age | I8=SAP Gender | J8=BY Age | K8=BY Gender | N8=Function | O8=SAP Group | P8=SAP Category | R8=Category | S8=SAP Group | T8=SAP Category
+r   9: A9=JUNIOR | B9=Unisex | C9=Children | D9=Unisex | E9=Kids | G9=Boys | H9=Children | I9=Male | J9=Kids | K9=Boys | N9=FIVE A SIDE | O9=FOOTBALL | P9=FOOTBALL | R9=BADMINTON | S9=TENNIS | T9=TENNIS
+r  10: A10=MAN | B10=Male | C10=Adults | D10=Male | E10=Adult | G10=Girls | H10=Children | I10=Female | J10=Kids | K10=Girls | N10=FUTSAL | O10=FOOTBALL | P10=FOOTBALL | R10=CASUAL | S10=LIFESTYLE | T10=LIFESTYLE
+r  11: A11=WOMAN | B11=Female | C11=Adults | D11=Female | E11=Adult | G11=Male  | H11=Adults | I11=Male | J11=Adult | K11=Male  | N11=LIFESTYLE | O11=LIFESTYLE | P11=LIFESTYLE | R11=FUTSAL | S11=FOOTBALL | T11=FOOTBALL
+r  12: A12=CHILD | B12=Unisex | C12=Children | D12=Unisex | E12=Kids | G12=Female | H12=Adults | I12=Female | J12=Adult | K12=Female | N12=PADDLE | O12=TENNIS | P12=TENNIS | R12=HIKING | S12=OUTDOOR | T12=OUTDOOR
+r  13: A13=UNISEX | B13=Unisex | C13=Adults | D13=Unisex | E13=Adult | G13=Unisex | H13=Adults | I13=Unisex | J13=Adult | K13=Unisex | N13=RUNNING | O13=RUNNING | P13=RUNNING | R13=KIDS | S13=LIFESTYLE | T13=LIFESTYLE
+r  14: A14=SENIOR | B14=Unisex | C14=Adults | D14=Unisex | E14=Adult | N14=SANDAL | O14=SANDALS | P14=SANDALS | R14=LIFESTYLE | S14=LIFESTYLE | T14=LIFESTYLE
+r  15: N15=SOCCER  | O15=FOOTBALL | P15=FOOTBALL | R15=OUTDOOR | S15=OUTDOOR | T15=OUTDOOR
+r  16: N16=TENNIS | O16=TENNIS | P16=TENNIS | R16=OUTDOOR SHOE | S16=OUTDOOR | T16=OUTDOOR
+r  17: N17=ACTIVE | O17=RUNNING | P17=RUNNING | R17=PADEL | S17=TENNIS | T17=TENNIS
+r  18: R18=RUNNING | S18=RUNNING | T18=RUNNING
+r  19: R19=SANDALS | S19=SANDALS | T19=SANDALS
+r  20: R20=SOCCER | S20=FOOTBALL | T20=FOOTBALL
+r  21: R21=TENNIS | S21=TENNIS | T21=TENNIS

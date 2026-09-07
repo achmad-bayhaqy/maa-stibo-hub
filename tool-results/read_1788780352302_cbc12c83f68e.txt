@@ -1,0 +1,1002 @@
+     1→"""
+     2→╔══════════════════════════════════════════════════════════════════╗
+     3→║      STIBO INBOUND XML GENERATOR — ELLESSE Licensed Recap v1.1   ║
+     4→║  Licensed Recap Sample Development → Stibo STEP XML            ║
+     5→╚══════════════════════════════════════════════════════════════════╝
+     6→
+     7→ELLESSE Licensed Recap-specific workflow (similar to New Balance Licensed):
+     8→
+     9→Source file
+    10→  • Single input file  : "RECAP SAMPLE DEVELOPMENT-LOT-{SEASON}-FOOTWEAR.xlsx"
+    11→  • Active sheet       : "ELLESSE"
+    12→  • Header row         : index 1 (0-based) → row 2 in Excel
+    13→  • Data starts        : index 2 (0-based) → row 3 in Excel
+    14→  • Filter             : All rows are Licensed recap samples
+    15→
+    16→Column mapping (from RECAP SAMPLE DEVELOPMENT file):
+    17→    Supp Art #          → AT_PrincipalStyleCode (supplier article number)
+    18→    Color               → AT_PrincipalColorName / AT_PrincipalColorDescription
+    19→    Color Code          → AT_PrincipalColorCode
+    20→    Gender              → AT_Gender, AT_BYGender, AT_PrincipalGenderDescription
+    21→    Code Category       → Product Division (F=Footwear, A=Apparel, E=Accessories)
+    22→    Category            → (internal classification)
+    23→    Size Range          → AT_PrincipalSize (comma-separated sizes → variants)
+    24→    FOB Price           → AT_FOB
+    25→    Currency            → AT_FOBCurrency
+    26→    Supplier            → AT_MainVendorIdentification
+    27→    Season              → AT_Season + AT_SeasonYear
+    28→    
+    29→Article structure:
+    30→  • Article Type   : always "License"  (Licensed recap samples)
+    31→  • Article Category: Generic (1) — has size variants
+    32→  • Each row = one Generic (Supp Art # + Color Code combination)
+    33→  • Variants       : derived by splitting "Size Range" into individual sizes
+    34→
+    35→Generic code  : LOT + Supp Art # + Color Code (max 12 chars)
+    36→Variant code  : Generic + 3-char SAP color token + 3-char SAP size code
+    37→
+    38→One Generic per (Supp Art # + Color) row.
+    39→"""
+    40→from __future__ import annotations
+    41→
+    42→import re
+    43→import sys
+    44→import logging
+    45→import argparse
+    46→from concurrent.futures import ThreadPoolExecutor, as_completed
+    47→from datetime import datetime
+    48→from pathlib import Path
+    49→from xml.etree import ElementTree as ET
+    50→
+    51→import openpyxl
+    52→import pandas as pd
+    53→
+    54→import os
+    55→
+    56→BASE_DIR = Path(os.environ.get("LAMBDA_TMP_DIR", str(Path(__file__).parent)))
+    57→
+    58→INPUT_DIR    = BASE_DIR / "input"
+    59→RECAP_DIR    = INPUT_DIR / "recap"
+    60→MDD_DIR      = INPUT_DIR / "mdd"
+    61→ATTR_DIR     = INPUT_DIR / "attributes"
+    62→
+    63→OUTPUT_DIR  = BASE_DIR / "output"
+    64→XML_OUT_DIR = OUTPUT_DIR / "xml"
+    65→LOG_DIR     = OUTPUT_DIR / "logs"
+    66→
+    67→for d in [RECAP_DIR, MDD_DIR, ATTR_DIR, XML_OUT_DIR, LOG_DIR]:
+    68→    d.mkdir(parents=True, exist_ok=True)
+    69→
+    70→log_path = LOG_DIR / f"run_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+    71→logging.basicConfig(
+    72→    level=logging.INFO,
+    73→    format="%(asctime)s  %(levelname)-8s  %(message)s",
+    74→    handlers=[
+    75→        logging.FileHandler(log_path),
+    76→        logging.StreamHandler(sys.stdout),
+    77→    ],
+    78→)
+    79→log = logging.getLogger(__name__)
+    80→
+    81→
+    82→# ══════════════════════════════════════════════════════════════════
+    83→# LOV TABLES
+    84→# ══════════════════════════════════════════════════════════════════
+    85→
+    86→LOV_BRAND = {
+    87→    "ADI": "ADIDAS", "NIK": "NIKE", "NEW": "NEW BALANCE",
+    88→    "SMI": "SMIGGLE", "ALD": "ALDO", "CRO": "CROCS",
+    89→    "LOT": "LOTTO",   "BIR": "BIRKENSTOCK", "AIW": "AIRWALK", "ASC": "ASTEC", "ELL": "ELLESSE", 
+    90→}
+    91→LOV_GENDER = {"M": "Male", "F": "Female", "U": "Unisex"}
+    92→LOV_AGE = {
+    93→    "AD": "Adults", "CH": "Children", "IN": "Infant",
+    94→    "AA": "All Ages", "JR": "Junior", "K": "Kids",
+    95→}
+    96→LOV_BY_AGE = {
+    97→    "ADULT": "Adult", "ADULTS": "Adult", "AD": "Adult",
+    98→    "JUNIOR": "Junior", "CH": "Children",
+    99→    "CHILDREN": "Children", "CHILD": "Children",
+   100→    "KIDS": "Kids", "K": "Kids",
+   101→    "ALL AGES": "All Ages", "AA": "All Ages",
+   102→}
+   103→LOV_UOM = {"EA": "Each", "PR": "Pair", "SET": "Set", "PK": "Pack"}
+   104→LOV_SAP_ARTICLE_CATEGORY = {"1": "Generic", "0": "Single", "10": "Sell set (Hampers)"}
+   105→LOV_SEASON = {
+   106→    "SS": "Spring-Summer", "FW": "Fall-Winter",
+   107→    "AL": "All Season",    "HO": "Holiday",
+   108→    "AW": "Autumn-Winter",
+   109→}
+   110→LOV_COUNTRY_ORIGIN = {
+   111→    "CN": "China", "VN": "Vietnam", "ID": "Indonesia",
+   112→    "KH": "Cambodia", "BD": "Bangladesh", "IN": "India",
+   113→    "MY": "Malaysia", "TH": "Thailand",
+   114→}
+   115→LOV_COMPANY_CODE = {
+   116→    "0888": "PT. Map Aktif Adiperkasa",
+   117→    "0886": "PT. MAP FTL Adiperkasa",
+   118→    "0882": "Magna Management Asia",
+   119→}
+   120→LOV_SBU = {
+   121→    "SP": "Sports", "FQ": "Footlocker", "FL": "Fashion Footwear",
+   122→    "SM": "Smiggle",
+   123→}
+   124→
+   125→# ── Country code → MDD COUNTRY name ──────────────────────────────
+   126→_COUNTRY_MAP: dict[str, str] = {
+   127→    "ID": "INDONESIA",
+   128→    "MY": "MALAYSIA",
+   129→    "PH": "PHILIPPINES",
+   130→    "SG": "SINGAPORE",
+   131→    "TH": "THAILAND",
+   132→    "VN": "VIETNAM",
+   133→    "KH": "CAMBODIA",
+   134→}
+   135→
+   136→_COUNTRY_NAME_TO_CODE: dict[str, str] = {
+   137→    "INDONESIA": "ID", "ID": "ID",
+   138→    "PHILIPPINES": "PH", "PHILIPPINE": "PH", "PH": "PH",
+   139→    "THAILAND": "TH", "TH": "TH",
+   140→    "SINGAPORE": "SG", "SG": "SG",
+   141→    "MALAYSIA": "MY", "MY": "MY",
+   142→    "VIETNAM": "VN", "VN": "VN",
+   143→    "CAMBODIA": "KH", "CAMBODIAN": "KH", "KH": "KH",
+   144→}
+   145→
+   146→def _parse_country_code_from_file_or_args(filename: str, cli_country: str = "") -> str:
+   147→    # 1. First check if filename has an explicit country token (e.g. PH, KH, TH, MY, SG, VN, ID)
+   148→    stem_upper = Path(filename).stem.upper().replace("_", " ").replace("-", " ")
+   149→    tokens = stem_upper.split()
+   150→    for token in tokens:
+   151→        if token in _COUNTRY_NAME_TO_CODE and token != "SP":
+   152→            return _COUNTRY_NAME_TO_CODE[token]
+   153→
+   154→    # 2. Fallback to CLI argument if provided
+   155→    cli_c = (cli_country or "").strip().upper()
+   156→    if cli_c:
+   157→        return cli_c
+   158→            
+   159→    return "ID"
+   160→
+   161→# ── LOTTO-specific lookup tables ───────────────────────────────
+   162→
+   163→# LOTTO Gender mapping to SAP Gender
+   164→ELLESSE_GENDER_TO_SAP: dict[str, str] = {
+   165→    "MALE":   "M",
+   166→    "FEMALE": "F",
+   167→    "UNISEX": "U",
+   168→    "BOY":    "M",
+   169→    "GIRL":   "F",
+   170→    "MEN":    "M",
+   171→    "WOMEN":  "F",
+   172→    "MENS":   "M",
+   173→    "WOMENS": "F",
+   174→}
+   175→
+   176→# LOTTO Gender/Category to SAP Age
+   177→ELLESSE_GENDER_TO_AGE: dict[str, str] = {
+   178→    "MALE":   "AD",   # Adults
+   179→    "FEMALE": "AD",
+   180→    "UNISEX": "AD",
+   181→    "MEN":    "AD",
+   182→    "WOMEN":  "AD",
+   183→    "MENS":   "AD",
+   184→    "WOMENS": "AD",
+   185→    "BOY":    "CH",    # Kids
+   186→    "GIRL":   "CH",
+   187→    "KIDS":   "CH",
+   188→}
+   189→
+   190→# LOTTO Category/Code Category to Product Division
+   191→ELLESSE_CATEGORY_TO_DIVISION: dict[str, str] = {
+   192→    "OUTDOOR":      "F",   # Footwear
+   193→    "CASUAL":       "F",
+   194→    "KIDS":         "F",
+   195→    "RUNNING":      "F",
+   196→    "SPORT":        "F",
+   197→    "FOOTWEAR":     "F",
+   198→    "FW":           "F",
+   199→    "APPAREL":      "A",
+   200→    "APP":          "A",
+   201→    "ACCESSORIES":  "E",
+   202→    "ACC":          "E",
+   203→}
+   204→
+   205→# LOTTO Article Type → 1-char code for InboundGenericCode
+   206→ELLESSE_ARTICLE_TYPE_CODE: dict[str, str] = {
+   207→    "LICENSE":   "R",
+   208→    "SSE":       "X",
+   209→    "WHOLESALE": "W",
+   210→    "SAMPLE":    "S",
+   211→}
+   212→
+   213→# LOTTO Size mapping to SAP 3-char codes (footwear sizes)
+   214→ELLESSE_SIZE_TO_SAP: dict[str, str] = {
+   215→    "36":   "036",
+   216→    "37":   "037",
+   217→    "38":   "038",
+   218→    "39":   "039",
+   219→    "40":   "040",
+   220→    "41":   "041",
+   221→    "42":   "042",
+   222→    "43":   "043",
+   223→    "44":   "044",
+   224→    "45":   "045",
+   225→    "46":   "046",
+   226→    "47":   "047",
+   227→    "48":   "048",
+   228→    "49":   "049",
+   229→    "50":   "050",
+   230→    # Youth/Kids sizes
+   231→    "28":   "028",
+   232→    "29":   "029",
+   233→    "30":   "030",
+   234→    "31":   "031",
+   235→    "32":   "032",
+   236→    "33":   "033",
+   237→    "34":   "034",
+   238→    "35":   "035",
+   239→    # Apparel sizes
+   240→    "XS":   "XSX",
+   241→    "S":    "SXX",
+   242→    "M":    "MXX",
+   243→    "L":    "LXX",
+   244→    "XL":   "XLX",
+   245→    "XXL":  "2XL",
+   246→    "2XL":  "2XL",
+   247→    "3XL":  "3XL",
+   248→}
+   249→
+   250→# LOTTO Material Type LOV
+   251→ELLESSE_MATERIAL_TYPE_LOV: dict[str, str] = {
+   252→    "ZHAW": "Direct Articles (QVB)",
+   253→    "ZINA": "Intercompany Articles",
+   254→    "ZUNB": "Nonvaluated Articles (QB)",
+   255→    "ZDIN": "Nonstock Articles (NQVB)",
+   256→}
+   257→
+   258→# Default Material Type for LOTTO Licensed
+   259→ELLESSE_DEFAULT_MATERIAL_TYPE = "ZINA"
+   260→
+   261→# ── Lotto Category → Sports Category EN display value ────────────
+   262→LOV_SPORTS_CATEGORY_EN: dict[str, str] = {
+   263→    "BADMINTON":    "Tennis / Padel",
+   264→    "CASUAL":       "Lifestyle / Casual",
+   265→    "FUTSAL":       "Soccer",
+   266→    "HIKING":       "Outdoor / Trail / Hiking",
+   267→    "KIDS":         "Lifestyle / Casual",
+   268→    "LIFESTYLE":    "Lifestyle / Casual",
+   269→    "OUTDOOR":      "Outdoor / Trail / Hiking",
+   270→    "OUTDOOR SHOE": "Outdoor / Trail / Hiking",
+   271→    "PADEL":        "Tennis / Padel",
+   272→    "RUNNING":      "Running",
+   273→    "SANDALS":      "Other",
+   274→    "SOCCER":       "Soccer",
+   275→    "TENNIS":       "Tennis / Padel",
+   276→}
+   277→
+   278→
+   279→# ══════════════════════════════════════════════════════════════════
+   280→# STIBO XML CONSTANTS
+   281→# ══════════════════════════════════════════════════════════════════
+   282→
+   283→STIBO_NS     = "http://www.stibosystems.com/step"
+   284→STIBO_XSI    = "http://www.w3.org/2001/XMLSchema-instance"
+   285→STIBO_SCHEMA = "http://www.stibosystems.com/step PIM.xsd"
+   286→
+   287→_XMLNS_RE = re.compile(r'\s+xmlns="[^"]*"')
+   288→ET.register_namespace('', STIBO_NS)
+   289→
+   290→
+   291→# ══════════════════════════════════════════════════════════════════
+   292→# SECTION 1 — LOADERS
+   293→# ══════════════════════════════════════════════════════════════════
+   294→
+   295→class MDDLoader:
+   296→    """Loads Core Attributes + LOVs from the MDD Excel."""
+   297→
+   298→    def __init__(self, path: Path):
+   299→        self.path       = path
+   300→        self.attributes: dict[str, dict] = {}
+   301→        self.lovs:       dict[str, dict] = {}
+   302→        self._load()
+   303→
+   304→    def _load(self):
+   305→        log.info("[MDD] Loading: %s", self.path.name)
+   306→        wb  = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   307→        ws  = wb["Core Attributes"]
+   308→        rows = list(ws.iter_rows(values_only=True))
+   309→        hdr  = rows[1]
+   310→
+   311→        col: dict[str, int] = {}
+   312→        for i, h in enumerate(hdr):
+   313→            if h:
+   314→                col[str(h).split("\n")[0].strip()] = i
+   315→                col[str(h).strip()] = i
+   316→
+   317→        for row in rows[2:]:
+   318→            aid = row[7] if len(row) > 7 else None
+   319→            if not aid:
+   320→                continue
+   321→            aid = str(aid).strip()
+   322→
+   323→            def _v(key):
+   324→                idx = col.get(key)
+   325→                if idx is None or idx >= len(row):
+   326→                    return None
+   327→                v = row[idx]
+   328→                return str(v).strip() if v else None
+   329→
+   330→            self.attributes[aid] = {
+   331→                "id":           aid,
+   332→                "name":         _v("PIM Attribute Name"),
+   333→                "source_name":  _v("Source Attribute Name"),
+   334→                "cardinality":  _v("Cardinality"),
+   335→                "validation":   _v("Validation Base Type"),
+   336→                "multi_valued": _v("Multi Valued"),
+   337→                "lov_name":     _v("Name of LOV"),
+   338→                "max_chars":    _v("Max Characters"),
+   339→                "group":        _v("PIM Attribute Group"),
+   340→            }
+   341→
+   342→        self._load_simple_lovs(wb)
+   343→        self._load_named_lov_sheets(wb)
+   344→        self._load_age_lov(wb)
+   345→        self._load_gender_lov(wb)
+   346→        wb.close()
+   347→        log.info("[MDD] %d attributes | %d LOVs", len(self.attributes), len(self.lovs))
+   348→
+   349→    def _load_simple_lovs(self, wb):
+   350→        if "Simple LOVs" not in wb.sheetnames:
+   351→            return
+   352→        for row in list(wb["Simple LOVs"].iter_rows(values_only=True))[1:]:
+   353→            lov_name, _, val_name, val_id = (row + (None,) * 4)[:4]
+   354→            if lov_name and val_name:
+   355→                self.lovs.setdefault(str(lov_name).strip(), {})[
+   356→                    str(val_name).strip()
+   357→                ] = str(val_id).strip() if val_id else str(val_name).strip()
+   358→
+   359→    def _load_age_lov(self, wb):
+   360→        """Load Age LOV sheet: col A = display value, col B = LOV ID. Also loads SAPAge and BYAge."""
+   361→        sheet_name = next((s for s in wb.sheetnames if "AGE" in s.upper() and "LOV" in s.upper()), None)
+   362→        if not sheet_name:
+   363→            log.warning("[MDD] Age LOV sheet not found")
+   364→            return
+   365→
+   366→        rows = list(wb[sheet_name].iter_rows(values_only=True))
+   367→        if len(rows) < 2:
+   368→            return
+   369→
+   370→        sap_age_map = {}
+   371→        by_age_map  = {}
+   372→        age_lov_map = {}  # col A (display) → col B (LOV ID)
+   373→        by_age_lov_map = {}  # col G (BY Age display) → col F (LOV ID)
+   374→
+   375→        for row in rows[1:]:
+   376→            if not row or not row[0]:
+   377→                continue
+   378→            age_display  = str(row[0]).strip()
+   379→            age_lov_id   = str(row[1]).strip() if len(row) > 1 and row[1] else ""
+   380→            sap_age_code = str(row[2]).strip() if len(row) > 2 and row[2] else ""
+   381→            by_age_val   = str(row[5]).strip() if len(row) > 5 and row[5] else ""
+   382→            by_age_disp  = str(row[6]).strip() if len(row) > 6 and row[6] else ""  # col G
+   383→            by_age_id    = str(row[5]).strip() if len(row) > 5 and row[5] else ""  # col F
+   384→
+   385→            if age_display and age_lov_id:
+   386→                age_lov_map[age_display] = age_lov_id
+   387→            if age_display and sap_age_code:
+   388→                sap_age_map[age_display] = sap_age_code
+   389→            if age_display and by_age_val:
+   390→                by_age_map[age_display] = by_age_val
+   391→            if by_age_disp and by_age_id:
+   392→                by_age_lov_map[by_age_disp] = by_age_id
+   393→
+   394→        self.lovs["AgeLOV"]    = age_lov_map
+   395→        self.lovs["ByAgeLOV"]  = by_age_lov_map
+   396→        self.lovs["SAPAge"]    = sap_age_map
+   397→        self.lovs["BYAge"]     = by_age_map
+   398→        log.info("[MDD] Age LOV loaded — AgeLOV: %d, ByAgeLOV: %d, SAPAge: %d, BYAge: %d",
+   399→                 len(age_lov_map), len(by_age_lov_map), len(sap_age_map), len(by_age_map))
+   400→
+   401→    def _load_gender_lov(self, wb):
+   402→        """Load Gender LOV sheet: col A = display value, col C = LOV ID."""
+   403→        sheet_name = next((s for s in wb.sheetnames if "GENDER" in s.upper() and "LOV" in s.upper()), None)
+   404→        if not sheet_name:
+   405→            log.warning("[MDD] Gender LOV sheet not found")
+   406→            return
+   407→        rows = list(wb[sheet_name].iter_rows(values_only=True))
+   408→        gender_lov: dict[str, str] = {}
+   409→        for row in rows[1:]:
+   410→            if not row or not row[0]:
+   411→                continue
+   412→            display = str(row[0]).strip()
+   413→            lov_id  = str(row[2]).strip() if len(row) > 2 and row[2] else ""
+   414→            if display and lov_id:
+   415→                gender_lov[display] = lov_id
+   416→        self.lovs["GenderLOV"] = gender_lov
+   417→        log.info("[MDD] Gender LOV loaded — %d entries", len(gender_lov))
+   418→
+   419→    def _load_named_lov_sheets(self, wb):
+   420→        for sn in wb.sheetnames:
+   421→            if "LOV" not in sn.upper():
+   422→                continue
+   423→            rows = list(wb[sn].iter_rows(values_only=True))
+   424→            if len(rows) < 2:
+   425→                continue
+   426→            display = sn.replace(" LOV", "").replace("LOV ", "").strip()
+   427→            
+   428→            for row in rows[1:]:
+   429→                if not row or len(row) < 2:
+   430→                    continue
+   431→                name, code = row[0], row[1]
+   432→                if name:
+   433→                    self.lovs.setdefault(display, {})[str(name).strip()] = (
+   434→                        str(code).strip() if code else str(name).strip()
+   435→                    )
+   436→
+   437→
+   438→class EllesseMDMappingLoader:
+   439→    """
+   440→    Loads the 'Lotto MD Mapping' tab from the Brand Mapping workbook.
+   441→    Col G (index 6)  = source value from input file.
+   442→    Col H (index 7)  = SAP Age LOV display value    → used for AT_SAPAge.
+   443→    Col I (index 8)  = SAP Gender LOV display value → used for AT_Gender.
+   444→    Col J (index 9)  = BY Age LOV display value     → used for AT_BYAge.
+   445→    Col K (index 10) = BY Gender LOV display value  → used for AT_BYGender.
+   446→    """
+   447→
+   448→    def __init__(self, path: Path):
+   449→        self.path          = path
+   450→        self.col_g_to_h: dict[str, str] = {}  # {source_upper: sap_age_display}
+   451→        self.col_g_to_i: dict[str, str] = {}  # {source_upper: sap_gender_display}
+   452→        self.col_g_to_j: dict[str, str] = {}  # {source_upper: by_age_display}
+   453→        self.col_g_to_k: dict[str, str] = {}  # {source_upper: by_gender_display}
+   454→        self._load()
+   455→
+   456→    def _load(self):
+   457→        log.info("[MDMapping] Loading from: %s", self.path.name)
+   458→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   459→        sheet_name = "Ellesse MD Mapping"
+   460→        if sheet_name not in wb.sheetnames:
+   461→            log.warning("[MDMapping] '%s' sheet not found", sheet_name)
+   462→            wb.close()
+   463→            return
+   464→
+   465→        ws   = wb[sheet_name]
+   466→        rows = list(ws.iter_rows(values_only=True))
+   467→        count = 0
+   468→        for row in rows:
+   469→            if not row or len(row) <= 8:
+   470→                continue
+   471→            src   = row[6]                               # Col G
+   472→            sap_a = row[7]                               # Col H — SAP Age
+   473→            sap_g = row[8]                               # Col I — SAP Gender
+   474→            by_a  = row[9]  if len(row) > 9  else None  # Col J — BY Age
+   475→            by_g  = row[10] if len(row) > 10 else None  # Col K — BY Gender
+   476→            if not src:
+   477→                continue
+   478→            src_str = str(src).strip().upper()
+   479→            if sap_a: self.col_g_to_h[src_str] = str(sap_a).strip()
+   480→            if sap_g: self.col_g_to_i[src_str] = str(sap_g).strip()
+   481→            if by_a:  self.col_g_to_j[src_str] = str(by_a).strip()
+   482→            if by_g:  self.col_g_to_k[src_str] = str(by_g).strip()
+   483→            if any([sap_a, sap_g, by_a, by_g]):
+   484→                count += 1
+   485→
+   486→        wb.close()
+   487→        log.info("[MDMapping] %d mappings loaded from '%s'", count, sheet_name)
+   488→
+   489→    def get_sap_age_lov_value(self, raw_value: str) -> str:
+   490→        """Return SAP Age LOV display value (col H) for a raw source value."""
+   491→        return self.col_g_to_h.get((raw_value or "").strip().upper(), "")
+   492→
+   493→    def get_lov_value(self, raw_value: str) -> str:
+   494→        """Return SAP Gender LOV display value (col I) for a raw source value."""
+   495→        return self.col_g_to_i.get((raw_value or "").strip().upper(), "")
+   496→
+   497→    def get_by_age_lov_value(self, raw_value: str) -> str:
+   498→        """Return BY Age LOV display value (col J) for a raw source value."""
+   499→        return self.col_g_to_j.get((raw_value or "").strip().upper(), "")
+   500→
+   501→    def get_by_gender_lov_value(self, raw_value: str) -> str:
+   502→        """Return BY Gender LOV display value (col K) for a raw source value."""
+   503→        return self.col_g_to_k.get((raw_value or "").strip().upper(), "")
+   504→
+   505→
+   506→class AttributesListLoader:
+   507→    """Loads the lotto Inline (New Format) tab from the NEW - Brand mapping files Template workbook."""
+   508→
+   509→    def __init__(self, path: Path, brand: str = "ELLESSE"):
+   510→        self.path      = path
+   511→        self.brand     = brand.upper()
+   512→        self.attr_map: list[dict] = []
+   513→        self._load()
+   514→
+   515→    def _load(self):
+   516→        log.info("[AttrList] Loading brand '%s' from: %s", self.brand, self.path.name)
+   517→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   518→
+   519→        # Use "Lotto(Inline + Licensed)" tab
+   520→        sheet_name = "Ellesse(Inline + Licensed)"
+   521→        if sheet_name not in wb.sheetnames:
+   522→            log.warning("[AttrList] '%s' sheet not found", sheet_name)
+   523→            wb.close()
+   524→            return
+   525→
+   526→        ws   = wb[sheet_name]
+   527→        rows = list(ws.iter_rows(values_only=True))
+   528→
+   529→        # Find header row that contains "Attributes" in column B (index 1)
+   530→        hdr_idx = next(
+   531→            (i for i, r in enumerate(rows) if len(r) > 1 and r[1] == "Attributes"),
+   532→            None,
+   533→        )
+   534→        if hdr_idx is None:
+   535→            log.warning("[AttrList] Cannot find header row in sheet '%s'", sheet_name)
+   536→            wb.close()
+   537→            return
+   538→
+   539→        hdr = rows[hdr_idx]
+   540→        col = {str(h).strip(): i for i, h in enumerate(hdr) if h}
+   541→
+   542→        for row in rows[hdr_idx + 1:]:
+   543→            attr = row[1] if len(row) > 1 else None
+   544→            if not attr:
+   545→                continue
+   546→            self.attr_map.append({
+   547→                "attribute":     str(attr).strip(),
+   548→                "cluster":       self._s(row, col, "Cluster"),
+   549→                "indicator":     self._s(row, col, "Indicator"),
+   550→                "mapping_logic": self._s(row, col, "Field Name / Mapping Logic"),
+   551→            })
+   552→
+   553→        wb.close()
+   554→        log.info("[AttrList] %d attributes loaded from '%s'", len(self.attr_map), sheet_name)
+   555→
+   556→    @staticmethod
+   557→    def _s(row, col_map, key):
+   558→        idx = col_map.get(key)
+   559→        if idx is None or idx >= len(row):
+   560→            return None
+   561→        v = row[idx]
+   562→        return str(v).strip() if v else None
+   563→
+   564→
+   565→class RNALoader:
+   566→    """
+   567→    Loads the 'Source Mapping Related RNA' tab from the Attributes List workbook.
+   568→    Maps (Country Name, Company Code, SBU, Brand Code) → Brand Type + Brand Category.
+   569→    """
+   570→
+   571→    RNA_SHEET_KEYWORDS = ["RNA", "SOURCE MAPPING"]
+   572→
+   573→    @staticmethod
+   574→    def _norm_country(v: str) -> str:
+   575→        return (v or "").strip().upper()
+   576→
+   577→    @staticmethod
+   578→    def _norm_comp_code(v: str) -> str:
+   579→        s = (v or "").strip()
+   580→        if not s:
+   581→            return ""
+   582→        # ── FIX: strip .0 suffix (e.g. "888.0" → "888") ─────────
+   583→        if s.endswith(".0"):
+   584→            s = s[:-2]
+   585→        s2 = s.lstrip("0")
+   586→        return s2 if s2 else "0"
+   587→
+   588→    def __init__(self, path: Path):
+   589→        self.path   = path
+   590→        self.lookup: dict[tuple, dict] = {}
+   591→        self._load()
+   592→
+   593→    def _load(self):
+   594→        log.info("[RNA] Loading from: %s", self.path.name)
+   595→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   596→
+   597→        sheet_name = next(
+   598→            (s for s in wb.sheetnames if any(kw in s.upper() for kw in self.RNA_SHEET_KEYWORDS)),
+   599→            None,
+   600→        )
+   601→        if not sheet_name:
+   602→            log.warning("[RNA] 'Source Mapping Related RNA' tab not found in %s", self.path.name)
+   603→            wb.close()
+   604→            return
+   605→
+   606→        log.info("[RNA] Using sheet: '%s'", sheet_name)
+   607→        rows = list(wb[sheet_name].iter_rows(values_only=True))
+   608→
+   609→        hdr_idx = next(
+   610→            (i for i, r in enumerate(rows)
+   611→             if any(isinstance(v, str) and "COUNTRY" in v.upper() for v in r if v)),
+   612→            None,
+   613→        )
+   614→        if hdr_idx is None:
+   615→            log.warning("[RNA] Cannot find header row in sheet '%s'", sheet_name)
+   616→            wb.close()
+   617→            return
+   618→
+   619→        hdr = rows[hdr_idx]
+   620→        col = {str(h).strip().upper(): i for i, h in enumerate(hdr) if h}
+   621→
+   622→        def _find(*candidates) -> int | None:
+   623→            for c in candidates:
+   624→                if c.upper() in col:
+   625→                    return col[c.upper()]
+   626→            return None
+   627→
+   628→        c_country = _find("COUNTRY", "COUNTRY NAME")
+   629→        c_comp    = _find("COMPANY CODE", "COMP CODE", "COMPCODE", "COMP_CODE")
+   630→        c_sbu     = _find("SBU")
+   631→        c_bcode   = _find("BRANDCODE", "BRAND CODE", "REPORTING BRAND CODE MAPPED")
+   632→        c_btype   = _find("BRANDTYPE_DETAIL", "BRAND TYPE", "AT_BRANDTYPE", "BRANDTYPE")
+   633→        c_bcat    = _find("BRANDCATEGORY", "BRAND CATEGORY", "AT_BRANDCATEGORY", "BRANDCATEGORY")
+   634→
+   635→        missing = [nm for nm, idx in [
+   636→            ("Country", c_country), ("CompCode", c_comp), ("SBU", c_sbu),
+   637→            ("BrandCode", c_bcode), ("BrandType", c_btype), ("BrandCategory", c_bcat),
+   638→        ] if idx is None]
+   639→        if missing:
+   640→            log.warning("[RNA] Missing columns in '%s': %s", sheet_name, missing)
+   641→
+   642→        def _cell(row, idx):
+   643→            if idx is None or idx >= len(row) or row[idx] is None:
+   644→                return ""
+   645→            return str(row[idx]).strip()
+   646→
+   647→        count = 0
+   648→        for row in rows[hdr_idx + 1:]:
+   649→            country = _cell(row, c_country)
+   650→            if not country:
+   651→                continue
+   652→            key = (
+   653→                self._norm_country(country),
+   654→                self._norm_comp_code(_cell(row, c_comp)),
+   655→                _cell(row, c_sbu).upper(),
+   656→                _cell(row, c_bcode).upper(),
+   657→            )
+   658→            self.lookup[key] = {
+   659→                "brand_type":     _cell(row, c_btype),
+   660→                "brand_category": _cell(row, c_bcat),
+   661→            }
+   662→            count += 1
+   663→
+   664→        wb.close()
+   665→        log.info("[RNA] %d entries loaded from '%s'", count, sheet_name)
+   666→
+   667→    def get(self, country_name: str, comp_code: str, sbu: str, brand_code: str) -> dict:
+   668→        """Return {brand_type, brand_category} for the given keys, or empty strings."""
+   669→        key = (
+   670→            self._norm_country(country_name),
+   671→            self._norm_comp_code(comp_code),
+   672→            (sbu        or "").strip().upper(),
+   673→            (brand_code or "").strip().upper(),
+   674→        )
+   675→        return self.lookup.get(key, {"brand_type": "", "brand_category": ""})
+   676→
+   677→    def get_fuzzy(self, country_name: str, sbu: str, brand_code: str) -> dict:
+   678→        """Match on country + brand only — ignores comp_code."""
+   679→        c = self._norm_country(country_name)
+   680→        b = (brand_code or "").strip().upper()
+   681→        s = (sbu or "").strip().upper()
+   682→        # pass 1: country + sbu + brand
+   683→        for (kc, _, ks, kb), val in self.lookup.items():
+   684→            if kc == c and ks == s and kb == b:
+   685→                return val
+   686→        # pass 2: country + brand only (first match)
+   687→        for (kc, _, ks, kb), val in self.lookup.items():
+   688→            if kc == c and kb == b:
+   689→                return val
+   690→        return {"brand_type": "", "brand_category": ""}
+   691→
+   692→
+   693→class EllesseRecapLoader:
+   694→    """
+   695→    Loads the LOTTO Licensed Recap workbook.
+   696→
+   697→    The active sheet is "LOTTO".
+   698→    Header row is at row 2 (1-based).
+   699→
+   700→    Each row represents one (Supp Art # / Color) combination.
+   701→    """
+   702→
+   703→    def __init__(self, path: Path):
+   704→        self.path  = path
+   705→        self.df    = pd.DataFrame()
+   706→        self.sheet = ""
+   707→        self._load()
+   708→
+   709→    def _load(self):
+   710→        log.info("[Recap-ELLESSE] Loading: %s", self.path.name)
+   711→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   712→
+   713→        # Use LOT or LOTTO sheet
+   714→        if "ELL" in wb.sheetnames:
+   715→            target = "ELL"
+   716→        elif "ELLESSE" in wb.sheetnames:
+   717→            target = "ELLESSE"
+   718→        else:
+   719→            target = wb.sheetnames[0]
+   720→        log.info("[Recap-ELLESSE] Using sheet: '%s'", target)
+   721→        
+   722→        ws   = wb[target]
+   723→        rows = list(ws.iter_rows(values_only=True))
+   724→
+   725→        # Dynamically find header row (search for row containing key columns)
+   726→        # Expected: Row 3 in Excel = index 2 in 0-based
+   727→        hdr_idx = None
+   728→        for i, row in enumerate(rows[:10]):  # Check first 10 rows
+   729→            if not row:
+   730→                continue
+   731→            row_str = " ".join([str(c).upper() if c else "" for c in row])
+   732→            # Look for key columns that indicate this is the header row
+   733→            if any(kw in row_str for kw in ["SUPP ART", "COLOR", "GENDER", "CATEGORY", "SIZE RANGE"]):
+   734→                hdr_idx = i
+   735→                log.info("[Recap-ELLESSE] Found header at row %d (0-indexed, row %d in Excel)", hdr_idx, hdr_idx + 1)
+   736→                break
+   737→        
+   738→        if hdr_idx is None:
+   739→            log.warning("[Recap-ELLESSE] Could not find header row, defaulting to row 3 (index 2)")
+   740→            hdr_idx = 2  # Row 3 in Excel
+   741→        
+   742→        header = [
+   743→            str(h).strip() if h else f"col_{i}"
+   744→            for i, h in enumerate(rows[hdr_idx])
+   745→        ]
+   746→        
+   747→        log.info("[Recap-ELLESSE] Header row %d: %s", hdr_idx, header)
+   748→        
+   749→        df = pd.DataFrame(rows[hdr_idx + 1:], columns=header)
+   750→        
+   751→        log.info("[Recap-ELLESSE] Found columns: %s", list(df.columns))
+   752→        
+   753→        # Log first data row for debugging
+   754→        if len(df) > 0:
+   755→            first_row_dict = df.iloc[0].to_dict()
+   756→            log.info("[Recap-ELLESSE] First data row sample: %s", {k: v for k, v in list(first_row_dict.items())[:5]})
+   757→
+   758→        # Filter out rows where Supp Art # is blank
+   759→        supp_art_col = next(
+   760→            (c for c in df.columns if "SUPP ART" in c.upper() or c.strip().upper() == "SUPP ART #"), 
+   761→            None
+   762→        )
+   763→        
+   764→        if supp_art_col:
+   765→            log.info("[Recap-ELLESSE] Found supplier article column: '%s'", supp_art_col)
+   766→            
+   767→            # Log sample values before filtering
+   768→            sample_values = df[supp_art_col].head(3).tolist()
+   769→            log.info("[Recap-ELLESSE] Sample '%s' values before filtering: %s", supp_art_col, sample_values)
+   770→            
+   771→            df = df[
+   772→                df[supp_art_col].notna()
+   773→                & (~df[supp_art_col].astype(str).str.strip().isin(["", "None", "nan"]))
+   774→            ]
+   775→            df = df.rename(columns={supp_art_col: "Supp Art #"})
+   776→            
+   777→            # Log sample values after filtering and renaming
+   778→            if len(df) > 0:
+   779→                sample_after = df["Supp Art #"].head(3).tolist()
+   780→                log.info("[Recap-ELLESSE] Sample 'Supp Art #' values after filtering: %s", sample_after)
+   781→        else:
+   782→            log.warning("[Recap-ELLESSE] 'Supp Art #' column not found! Available columns: %s", list(df.columns))
+   783→
+   784→        wb.close()
+   785→        self.df    = df.reset_index(drop=True)
+   786→        self.sheet = target
+   787→        log.info("[Recap-ELLESSE] %d rows loaded", len(self.df))
+   788→
+   789→
+   790→# ══════════════════════════════════════════════════════════════════
+   791→# SECTION 2 — MAPPER
+   792→# ══════════════════════════════════════════════════════════════════
+   793→
+   794→def _s(v) -> str:
+   795→    """Safely convert any cell value to a clean string; return '' for empties."""
+   796→    if v is None:
+   797→        return ""
+   798→    s = str(v).strip()
+   799→    return "" if s in ("None", "nan", "0", "NaT") else s
+   800→
+   801→
+   802→def _find_currency_mdd_source_file() -> Path | None:
+   803→    """Find MDD workbook with Country LOV and Retail Price Currency LOV sheets."""
+   804→    candidates: list[Path] = []
+   805→    for d in (MDD_DIR, ATTR_DIR):
+   806→        if d.exists():
+   807→            candidates += list(d.glob("*.xlsx")) + list(d.glob("*.xlsm"))
+   808→    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+   809→
+   810→    for p in candidates:
+   811→        try:
+   812→            wb = openpyxl.load_workbook(p, read_only=True, data_only=True)
+   813→            s_names = [s.upper() for s in wb.sheetnames]
+   814→            has_country = any("COUNTRY" in s and "LOV" in s and "SIZE" not in s and "ORIGIN" not in s for s in s_names)
+   815→            has_currency = any("RETAIL PRICE CURRENCY" in s for s in s_names)
+   816→            wb.close()
+   817→            if has_country and has_currency:
+   818→                log.info("[MDD] Selected currency workbook: %s", p.name)
+   819→                return p
+   820→            log.info("[MDD] Skipping %s — no retail currency LOV sheets", p.name)
+   821→        except Exception as e:
+   822→            log.warning("[MDD] Cannot inspect %s: %s", p.name, e)
+   823→    return None
+   824→
+   825→
+   826→def _load_retail_currency_mdd(path: Path | None = None) -> dict:
+   827→    """Load Country LOV and Retail Price Currency LOV from MDD workbook."""
+   828→    empty = {"country_id_to_name": {}, "retail_price_currency_lov": {}}
+   829→    if path is None:
+   830→        path = _find_currency_mdd_source_file()
+   831→    if path is None or not path.exists():
+   832→        log.warning("[MDD] No workbook found for retail price currency lookup.")
+   833→        return empty
+   834→
+   835→    try:
+   836→        wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+   837→    except Exception as e:
+   838→        log.warning("[MDD] Cannot open retail currency workbook %s: %s", path.name, e)
+   839→        return empty
+   840→
+   841→    country_id_to_name: dict[str, str] = {}
+   842→    country_sheet = next(
+   843→        (s for s in wb.sheetnames 
+   844→         if "COUNTRY" in s.upper() and "LOV" in s.upper()
+   845→         and "SIZE" not in s.upper() and "ORIGIN" not in s.upper()),
+   846→        None,
+   847→    )
+   848→    if country_sheet:
+   849→        for row in wb[country_sheet].iter_rows(min_row=2, values_only=True):
+   850→            if row and row[0] and len(row) > 1 and row[1]:
+   851→                v0 = _s(row[0]).strip()
+   852→                v1 = _s(row[1]).strip()
+   853→                if v0 and v1:
+   854→                    country_id_to_name[v0.upper()] = v1
+   855→                    country_id_to_name[v1.upper()] = v0
+   856→
+   857→    retail_price_currency_lov: dict[str, str] = {}
+   858→    currency_sheet = next(
+   859→        (s for s in wb.sheetnames if "RETAIL PRICE CURRENCY" in s.upper()),
+   860→        None,
+   861→    )
+   862→    if currency_sheet:
+   863→        # Data starts at row 3 in "Retail Price Currency LOV" sheet
+   864→        for row in wb[currency_sheet].iter_rows(min_row=3, values_only=True):
+   865→            if row and row[0] and len(row) > 1 and row[1]:
+   866→                retail_price_currency_lov[_s(row[0]).strip().upper()] = _s(row[1]).strip()
+   867→
+   868→    wb.close()
+   869→    log.info(
+   870→        "[MDD] Retail currency lookup loaded — countries=%d currencies=%d",
+   871→        len(country_id_to_name), len(retail_price_currency_lov),
+   872→    )
+   873→    return {
+   874→        "country_id_to_name": country_id_to_name,
+   875→        "retail_price_currency_lov": retail_price_currency_lov,
+   876→    }
+   877→
+   878→
+   879→def _resolve_retail_price_currency(country_code: str, mdd: dict | None = None) -> str:
+   880→    """country_code (e.g. 'ID', 'KH') → Retail Price Currency LOV ID (e.g. 'IDR', 'USD')."""
+   881→    fallback_map = {
+   882→        "ID": "IDR", "PH": "PHP", "TH": "THB",
+   883→        "SG": "SGD", "MY": "MYR", "VN": "VND", "KH": "USD"
+   884→    }
+   885→    code_upper = (country_code or "").strip().upper()
+   886→    if not code_upper:
+   887→        return ""
+   888→
+   889→    if mdd:
+   890→        country_name = mdd.get("country_id_to_name", {}).get(code_upper, "")
+   891→        retail_currency_lov = mdd.get("retail_price_currency_lov", {})
+   892→
+   893→        if country_name and retail_currency_lov:
+   894→            country_name_upper = country_name.strip().upper()
+   895→
+   896→            # Special case mapping for countries like Cambodia where country name != currency name
+   897→            if code_upper == "KH" or "CAMBODIA" in country_name_upper:
+   898→                for currency_name, c_code in retail_currency_lov.items():
+   899→                    if "UNITED STATES" in currency_name or c_code == "USD":
+   900→                        return c_code
+   901→                return "USD"
+   902→
+   903→            if country_name_upper in retail_currency_lov:
+   904→                return retail_currency_lov[country_name_upper]
+   905→
+   906→            country_root = country_name_upper.rstrip("S").rstrip("N")
+   907→            for lov_entry, currency in retail_currency_lov.items():
+   908→                lov_entry_upper = lov_entry.upper()
+   909→                if (country_name_upper in lov_entry_upper or 
+   910→                    country_root in lov_entry_upper or
+   911→                    lov_entry_upper.split()[0].rstrip("N") in country_name_upper):
+   912→                    return currency
+   913→
+   914→    # Fallback if MDD lookup didn't yield a match
+   915→    return fallback_map.get(code_upper, "")
+   916→
+   917→
+   918→def _fmt_date(v) -> str:
+   919→    """Format a date to dd-Mon-YYYY lowercase."""
+   920→    if isinstance(v, datetime):
+   921→        return v.strftime("%d-%b-%Y").lower()
+   922→    if hasattr(v, "strftime"):
+   923→        return v.strftime("%d-%b-%Y").lower()
+   924→    raw = _s(v)
+   925→    if not raw:
+   926→        return raw
+   927→    for fmt in ("%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d.%m.%Y"):
+   928→        try:
+   929→            return datetime.strptime(raw, fmt).strftime("%d-%b-%Y").lower()
+   930→        except (ValueError, TypeError):
+   931→            pass
+   932→    return raw
+   933→
+   934→
+   935→def _size_to_sap_code(size_raw: str) -> str:
+   936→    """
+   937→    Convert a single LOTTO size string to a 3-char SAP size code.
+   938→    Falls back to a zero-padded or truncated version of the raw value.
+   939→    """
+   940→    key = size_raw.strip().upper()
+   941→    if key in ELLESSE_SIZE_TO_SAP:
+   942→        return ELLESSE_SIZE_TO_SAP[key]
+   943→    
+   944→    # Try numeric conversion (e.g., "37" → "037")
+   945→    if key.isdigit():
+   946→        return key.zfill(3)
+   947→    
+   948→    # Generic fallback: strip non-alphanumeric, take first 3 chars, pad to 3
+   949→    cleaned = re.sub(r"[^A-Z0-9]", "", key)[:3].ljust(3, "X")
+   950→    return cleaned
+   951→
+   952→
+   953→def _parse_season(season: str) -> tuple[str, str]:
+   954→    """
+   955→    Split a season token into (sea_code, sea_year).
+   956→    
+   957→    Examples:
+   958→        SS26  → ("SS", "2026")
+   959→        FW27  → ("FW", "2027")
+   960→        SP2028 → ("SP", "2028")
+   961→    """
+   962→    s = (season or "").strip().upper()
+   963→    if len(s) < 3:
+   964→        return s, ""
+   965→    
+   966→    # Match 2-letter code + 2 or 4 digit year
+   967→    match = re.match(r"^([A-Z]{2})(\d{2,4})$", s)
+   968→    if match:
+   969→        code = match.group(1)
+   970→        year_part = match.group(2)
+   971→        # Convert 2-digit year to 4-digit
+   972→        if len(year_part) == 2:
+   973→            year = f"20{year_part}"
+   974→        else:
+   975→            year = year_part
+   976→        return code, year
+   977→    
+   978→    return s[:2], ""
+   979→
+   980→
+   981→def map_article_ellesse(recap_row: dict, brand_code: str = "ELL") -> dict:
+   982→    """
+   983→    Map one LOTTO recap row → unified article dict (similar to NB Licensed pattern).
+   984→
+   985→    Key mappings (from RECAP SAMPLE DEVELOPMENT file):
+   986→      - article_no          = Supp Art #
+   987→      - sap_style_code      = Supp Art # (same as article_no for supplier items)
+   988→      - color               = Color column
+   989→      - color_code          = Color Code column (if present)
+   990→      - gender_code         = from Gender column → SAP Gender (M/F/U)
+   991→      - age_code            = derived from Gender (KIDS→CH, others→AD)
+   992→      - div_letter          = from Code Category or Category column
+   993→      - art_category        = "1" (Generic - has size variants)
+   994→      - category            = Category column (OUTDOOR, CASUAL, KIDS, etc.)
+   995→      - outsole_material    = Outsole Material column
+   996→      - upper_material      = Upper Material column
+   997→      - fob                 = FOB Price column
+   998→      - currency            = Currency column
+   999→      - supplier            = Supplier column
+  1000→      - season              = Season column (e.g., SS26)
+
+[showing lines 1-1000 of 1914; use offset=1001 with limit to continue reading]

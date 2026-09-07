@@ -1,0 +1,60 @@
+r   1: A1=PIM Attribute Name\n(As MAA want it to be called in STEP) | B1=PIM Attribute ID | C1=Validation Base Type
+r   2: A2=Occasion | B2=AT_Occasion | C2=LOV
+r   3: A3=Fastening | B3=AT_Fastening | C3=LOV
+r   4: A4=Collection 1 | B4=AT_Collection1 | C4=text
+r   5: A5=Principal Age Code | B5=AT_PrincipalAgeCode | C5=text
+r   6: A6=Ecom Product Name PH | B6=AT_EComProductNamePH | C6=text
+r   7: A7=Royalty | B7=AT_Royalty | C7=regexp
+r   8: A8=Principal Color Description PH | B8=AT_ColorDescriptionPH | C8=text
+r   9: A9=Collection 2 | B9=AT_Collection2 | C9=text
+r  10: A10=Certificate No. (SNI, K3L, UTTP) | B10=AT_CertificateNumber | C10=text
+r  11: A11=Variant Description | B11=AT_VariantDescription | C11=text
+r  12: A12=BY Gender | B12=AT_BYGender | C12=LOV
+r  13: A13=Ecom Gender Description EN | B13=AT_EcomGenderDescriptionEN | C13=text
+r  14: A14=Created on | B14=AT_Createdon | C14=legacyisodatetime
+r  15: A15=Ecom Long Description ID | B15=AT_LongDescriptionID | C15=text
+r  16: A16=Style | B16=AT_Style | C16=LOV
+r  17: A17=Others | B17=AT_Others | C17=number
+r  18: A18=Silhouette | B18=AT_Silhouette | C18=LOV
+r  19: A19=Musical Box Components Qty | B19=AT_MusicalBoxComponentsQty | C19=LOV
+r  20: A20=Merchandise Category | B20=AT_MerchandiseCategory | C20=text
+r  21: A21=Label Cost | B21=AT_LabelCost | C21=regexp
+r  22: A22=Main EAN Indicator | B22=AT_MainEANIndicator | C22=LOV
+r  23: A23=Care Instruction VN | B23=AT_CareInstructionVN | C23=text
+r  24: A24=Principal Gender Description | B24=AT_PrincipalGenderDescription | C24=text
+r  25: A25=Country Size | B25=AT_CountrySize | C25=LOV
+r  26: A26=Country of Origin | B26=AT_CountryOrigin | C26=LOV
+r  27: A27=Style Type | B27=AT_StyleType | C27=LOV
+r  28: A28=Internal Barcode | B28=AT_InternalBarcode | C28=regexp
+r  29: A29=Brand Group | B29=AT_BrandGroup | C29=LOV
+r  30: A30=Ecom Short Description VN | B30=AT_ShortDescriptionVN | C30=text
+r  31: A31=Proposed Retail Price | B31=AT_ProposedRetailPrice | C31=number
+r  32: A32=Marketing Fee | B32=AT_MarketingFee | C32=regexp
+r  33: A33=Principal Style Code | B33=AT_PrincipalStyleCode | C33=text
+r  34: A34=Product Weight | B34=AT_ProductWeight | C34=number
+r  35: A35=FOB | B35=AT_FOB | C35=regexp
+r  36: A36=Discount Bucket (Rounded) | B36=AT_DiscountBucketRounded | C36=number
+r  37: A37=Pricing Distribution Channel | B37=AT_PricingDistributionChannel | C37=LOV
+r  38: A38=Incoming Month | B38=AT_IncomingMonth | C38=regexp
+r  39: A39=SAP Indicator | B39=AT_SAPIndicator | C39=LOV
+r  40: A40=Color Group | B40=AT_ColorGroup | C40=LOV
+r  41: A41=Ecom Short Description EN | B41=AT_ShortDescriptionEN | C41=text
+r  42: A42=Principal Color Description MY | B42=AT_ColorDescriptionMY | C42=text
+r  43: A43=Heel Type | B43=AT_HeelType | C43=LOV
+r  44: A44=Ecom Product Name VN | B44=AT_EComProductNameVN | C44=text
+r  45: A45=Ecom Short Description MY | B45=AT_ShortDescriptionMY | C45=text
+r  46: A46=Principal Color Description VN | B46=AT_ColorDescriptionVN | C46=text
+r  47: A47=Care Instruction ID | B47=AT_CareInstructionID | C47=text
+r  48: A48=Principal Color Description | B48=AT_PrincipalColorName | C48=text
+r  49: A49=Unit of Measurement (UoM) | B49=AT_UOM | C49=LOV
+r  50: A50=Exchange Rate | B50=AT_ExchangeRate | C50=number
+r  51: A51=Article Category | B51=AT_SAPArticleCategory | C51=LOV
+r  52: A52=Fit | B52=AT_Fit | C52=LOV
+r  53: A53=SPU Grouping Name | B53=AT_SPUGroupingName | C53=text
+r  54: A54=Width | B54=AT_Width | C54=LOV
+r  55: A55=Musical Box Article Description | B55=AT_MusicalBoxArticleDescription | C55=text
+r  56: A56=Current Price | B56=AT_CurrentPrice | C56=regexp
+r  57: A57=Material Type | B57=AT_MaterialType | C57=LOV
+r  58: A58=BY Article Type | B58=AT_BYArticleType | C58=LOV
+r  59: A59=HS Code | B59=AT_HSCode | C59=text
+r  60: A60=SAP Age | B60=AT_SAPAge | C60=LOV

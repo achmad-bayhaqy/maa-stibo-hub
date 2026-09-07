@@ -1,0 +1,40 @@
+r   1: A1=Division | B1=Silo 1 or Category 2 | C1=Series or Sub Silhouette Group | D1=Sports Category | F1=Source: Linelist
+r   2: A2=ACC | B2=TENNIS | C2=ARM & LEG WEAR | D2=Tennis / Padel
+r   3: A3=ACC | B3=TENNIS | C3=HEADWEAR | D3=Tennis / Padel | F3=Footwear: Mapping from Column Silo 1 & Column Series
+r   4: A4=APP | B4=TENNIS | C4=SHORT | D4=Tennis / Padel | F4=Apparel & Accessories: Mapping from Column Category 2 & Column Sub Sil…
+r   5: A5=APP | B5=TENNIS | C5=SHORT SLEEVE | D5=Tennis / Padel
+r   6: A6=APP | B6=TENNIS | C6=SKIRT | D6=Tennis / Padel
+r   7: A7=APP | B7=TENNIS | C7=SLEEVELESS | D7=Tennis / Padel
+r   8: A8=ACC | B8=TENNIS | C8=SOCKS | D8=Tennis / Padel
+r   9: A9=APP | B9=TENNIS | C9=DRESS | D9=Tennis / Padel
+r  10: A10=APP | B10=TENNIS | C10=LONG SLEEVE | D10=Tennis / Padel
+r  11: A11=APP | B11=TRACK&FIELD | C11=TIGHT | D11=Outdoor / Trail / Hiking
+r  12: A12=APP | B12=TRACK&FIELD | C12=SLEEVELESS | D12=Outdoor / Trail / Hiking
+r  13: A13=ACC | B13=PERFORMANCE RUNNING | C13=SOCKS | D13=Running
+r  14: A14=ACC | B14=PERFORMANCE RUNNING | C14=HEADWEAR | D14=Running
+r  15: A15=ACC | B15=PERFORMANCE RUNNING | C15=BAG | D15=Running
+r  16: A16=ACC | B16=PERFORMANCE RUNNING | C16=ARM & LEG WEAR | D16=Running
+r  17: A17=APP | B17=PERFORMANCE RUNNING | C17=BRA | D17=Running
+r  18: A18=APP | B18=PERFORMANCE RUNNING | C18=JACKET/VEST | D18=Running
+r  19: A19=APP | B19=PERFORMANCE RUNNING | C19=LONG SLEEVE | D19=Running
+r  20: A20=APP | B20=PERFORMANCE RUNNING | C20=PANT | D20=Running
+r  21: A21=APP | B21=PERFORMANCE RUNNING | C21=SHORT | D21=Running
+r  22: A22=APP | B22=PERFORMANCE RUNNING | C22=SHORT SLEEVE | D22=Running
+r  23: A23=APP | B23=PERFORMANCE RUNNING | C23=SLEEVELESS | D23=Running
+r  24: A24=APP | B24=PERFORMANCE RUNNING | C24=TIGHT | D24=Running
+r  25: A25=APP | B25=TRAINING | C25=BRA | D25=Fitness / Training
+r  26: A26=APP | B26=TRAINING | C26=JACKET/VEST | D26=Fitness / Training
+r  27: A27=APP | B27=TRAINING | C27=LONG SLEEVE | D27=Fitness / Training
+r  28: A28=APP | B28=TRAINING | C28=PANT | D28=Fitness / Training
+r  29: A29=APP | B29=TRAINING | C29=SHORT | D29=Fitness / Training
+r  30: A30=APP | B30=TRAINING | C30=SHORT SLEEVE | D30=Fitness / Training
+r  31: A31=APP | B31=TRAINING | C31=SLEEVELESS | D31=Fitness / Training
+r  32: A32=APP | B32=TRAINING | C32=TIGHT | D32=Fitness / Training
+r  33: A33=APP | B33=TRAINING | C33=UNDERWEAR | D33=Fitness / Training
+r  34: A34=ACC | B34=TRAINING | C34=SOCKS | D34=Fitness / Training
+r  35: A35=ACC | B35=TRAINING | C35=BAG | D35=Fitness / Training
+r  36: A36=ACC | B36=TRAINING | C36=HEADWEAR | D36=Fitness / Training
+r  37: A37=FTW | B37=TRAIL | C37=METAFUJI TRAIL | D37=Outdoor / Trail / Hiking
+r  38: A38=FTW | B38=ROAD | C38=2000 | D38=Running
+r  39: A39=FTW | B39=ROAD | C39=CUMULUS | D39=Running
+r  40: A40=FTW | B40=ROAD | C40=KAYANO | D40=Running

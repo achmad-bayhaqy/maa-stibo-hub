@@ -1,0 +1,674 @@
+/home/z/.venv/lib/python3.12/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Data Validation extension is not supported and will be removed
+  warn(msg)
+====================================================================================================
+### INSTRUCTIONS (full)
+====================================================================================================
+r   1: A1=Attribute Worksheet Instructions
+r   2: A2=The Data Model Attribute Worksheet is the mechanism for capturing the required attributes 
+r   4: A4=MDD Attributes tab
+r   5: A5=Field | B5=Instructions
+r   6: A6=Source Application Name | B6=Where is the data coming from for this attribute?
+r   7: A7=Source Attribute Name | B7=Enter an attribute name as mentioned in the source
+r   8: A8=PIM Attribute Name
+(As KCC want it to be in STEP) | B8=Enter the Name of the Attribute as you would like it configured in STEP.
+r   9: A9=PIM Attribute ID | B9=Enter the attribute ID as configured in STEP.
+r  10: A10=PIM Attribute Group (As Configured in STEP) | B10=Enter the attribute group name.
+r  11: A11=Validation Base Type | B11=Select the validation base type from the drop down list.
+r  12: A12=Comments | B12=Add a comment
+r  13: A13=Min Value | B13=If Validation Type = number/embedded number/fraction, enter the minimum possible value if 
+r  14: A14=Max Value | B14=If Validation Type = number/embedded number/fraction, enter the maximum possible value if 
+r  15: A15=Max Characters | B15=If Text/Numeric Text/URL, enter the maximum number of characters if applicable.
+r  16: A16=Precision | B16=Applicable only if numeric with decimal
+r  17: A17=Multi Valued | B17=Select yes or no from the drop down list. Select if the Attribute should hold multiple val
+r  18: A18=Base or Variant | B18=Indicates whether the attribute is part of a variant 
+r  19: A19=Calculated | B19=Select yes or no from the drop down list. A calculated attribute is an attribute, whose va
+r  20: A20=System Cardinality
+r  21: A21=Cardinality - (Conditional/Mandatory/Optional) | B21=Whether this attribute is conditional or mandatory or optional ?
+r  22: A22=Is Condition /Business Rule Involved | B22=Select yes or no from the drop down list. Does the attribute contains any Business rules?
+r  23: A23=Business/Condition Rule | B23=Enter the Business rule conditions and actions, if attributes contains. Otherwise enter NA
+r  24: A24=Attribute Description | B24=Enter a text description if needed.
+r  25: A25=Attribute Help Text | B25=Help text provided will be displayed when we hover on the attribute name in user interface
+r  26: A26=Unit of Measure | B26=If validation type = number, do you want to add defined units of measure?  If so, these ar
+r  27: A27=Actual Unit of Measure(s) | B27=Enter the possible Units of Measures for the attribute value.
+r  28: A28=Default Units Of Measure | B28=Enter one Units Of Measure from possible UOMs that has to be defaulted with the attribute 
+r  29: A29=Default Value | B29=Enter the value to be defaulted if required. Otherwise enter NA
+r  30: A30=Who Owns this attribute ? | B30=Enter the team which holds this attribute
+r  31: A31=Name of LOV | B31=If it is a LOV, then list the LOV name. (Applicable Only if Validation Base Type = LOV)
+r  32: A32=Hierarchical Filtering | B32=Select yes or no from the drop down list.  Hierarchical filtering is a way of setting a fi
+r  33: A33=Input Mask | B33=An input mask sets a valid pattern for a value
+r  34: A34=Full Text Indexable | B34=Only if validation type = text.  Select yes or no from the drop down list. Full text index
+r  35: A35=Externally Maintained | B35=Select yes or no from the drop down list. An externally maintained Attribute “lives” outsi
+r  36: A36=Type: Specification or Description | B36=Select Specification or Description from drop down list. Description attributes will hold 
+r  37: A37=Dimension Dependency | B37=Enter any dimension dependencies.
+r  38: A38=Country/Language/Market Dependent | B38=If the attribute is specific to any country or language or market
+r  39: A39=Attribute Validity | B39=This will not be able to be filled out until the Object Type IDs have been identified.
+r  40: A40=Read-Only Levels | B40=At what all levels this attribute will be read-only ?
+r  41: A41=Event Triggering Attribute | B41=Does change in this attribute should trigger event to outbound system ?
+r  42: A42=Filter Option in the Website | B42=Will this attribute be used in the filter option in website ?
+r  43: A43=Attribute Display Sequence | B43=Enter a whole number to represent the order in which the attribute will be displayed. This
+r  44: A44=Completeness Score | B44=If using completeness scores for attributes enter an integer value here.
+r  45: A45=Change Control | B45=Enter the the changes made, collation of all changes made to the attribute since conceptio
+r  47: A47=LOVs Tabs
+r  48: A48=Field | B48=Instructions
+r  49: A49=Name of LOV | B49=Enter the List of Value name - usually the name of the attribute
+r  50: A50=ID of LOV | B50=Enter the ID of the List of Value name
+r  51: A51=Values of LOV | B51=Enter the values for the List of Values
+r  52: A52=Value ID of LOV | B52=Enter the ID of the List of Value name (this should match legacy where outbound integratio
+r  53: A53=Change Control | B53=Enter the the changes made, collation of all changes made to the attribute since conceptio
+r  55: A55=Yes
+r  56: A56=No
+
+====================================================================================================
+### VERSION HISTORY (full)
+====================================================================================================
+r   1: D1=Master Data Dictionary
+r   2: D2=Product Information Management : Core Attributes
+r   4: C4=Author:
+r   5: C5=Author Workstream:
+r   6: C6=Issue Date:
+r  10: B10=Review and Sign-Off
+r  11: B11=This document has been reviewed and formally signed by the following:
+r  13: B13=Name | C13=Role | D13=Review Category | E13=Version (s) Required
+r  21: B21=DOCUMENT CONTROL
+r  22: B22=Document History
+r  23: B23=The following versions of the document have been produced:
+r  25: B25=Version | C25=Date | D25=Updated By | E25=Comments
+r  26: B26=0.1 | C26=2026-02-02 00:00:00 | D26=Dhruve Besoya | E26=Initial version baselined
+r  27: B27=0.2 | C27=2026-12-02 00:00:00 | D27=Dhruve Besoya | E27=Second version baselined
+r  28: B28=0.3 | C28=23/2/2026 | D28=Dhruve Besoya | E28=Third version baselined
+r  29: B29=0.4 | C29=24/2/2026 | D29=Dhruve Besoya | E29=Fourth version baselined
+
+====================================================================================================
+### VALIDATION BASE TYPE DEFINITION (full)
+====================================================================================================
+r   1: A1=Attribute Validation Base Types
+r   2: A2=Type | B2=Validation Base type | C2=Description | D2=Example
+r   3: A3=Numerical | B3=Integer | C3=Allows only positive numbers. | D3=Valid values: 5, 26, and 199.
+Invalid values: .250, 67.34, and 50 1/2
+r   4: B4=Number | C4=Allows any numeric characters. | D4=Valid values: 78, 1, .34, and 384.5.
+Invalid values: Fractions such as 50
+1/2
+r   5: B5=Number Range | C5=Allows a range of numbers. | D5=Say for months in a year valid value range will be from 1 to 12.
+r   6: B6=Fraction | C6=Allows numbers including dash “-” slash “/”. | D6=Valid values: 1/2, 1-1/2
+Invalid value: 1 1/2
+r   7: B7=Embedded Number | C7=Allows a number to be entered in between a prefix and a suffix.
+It is allowed, that the nu | D7=The mask is: 
+Prefix Number (Unit) Suffix. A valid embedded_
+number for a Receiver could
+b
+r   8: A8=Date/Time Related | B8=Date | C8=Allows a date to be entered according to a defined input
+mask, indicating the valid patter | D8=The mask is:
+DD-MON-YYYY.
+A valid date is e.g.: 15-JAN-2008
+r   9: B9=ISO Date | C9=Allows a date to be entered according to a defined input
+mask, indicating the valid patter | D9=The mask is:
+YYYY-MM-DD
+A valid date is e.g.:
+2008-01-15
+r  10: B10=ISO Date and Time | C10=Allows a date to be entered according to a defined input
+mask, indicating the valid patter | D10=The mask is:
+YYYY-MM-DD HH24:MI:SS
+A valid date is e.g.:
+2008-01-15 12:15:40
+r  11: A11=Texts | B11=Text | C11=All characters (numeric and alpha) are valid. | D11=For attribute Description of Product: 
+Opal Shaving Cabinet Double Bowl Door Gloss Bev Whi
+r  12: B12=Numeric Text | C12=All characters (numeric and alpha) are valid. It is also possible
+to link a Unit. | D12=Valid values:
+Converter 20 bit, Cable 2.2 mm
+r  13: B13=Text (exclude tags) | C13=Functions like the Text validation base type except style tags are excluded from character | D13=Additional tag exclusions are as follows:
+
+Character tags, such as less than (<lt/>) or gr
+r  14: A14=Miscelleneous | B14=List of Values (LOV) | C14=LOV must be selected containing the valid values. | D14=An LOV (List Of Values) will contain the
+valid values of an attribute, e.g. for color attr
+r  15: B15=Regular Expression | C15=Allows forming a regular expression.
+A regular expression is a
+specific pattern that provi | D15=Regular expression for a country's Zip code can be [0-9]{5}(-[0-9]{4})?|
+r  16: B16=URL | C16=Allows applying a URL. | D16=http://www.tradelink.com.au/product-showroom/bathroom-accessories/bathroom-shaving-cabinet
+
+====================================================================================================
+### SIMPLE LOVs (full)
+====================================================================================================
+r   2: A2=Name of LOV | B2=ID of LOV (Duco to fill) | C2=Values of LOV | D2=Value ID of LOV
+(this should be maximum of 10 characters) 
+r   3: A3=Color | C3=Black | D3=BLK
+r   4: A4=Color | C4=Red | D4=RED
+r   7: A7=Brand | C7=Adidas | D7=ADIDAS
+r   8: A8=Brand | C8=Nike | D8=NIKE
+r   9: A9=Brand | C9=Wilson | D9=WILSON
+
+====================================================================================================
+### BUSINESS RULES (full)
+====================================================================================================
+r   1: A1=No. | B1=Attribute | C1=Business Action | D1=Business Condition
+r   2: B2=Best Commercial Image (BCI) | D2=Attribute is mandatory for the SPORTS and GOLF category (Footwear, Apparel, Accessories, E
+
+====================================================================================================
+### CORE ATTRIBUTES (422x40)
+====================================================================================================
+HEADER row1:
+  col 1: None
+  col 2: None
+  col 3: None
+  col 4: None
+  col 5: None
+  col 6: None
+  col 7: None
+  col 8: None
+  col 9: None
+  col10: None
+  col11: None
+  col12: None
+  col13: None
+  col14: None
+  col15: None
+  col16: None
+  col17: None
+  col18: None
+  col19: None
+  col20: None
+  col21: None
+  col22: None
+  col23: None
+  col24: None
+  col25: None
+  col26: None
+  col27: None
+  col28: None
+  col29: None
+  col30: None
+  col31: None
+  col32: None
+  col33: None
+  col34: None
+  col35: None
+  col36: None
+  col37: None
+  col38: None
+  col39: None
+  col40: None
+
+Data rows (non-empty): 402
+
+SAMPLE rows 2,3,10,50,120,200,300,420:
+--- data row #2 (sheet row 2) ---
+    None: Major Product Grouping
+    None: Variant Attribute?
+    None: Source Application Name
+    None: Version No.
+    None: Source Attribute Name
+    None: PIM Attribute Name
+(As MAA want it to be called in STEP)
+    None: PIM Attribute ID
+    None: PIM Attribute Group
+(As Configured in STEP)
+    None: Validation Base Type
+    None: Min Value 
+<Only if Validation Type = number / embedded number / fraction>
+    None: Max Value
+<Only if Validation Type = number / embedded number / fraction>
+    None: Max Characters
+<Only if Validation Type = Text / Numeric Text / URL>
+    None: Precision
+(Only if numeric with decimal) 
+    None: Multi Valued
+    None: Calculated Attribute 
+(If this attribute is calculated from any other attributes)
+    None: Category-specific Display Rules
+    None: Cardinality 
+(Conditional / Mandatory / Optional)
+    None: Is Condition / Business Rule Involved
+    None: Business/Condition Rule
+    None: Attribute Description
+    None: Attribute Help Text
+(To be used in user interface as help text for the attribute)
+    None: Unit of Measure (UOM)
+    None: Actual Unit of Measure(s)
+<Only if Unit of Measure (UOM) = Yes >
+    None: If UOM, Default UOM
+<Only if Unit of Measure (UOM) = Yes >
+    None: Default Value 
+    None: Name of LOV
+(Only if Validation Base Type = LOV)
+    None: Input Mask
+<Only if pattern for a value is needed>
+    None: Full Text Indexable
+<Only if Validation Type = Text>
+    None: Externally Maintained ?
+    None: Type: Specification or Description
+    None: Attribute Validity
+    None: ReadOnly Levels
+    None: Event Triggering Attribute ?
+    None: Attribute Display Sequence
+(Within Attribute Group)
+    None: Completeness score
+    None: Change Control
+    None: Created
+    None: Sytem Maintenance
+    None: Remarks
+--- data row #3 (sheet row 3) ---
+    None: COE Offline
+    None: No
+    None: SAP
+    None: 5
+    None: Age
+    None: Company Code
+    None: AT_CompanyCode
+    None: List Of Values
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: Yes
+    None: No
+    None: n/a
+    None: Mandatory
+    None: Yes
+    None: Mapping rules to be applied company code should be relevant to the country. i.e. if country = Indone
+    None: The company code of an article
+    None: The company code of an article (eg: 0191)
+    None: No
+    None: n/a
+    None: n/a
+    None: n/a
+    None: Company Code
+    None: n/a
+    None: n/a
+    None: No
+    None: Description
+    None: SAP
+--- data row #10 (sheet row 10) ---
+    None: COE Offline
+    None: No
+    None: SAP
+    None: 1
+    None: n/a
+    None: Generic Description
+    None: AT_GenericDescription
+    None: Text
+    None: n/a
+    None: n/a
+    None: 18 40
+    None: n/a
+    None: No
+    None: Yes
+    None: n/a
+    None: Mandatory
+    None: Yes
+    None: The attribute can not contain one of the following special characters: ' " = - & : ? # > ; , ^ < * .
+    None: This is a description of the article, calculated by concatenating other attributes in the following 
+    None: MAA Generic Description Mapping (Max 40 Digits - 3 Digits brand code + Principal style + (Age/Gender
+    None: No
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: No
+    None: Specification
+    None: SAP
+--- data row #50 (sheet row 50) ---
+    None: COE Offline
+    None: SAP
+    None: 1
+    None: FOB
+    None: AT_FOB
+    None: Landed Cost (repeated for each country that the articles are sold in)
+    None: Number
+    None: n/a
+    None: n/a
+    None: n/a
+    None: 2
+    None: No
+    None: No
+    None: n/a
+    None: Mandatory
+    None: No
+    None: Free on Board cost for an article
+    None: No
+    None: Specification
+    None: SAP
+--- data row #120 (sheet row 120) ---
+    None: BY
+    None: BY Tools
+    None: 1
+    None: Golf Club Loft
+    None: AT_GolfClubLoft
+    None: BY
+    None: List Of Values
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: No
+    None: No
+    None: See BY Matrix. 
+    None: Optional
+    None: No
+    None: See BY Matrix. 
+    None: Loft angle of the golf club.
+    None: Golf Club Loft
+    None: No
+    None: Specification
+    None: BY Tools
+    None: Currently is not maintained by COE
+--- data row #200 (sheet row 201) ---
+    None: COE Online
+    None: DAM
+    None: 4
+    None: Principal Color Description KH
+    None: AT_ColorDescriptionKH
+    None: SAP Color Description
+    None: Text
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: No
+    None: Not for display - for GTECH mapping only - one time translation within Stibo
+    None: Mandatory
+    None: No
+    None: n/a
+    None: SAP system color in Cambodia
+    None: No
+    None: Specification
+    None: DAM
+    None: - Color (EN): Managed by COE Offline
+
+- Required attribute: Currently available in English only; oth
+--- data row #300 (sheet row 301) ---
+    None: COE Offline
+    None: 2
+    None: SIS Sport Mall UOM
+    None: AT_SISSportMallUOM
+    None: Optional
+    None: No
+    None: Currently is not available 
+--- data row #403 (sheet row 404) ---
+    None: COE Offline
+    None: Line list
+    None: 6
+    None: Proposed Retail Price
+    None: AT_ProposedRetailPrice
+    None: Number
+    None: n/a
+    None: n/a
+    None: n/a
+    None: n/a
+    None: No
+    None: No
+    None: n/a
+    None: Optional
+    None: No
+    None: Retail price based on merchandiser input (consume from BYTools - SQLMAA); editable in Stibo
+    None: No
+    None: n/a
+    None: n/a
+    None: n/a
+    None: Yes/No LOV
+    None: n/a
+    None: n/a
+    None: No
+    None: Specification
+    None: N/A
+
+Column fill counts:
+  col 1 None                                           non-empty= 396 distinct=11
+  col 2 None                                           non-empty=  14 distinct=2
+  col 3 None                                           non-empty= 243 distinct=10
+  col 4 None                                           non-empty= 396 distinct=7
+  col 5 None                                           non-empty=   5 distinct=3
+  col 6 None                                           non-empty= 402 distinct=402
+  col 7 None                                           non-empty=  11 distinct=4
+  col 8 None                                           non-empty= 381 distinct=380
+  col 9 None                                           non-empty= 139 distinct=18
+  col10 None                                           non-empty= 338 distinct=5
+  col11 None                                           non-empty= 332 distinct=3
+  col12 None                                           non-empty= 332 distinct=3
+  col13 None                                           non-empty= 330 distinct=23
+  col14 None                                           non-empty= 332 distinct=5
+  col15 None                                           non-empty= 278 distinct=5
+  col16 None                                           non-empty= 335 distinct=3
+  col17 None                                           non-empty= 261 distinct=13
+  col18 None                                           non-empty= 394 distinct=6
+  col19 None                                           non-empty= 342 distinct=4
+  col20 None                                           non-empty= 267 distinct=81
+  col21 None                                           non-empty= 334 distinct=318
+  col22 None                                           non-empty=  14 distinct=14
+  col23 None                                           non-empty= 198 distinct=7
+  col24 None                                           non-empty= 192 distinct=2
+  col25 None                                           non-empty= 192 distinct=3
+  col26 None                                           non-empty= 190 distinct=16
+  col27 None                                           non-empty= 229 distinct=83
+  col28 None                                           non-empty= 180 distinct=2
+  col29 None                                           non-empty= 180 distinct=2
+  col30 None                                           non-empty= 392 distinct=2
+  col31 None                                           non-empty= 331 distinct=3
+  col32 None                                           non-empty=   2 distinct=2
+  col33 None                                           non-empty=   1 distinct=1
+  col34 None                                           non-empty=   1 distinct=1
+  col35 None                                           non-empty=   1 distinct=1
+  col36 None                                           non-empty=   1 distinct=1
+  col37 None                                           non-empty=   1 distinct=1
+  col38 None                                           non-empty=   1 distinct=1
+  col39 None                                           non-empty= 200 distinct=8
+  col40 None                                           non-empty= 229 distinct=46
+
+Using columns -> Validation: None Mandatory: None LOV: None
+
+====================================================================================================
+### LOV SHEET INVENTORY
+====================================================================================================
+  'Company Code LOV'                     rows=    45 cols= 4 entries=    20
+  'SBU LOV'                              rows=    37 cols= 2 entries=    36
+  'Company LOV'                          rows=    37 cols= 2 entries=     7
+  'Brand LOV'                            rows=    38 cols= 2 entries=    37
+  'Ecomm Concept LOV'                    rows=    46 cols= 2 entries=    45
+  'Ecomm Sales Channel LOV'              rows=   228 cols= 2 entries=   227
+  'Vendor LOV'                           rows= 32664 cols= 6 entries= 32663
+  'Price Range LOV'                      rows=    37 cols= 2 entries=    27
+  'Pricing Distribution Channel LO'      rows=    37 cols= 2 entries=     3
+  'MB Components Qty'                    rows=    37 cols= 2 entries=    12
+  'MB Assortment Code LOV'               rows=   804 cols= 2 entries=   803
+  'UOM LOV'                              rows=    37 cols= 2 entries=     7
+  'SIS Gender & Age Mapping'             rows=   113 cols=13 entries=     8
+  'SIS Brand Mapping'                    rows=   124 cols=11 entries=    15
+  'SIS CDS & CRC Group Size'             rows=   124 cols= 2 entries=   123
+  'SIS CDS & CRC Group Color Descr'      rows=   124 cols= 2 entries=   103
+  'SIS SM Class Code'                    rows=   390 cols= 3 entries=   389
+  'SIS SM Color Description LOV'         rows=   104 cols= 3 entries=   103
+  'Channel Category LOV'                 rows=     8 cols= 2 entries=     7
+  'Channel Allocation LOV'               rows=    25 cols= 2 entries=    24
+  'Retail Price Currency LOV'            rows=   183 cols= 2 entries=   182
+  'SAP Product Flag LOV'                 rows=     6 cols= 2 entries=     5
+  'Gender LOV'                           rows=     9 cols= 7 entries=     4
+  'Age LOV'                              rows=     9 cols= 7 entries=     3
+  'Images Source LOV'                    rows=   104 cols= 2 entries=     2
+  'Gender Size Chart LOV'                rows=   104 cols= 2 entries=    15
+  'Nature of Article LOV'                rows=   104 cols= 2 entries=    53
+  'E-com Ages Category LOV'              rows=   104 cols= 2 entries=    18
+  'Standardized Color LOV'               rows=   104 cols= 2 entries=    53
+  'Material LOV'                         rows=   104 cols= 3 entries=    93
+  'Material -Upper LOV'                  rows=   104 cols= 2 entries=     9
+  'BY Article Type'                      rows=   104 cols= 2 entries=     3
+  'SAP Article Type LOV'                 rows=   104 cols= 5 entries=     8
+  'Article Category LOV'                 rows=   104 cols= 2 entries=     5
+  'Sports Category LOV'                  rows=   104 cols= 2 entries=    16
+  'Country Size LOV'                     rows=   104 cols= 2 entries=    14
+  'Size Code LOV'                        rows=  5062 cols= 7 entries=  5061
+  'Country Origin LOV'                   rows=   239 cols= 2 entries=   238
+  'Color Code LOV'                       rows=   222 cols= 2 entries=   221
+  'Brand Group'                          rows=   301 cols= 2 entries=   300
+  'Brand Type LOV '                      rows=     9 cols= 2 entries=     4
+  'Brand Status LOV '                    rows=     9 cols= 2 entries=     2
+  'Brand Category LOV'                   rows=    50 cols= 2 entries=    49
+  'Golf Club Loft LOV'                   rows=    24 cols= 2 entries=    23
+  'Golf Club Flex'                       rows=     9 cols= 2 entries=     5
+  'Golf Club Length LOV'                 rows=     9 cols= 2 entries=     4
+  'Content LOV'                          rows=    12 cols= 2 entries=    11
+  'PatternPrint LOV'                     rows=    33 cols= 2 entries=    32
+  'Style Type LOV'                       rows=    12 cols= 2 entries=    11
+  'Style LOV'                            rows=    83 cols= 2 entries=    82
+  'Ocassion LOV'                         rows=     9 cols= 2 entries=     6
+  'Fabric LOV'                           rows=    15 cols= 2 entries=    14
+  'Franchise LOV'                        rows=  1918 cols= 2 entries=  1917
+  'Fastening LOV'                        rows=    61 cols= 2 entries=    13
+  'Silhouette LOV'                       rows=    79 cols= 2 entries=    78
+  'Color Group LOV'                      rows=    11 cols= 2 entries=    10
+  'Width LOV'                            rows=     9 cols= 2 entries=     3
+  'Fit LOV'                              rows=     9 cols= 2 entries=     4
+  'Pack Details LOV'                     rows=     9 cols= 2 entries=     6
+  'Heel Type LOV'                        rows=    20 cols= 2 entries=     9
+  'Heel Height LOV'                      rows=     9 cols= 2 entries=     4
+  'Country LOV'                          rows=     9 cols= 2 entries=     7
+  'Interest LOV'                         rows=    89 cols= 2 entries=    88
+  'Season LOV'                           rows=     9 cols= 2 entries=     8
+Total candidate LOV/reference sheets: 64; total data entries: 43352
+
+====================================================================================================
+### LOV SAMPLES
+====================================================================================================
+
+--- Company Code LOV ---
+r   1: A1=Value ID of LOV | B1=Values of LOV | C1=Country
+r   2: A2=0801 | B2=PT. Astec Asia Adiperkasa | C2=Indonesia
+r   3: A3=0888 | B3=PT. Map Aktif Adiperkasa | C3=Indonesia
+r   4: A4=0886 | B4=PT. MAP FTL Adiperkasa | C4=Indonesia
+r   5: A5=0510 | B5=PT. Mitra Gaya Indah | C5=Indonesia
+r   6: A6=0190 | B6=PT. Putra Agung Lestari | C6=Indonesia
+r   7: A7=0191 | B7=PT. Aldo Indonesia Adiprk | C7=Indonesia
+r   8: A8=0882 | B8=Magna Management Asia | C8=Vietnam
+r   9: A9=0803 | B9=Planet Sports Inc. | C9=Philiphine
+r  10: A10=0883 | B10=MAP Active Singapore Ltd. | C10=Singapore
+r  11: A11=0805 | B11=MAP Sports Singapore Ltd. | C11=Singapore
+r  12: A12=0195 | B12=Aldo Singapore | C12=Singapore
+
+--- SBU LOV ---
+r   1: A1=Value ID of LOV | B1=Values of LOV
+r   2: A2=SB | B2=MFA Badminton
+r   3: A3=SP | B3=MAA Sport
+r   4: A4=GO | B4=MAA Golf
+r   5: A5=CH | B5=MAA Children
+r   6: A6=FF | B6=MAA Fashion Footwear
+r   7: A7=FT | B7=MAA Foot Locker
+r   8: A8=IZ | B8=Sports Direct ID
+r   9: A9=FQ | B9=Foot Locker
+r  10: A10=GI | B10=Mitra Gaya Indah
+
+--- Brand LOV ---
+r   1: A1=Value ID of LOV | B1=Values of LOV
+r   2: A2=NEW | B2=NEW BALANCE
+r   3: A3=ATA | B3=ANTA
+r   4: A4=NIK | B4=NIKE
+r   5: A5=AIW | B5=AIRWALK
+r   6: A6=ASC | B6=ASTEC
+r   7: A7=DIA | B7=DIADORA
+r   8: A8=LOT | B8=LOTTO
+r   9: A9=NRA | B9=NEW ERA
+r  10: A10=ASI | B10=ASICS
+r  11: A11=ADI | B11=ADIDAS
+r  12: A12=CCR | B12=CROCS
+
+--- Gender LOV ---
+r   2: A2=Values of LOV | B2=Value ID of LOV
+(Used for Article Description)  | C2=SAP Gender Code | F2=Value ID of LOV
+(Used for Article Description)  | G2=BY Gender Values
+r   3: A3=Male | B3=M | C3=M | G3=Male
+r   4: A4=Female | B4=F | C4=F | G4=Female
+r   5: A5=Unisex | B5=U | C5=U | G5=Unisex
+r   6: G6=Boys
+r   7: G7=Girls
+r   8: G8=Men
+r   9: G9=Women
+
+--- Season LOV ---
+r   1: A1=Code | B1=Season Name
+r   2: A2=SP  | B2=Spring
+r   3: A3=SM | B3=Summer
+r   4: A4=FL | B4=Fall
+r   5: A5=WN | B5=Winter
+r   6: A6=CO | B6=Core
+r   7: A7=SS | B7=Spring-Summer
+r   8: A8=FW | B8=Fall-Winter
+r   9: A9=AL | B9=All Season
+
+--- Color Code LOV ---
+r   1: A1=Color Code | B1=Color Code Description
+r   2: A2=AIC | B2=AIRFORCE
+r   3: A3=ANR | B3=ANTHRACITE
+r   4: A4=A | B4=AQUA
+r   5: A5=615 | B5=AUBERGINE
+r   6: A6=PIB | B6=BABY PINK
+r   7: A7=18 | B7=BEIGE
+r   8: A8=005 | B8=BLACK
+r   9: A9=B1A | B9=BLACK STRIPES
+r  10: A10=12W | B10=BLUE
+r  11: A11=3T | B11=BLUE STRIPE
+r  12: A12=EE0 | B12=BOTTLE GREEN
+r  13: A13=BZ | B13=BRONZE
+r  14: A14=700 | B14=BROWN
+r  15: A15=237 | B15=BROWN STRIPE
+
+--- Size Code LOV ---
+r   1: A1=Size Code | B1=Size Code Description | C1=Size Code | D1=Size Code Description | F1=Size Code | G1=Size Code Description
+r   2: A2=#01 | B2=8 | C2=0 | D2=NO SIZE | F2=000 | G2=NO SIZE
+r   3: A3=#02 | B3=10.. | C3=1 | D3=1 | F3=1 | G3=1
+r   4: A4=#03 | B4=12 | C4=2 | D4=2 | F4=2 | G4=2
+r   5: A5=#04 | B5=14 | C5=3 | D5=3 | F5=3 | G5=3
+r   6: A6=#05 | B6=16 | C6=4 | D6=4 | F6=4 | G6=4
+r   7: A7=#06 | B7=18.. | C7=5 | D7=5 | F7=5 | G7=5
+r   8: A8=#08 | B8=8R.. | C8=6 | D8=6 | F8=6 | G8=6
+r   9: A9=#09 | B9=10R.. | C9=7 | D9=7 | F9=7 | G9=7
+r  10: A10=#10 | B10=12R.. | C10=8 | D10=8 | F10=8 | G10=8
+r  11: A11=#11 | B11=14R.. | C11=9 | D11=9 | F11=9 | G11=9
+r  12: A12=#12 | B12=16R.. | C12=10 | D12=10 | F12=10 | G12=10
+
+--- Material LOV ---
+r   1: A1=Code | B1=Material 
+r   2: A2=ACR | B2=Acrylic
+r   3: A3=BLD | B3=Blend
+r   4: A4=CAN | B4=Canvas
+r   5: A5=CF | B5=Carbon Fiber
+r   6: A6=COP | B6=Copper
+r   7: A7=COT | B7=Cotton
+r   8: A8=EVA | B8=Eva
+r   9: A9=FAB | B9=Fabrics
+r  10: A10=FG | B10=Fiber Glass
+
+--- Vendor LOV ---
+r   1: A1=Company Code | B1=Vendor ID | C1=Vendor Name
+r   2: A2=0190 | B2=0000000131 | C2=ONE TIME VENDOR | F2=Note: Mapping required for cross validation LOV as per compa
+r   3: A3=0190 | B3=0000002853 | C3=SWEET SEVENTEEN CV
+r   4: A4=0190 | B4=0000003306 | C4=CORTINA CHINA LIMITED
+r   5: A5=0190 | B5=0000003358 | C5=SUHARDI
+r   6: A6=0190 | B6=0000003681 | C6=COLLECTIVE FRANCHISING LIMITED | F6=MAA Vendor code (Co Dependent with description)
+Format :
+Cou
+r   7: A7=0190 | B7=0000003699 | C7=SHEN ZHEN GNG CO, LTD
+r   8: A8=0190 | B8=0000003784 | C8=VALIENTE CO LTD
+
+--- UOM LOV ---
+r   1: A1=Value ID of LOV | B1=Values of LOV
+r   2: A2=DZ | B2=Dozen
+r   3: A3=SET | B3=Set
+r   4: A4=EA | B4=Each
+r   5: A5=PAA | B5=Pair
+r   6: A6=PAC | B6=PACK
+r   7: A7=CAR | B7=Carton
+r   8: A8=SLV | B8=Sleeve
+
+--- Retail Price Currency LOV ---
+r   2: A2=Values of LOV | B2=Value ID of LOV
+(Retail Price Currency) 
+r   3: A3=United States Dollar | B3=USD
+r   4: A4=Canadian Dollar | B4=CAD
+r   5: A5=Swiss Franc | B5=CHF
+r   6: A6=European Euro | B6=EUR
+
+--- SAP Product Flag LOV ---
+r   2: A2=Values of LOV | B2=Value ID of LOV
+(SAP Product Flag) 
+r   3: A3=Intercompany | B3=A
+r   4: A4=Direct - Local | B4=5
+r   5: A5=Consignment | B5=1
+r   6: A6=Non MD  | B6=9

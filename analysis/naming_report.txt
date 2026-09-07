@@ -1,0 +1,101 @@
+====================================================================================================
+### SHEET 'COE Question'  (5 x 1)
+====================================================================================================
+r  1: A1=Concern
+r  2: A2=1. Propose standardize naming convention :
+    Adidas : [com
+r  3: A3=2. What if 1 brand description consists of multiple brand co
+r  4: A4=3. Should we differentiate between multi and mono or differe
+r  5: A5=4. Can we use 1 file in different sheet such as Footwear and
+====================================================================================================
+### SHEET 'Stibo'  (89 x 59)
+====================================================================================================
+r  1: A1=Brand | B1=Inline/Licensed? | C1=File Type | D1=Triggers? | E1=Stibo Endpoint | F1=Comment | G1=Sample Input File Link
+r  2: A2=Adidas | B2=Inline | C2=Line List | D2=Stibo Article Planning | E2=Article Planning | F2=Multi Line list | G2=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  3: C3=Line List | D3=Stibo Article Planning | E3=Article Planning | F3=Mono line list | G3=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  4: C4=Backlog | D4=SAP Article Creation | E4=EAN Update | G4=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  5: C5=TDD & Price List | D5=Hard Allocation, Price Maintenance | E5=Article Maintenance | G5=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  6: C6=DTB | D6=Ecommerce Enrichment | E6=Article Maintenance | F6=File Provided | G6=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  7: A7=New Balance | B7=Inline | C7=Line List (Apparel & Accessories) | D7=Stibo Article Planning | E7=Article Planning | G7=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  8: C8=Line List (Footwear) | D8=Stibo Article Planning | E8=Article Planning | G8=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r  9: C9=EAN Source | D9=SAP Article Creation | E9=EAN Update | F9=File Provided, open questions with Arry and Novia | G9=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 10: C10=Eommerce File | D10=Ecommerce Enrichment | E10=Article Maintenance | G10=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 11: A11=New Balance | B11=Licensed | C11=Line List | D11=Stibo Article Planning | E11=Article Planning | G11=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 12: C12=Order Sheet | D12=SAP Article Creation | E12=EAN Update | F12=File Provided, open questions with Arry and Novia | G12=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 13: C13=Ecommerce File | D13=Ecommerce Enrichment | E13=Article Maintenance | G13=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 14: A14=Diadora | B14=Inline | C14=Price List | D14=Stibo Article Planning | E14=Article Planning | G14=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 15: C15=EAN Source | D15=SAP Article Creation | E15=EAN Update | F15=Not needed. Variants will be created via BY Tools.
+r 16: A16=Diadora | B16=Licensed | C16=Recap Sample | D16=Stibo Article Planning | E16=Article Planning | G16=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 17: C17=Recap Sample 2nd Ingestion | D17=Stibo Article Planning | E17=Article Planning | G17=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 18: C18=Order Sheet | D18=SAP Article Creation | E18=EAN Update | F18=Not needed. Variants will be created via BY Tools.
+r 19: A19=Smiggle | B19=Inline | C19=Linelist | D19=Stibo Article Planning | E19=Article Planning | G19=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 20: C20=Packing List | D20=SAP Article Creation | E20=EAN Update | G20=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 21: C21=Ecommerce File | D21=Ecommerce Enrichment | E21=Article Maintenance | G21=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 22: A22=Aldo | B22=Inline | C22=Line list | D22=Stibo Article Planning | E22=Article Planning | G22=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 23: C23=OOR | D23=SAP Article Creation | E23=EAN Update | G23=WSL001 - OOR Size Run Report - External (Indonesia 200782)_3
+r 24: C24=Ecommerce File | D24=Ecommerce Enrichment | E24=Article Maintenance | G24=https://mapcoid.sharepoint.com/:x:/r/sites/MAPONESOURCE/Shar
+r 25: A25=2XU | B25=Inline | C25=Product Bible  | D25=Stibo Article Planning | E25=Article Planning | G25=H1 27 Product Bible - Wholesale.xlsx
+r 26: C26=Order Confirmation    | D26=SAP Article Creation | E26=EAN Update | G26=H226CN1 1MAPA001 Order Confirmation.xlsx
+r 27: A27=Crocs | B27=Inline | C27=Line List | D27=Stibo Article Planning | E27=Article Planning | G27=H1 27 SEA Line List - SEA (5.15).xlsx
+r 28: C28=Order Form JBZ | D28=SAP Article Creation | E28=EAN Update | G28=JBZ Order form.xlsx
+r 29: C29=Shipment Confirmation | D29=SAP Article Creation | E29=EAN Update | G29=Shipment Confirmation - Early Ready (Jan orders) (12122025).
+r 30: C30=Order Form FW | D30=SAP Article Creation | E30=EAN Update | G30=FW Order Form.xlsx
+r 31: C31=Order Form ACCs BAG | D31=SAP Article Creation | E31=EAN Update | G31=ACCs BAG Order Form.xlsx
+r 32: A32=Lotto | B32=Inline | C32=Order Form | D32=Stibo Article Planning | E32=Article Planning | F32=02/07/2026--Template Changed by MAA | G32=FW26 LIC FOB ORDERFORM .xlsm
+r 33: C33=Price List | D33=Stibo Article Planning | E33=Article Planning | G33=Format_FW26 Price List USD Licensees with pics.xlsx
+r 34: C34=FOB Order | D34=SAP Article Creation | E34=EAN Update | G34=LOTTO SPA- FW25 FOB order info update 170725.xlsm
+r 35: B35=Licensed | C35=Recap Sample | D35=Stibo Article Planning | E35=Article Planning | G35=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 36: C36=Recap Sample 2nd Ingestion | D36=Stibo Article Planning | E36=Article Planning | G36=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 37: A37=On Running | B37=Inline | C37=Linesheet Footwear Planet Sports | D37=Stibo Article Planning | E37=Article Planning | G37=Linesheet Footwear - ON FW26 (Planet Sports).xlsx
+r 38: C38=Linesheet Footwear TAF | D38=Stibo Article Planning | E38=Article Planning | G38=Linesheet Footwear - ON FW26 (TAF).xlsx
+r 39: C39=Packaging list Planet Sport | D39=SAP Article Creation | E39=EAN Update | F39=Planet Sport--Has been Renamed by MAA to Packaging list Plan | G39=PLANET SPORT - ON SS26 (FEB 26).xlsx
+r 40: C40=Packaging List TAF | D40=SAP Article Creation | E40=EAN Update | F40=TAF--Has been renamed by MAA to Packaging List TAF | G40=TAF - ON SS26 (APR 26).xlsx
+r 41: A41=Nike | B41=Inline | C41=LineList | D41=Stibo Article Planning | E41=Article Planning | G41=SP27 MAA NIKE Linelist.xlsx
+r 42: C42=LineList Rookie | D42=Stibo Article Planning | E42=Article Planning | G42=SP27 ROOKIE NIKE Linelist.xlsx
+r 43: C43=Order Confirmation    | D43=SAP Article Creation | E43=EAN Update | G43=FA26 PT MAA Order Confrimation.xlsx
+r 44: C44=Line List 360 Article Planning | D44=Stibo Article Planning | E44=Article Planning | G44=Nike 360 MAA SP 27 ORDER FORM.xlsx
+r 45: C45=Line List 360 EAN | D45=SAP Article Creation | E45=EAN Update
+r 46: A46=DR. Martens | B46=Inline | C46=Retail Price Master | D46=Stibo Article Planning | E46=Article Planning | G46=SEA_SS27 B2B Suggested Retail Price Master - 20260526_OUTPUT
+r 47: C47=EAN Source | D47=SAP Article Creation | E47=EAN Update | G47=5. DR.MARTENS_EAN Source.xlsx
+r 48: A48=Birkenstock | B48=Inline | C48=OFS-FC-PT Mitra-SS27 | D48=Stibo Article Planning | E48=Article Planning | G48=OFS-FC-PT Mitra-SS27 (2025-05-05).xlsx
+r 49: C49=OOR  | D49=SAP Article Creation | E49=EAN Update | G49=SS27 JUN'26 INTAKE OOR - PT MITRA.xlsx
+r 50: A50=Pazzion | B50=Inline | C50=Order Form | D50=Stibo Article Planning | E50=Article Planning | G50=IDM - Spring Summer'26 Order Form.xlsx
+r 51: C51=Barcode | D51=SAP Article Creation | E51=EAN Update | G51=CI1167 barcode.xlsx
+r 52: A52=Staccato | B52=Inline | C52=Linesheet | D52=Stibo Article Planning | E52=Article Planning | G52=STACCATO 26Summer linesheet _selection consolidation_2025112
+r 53: A53=Clarks | B53=Inline | C53=RAW Delivery Performance Clarks Footwear & Accs | D53=SAP Article Creation | E53=EAN Update | G53=RAW Delivery Performance Clarks Footwear & Accs.xlsx
+r 54: C54=RAW Order Form Clarks Accs SS27 | D54=Stibo Article Planning | E54=Article Planning | G54=RAW Order Form Clarks Accs SS27.xlsx
+r 55: C55=RAW Order Form Clarks Footwear SS27 | D55=Stibo Article Planning | E55=Article Planning | G55=RAW Order Form Clarks Footwear SS27.xlsx
+r 56: A56=PTP | B56=Inline | C56=V2 ASIA ORDER FORM USD FOB | D56=Stibo Article Planning | E56=Article Planning | G56=V2 ASIA ORDER FORM USD FOB 20260207.xlsx
+r 57: C57=PTP_EAN Source | D57=SAP Article Creation | E57=EAN Update | G57=3. PTP_EAN Source.xlsx
+r 58: A58=Ellesse | B58=Licensed | C58=Recap Sample | D58=Stibo Article Planning | E58=Article Planning | G58=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 59: C59=Recap Sample 2nd Ingestion | D59=Stibo Article Planning | E59=Article Planning | G59=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 60: A60=Astec | B60=Licensed | C60=Recap Sample | D60=Stibo Article Planning | E60=Article Planning | G60=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 61: C61=Recap Sample 2nd Ingestion | D61=Stibo Article Planning | E61=Article Planning | G61=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 62: A62=Airwalk | B62=Licensed | C62=Recap Sample | D62=Stibo Article Planning | E62=Article Planning | G62=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 63: C63=Recap Sample 2nd Ingestion | D63=Stibo Article Planning | E63=Article Planning | G63=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 64: A64=Steve Madden | B64=Inline | C64=FOOTWEAR PO FORM | D64=Stibo Article Planning | E64=Article Planning | G64=MAA- INTL Women's December FFANY 2025_FOOTWEAR PO FORM_Origi
+r 65: C65=HANDBAG PO FORM | D65=Stibo Article Planning | E65=Article Planning | G65=MAA- INTL Women's December FFANY 2025_HANDBAG PO FORM_Origin
+r 66: C66=EAN Source | D66=SAP Article Creation | E66=EAN Update | G66=STEVE MADDEN_EAN Source.xlsx
+r 67: A67=K Swiss | B67=Inline | C67=Buy2 update_KSWISS FW26 Global Line Order Form_Lifestyle | D67=Stibo Article Planning | E67=Article Planning | G67=Buy2 update_KSWISS FW26 Global Line Order Form_Lifestyle-fee
+r 68: C68=FW26 UPC - PT.MAP | D68=SAP Article Creation | E68=EAN Update | G68=FW26 UPC - PT.MAP 20260508.xlsx
+r 69: B69=Licensed | C69=Recap Sample | D69=Stibo Article Planning | E69=Article Planning | G69=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 70: C70=Recap Sample 2nd Ingestion | D70=Stibo Article Planning | E70=Article Planning | G70=RECAP SAMPLE DEVELOPMENT-LOT-SS27-FOOTWEAR
+r 71: A71=IMPLUS | B71=Inline | C71= IPL_Article Attributes Source_Balega Article Planning | D71=Stibo Article Planning | E71=Article Planning | G71=1. IPL_Article Attributes Source_Balega.xlsx
+r 72: C72= IPL_Article Attributes Source_Balega EAN | D72=SAP Article Creation | E72=EAN Update
+r 73: C73=IPL_Article Attributes Source_Harbinger Article Planning | D73=Stibo Article Planning | E73=Article Planning | G73=1. IPL_Article Attributes Source_Harbinger.xlsx
+r 74: C74= IPL_Article Attributes Source_Harbinger EAN | D74=SAP Article Creation | E74=EAN Update
+r 75: C75=IPL_Article Attributes Source_Sofsole Article Planning | D75=Stibo Article Planning | E75=Article Planning | G75=1. IPL_Article Attributes Source_Sofsole.xlsx
+r 76: C76= IPL_Article Attributes Source_Sofsole EAN | D76=SAP Article Creation | E76=EAN Update
+r 77: A77=Asics | B77=Inline | C77=OTB  AW26 APEQ  MAA | D77=Stibo Article Planning | E77=Article Planning | G77=OTB - AW26 APEQ - MAA.xlsx
+r 78: C78=OTB  AW26 P.RUN  MAA | D78=Stibo Article Planning | E78=Article Planning | G78=OTB - AW26 P.RUN - MAA.xlsx
+r 79: C79=MAA_AW26 EAN CODE UPDATE_272026 | D79=SAP Article Creation | E79=EAN Update | G79=MAA_AW26 EAN CODE UPDATE_272026.xlsx
+r 80: C80=ASICS_Article Attributes Source AW26
+r 81: A81=Reebok | B81=Inline | C81=Reebok article master data with image - APPAREL (SS27) - Cop | D81=Stibo Article Planning | E81=Article Planning | G81=Reebok article master data with image - APPAREL (SS27) - Cop
+r 82: C82=Reebok article master data with image - FOOTWEAR (SS27) - Co | D82=Stibo Article Planning | E82=Article Planning | G82=Reebok article master data with image - FOOTWEAR (SS27) - Co
+r 83: C83=REEBOK_Article Attributes EAN Source | D83=SAP Article Creation | E83=EAN Update | G83=REEBOK_Article Attributes EAN Source.xlsx
+r 84: A84=Anta | B84=Inline | C84=Stibo Line List Template - Anta | D84=Stibo Article Planning | E84=Article Planning | G84=Stibo Line List Template - Anta.xlsx
+r 85: C85=ANTA_EAN Source | D85=SAP Article Creation | E85=EAN Update | G85=ANTA_EAN Source.xlsx
+r 86: A86=New Era | B86=Inline | C86=Copy of Order form - APAC FW26 (ACC)_Revised Size | D86=Stibo Article Planning | E86=Article Planning | G86=Copy of Order form - APAC FW26 (ACC)_Revised Size.xlsx
+r 87: C87=Copy of Order form - APAC FW26 (APP) 1 | D87=Stibo Article Planning | E87=Article Planning | G87=Copy of Order form - APAC FW26 (APP) 1.xlsx
+r 88: C88=Copy of Order form - APAC FW26 (HW)_Revised Pricing | D88=Stibo Article Planning | E88=Article Planning | G88=Copy of Order form - APAC FW26 (HW)_Revised Pricing.xlsx
+r 89: C89=Delivery schedule 12.23.2025-PT MAP - | D89=SAP Article Creation | E89=EAN Update | G89=Delivery schedule 12.23.2025-PT MAP -.XLSX

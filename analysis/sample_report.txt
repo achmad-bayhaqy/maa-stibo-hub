@@ -1,0 +1,319 @@
+SHEETS: ['Sheet2', 'Sheet1', 'ELL', 'Mapping', 'Sheet5', 'Sheet4', 'Sheet3', 'Database Stibo', 'MAPPING GEN ART']
+--- 'ELL' dims 4x69, dumping rows 1..4 cols<= 69 ---
+r  1: col1=No | col2=Brand | col3=Season | col4=Supplier | col5=Supp Art # | col6=Image | col7=Updated Image | col8=Color | col9=Updated Color | col10=Color Code | col11=Updated Color Code | col12=ARTCO | col13=Division | col14=MD Category | col15=Code Category | col16=Outsole Material | col17=Upper Material | col18=Gender | col19=Gender Code | col20=Age Group | col21=Size Range | col22=Article Type | col23=MD Article Type Code | col24=FOB Currency | col25=FOB Price | col26=Target Fob | col27=Final FOB | col28=Outsole | col29=ETD DATE | col30=ETA DATE | col31=REMARKS | col32=OUTSOLE CODE | col33=Status | col34=ProductSize | col35=suggested_retail_price | col36=proposed_retail_price | col37=landed_cost | col38=PROTO COMMENT  | col39=REF IMAGE | col40=REVISE COMMENT  | col41=REF IMAGE | col42=PPS COMMENT  | col43=Country Of Origin | col44=Final Hierarchy | col45=Price Range | col46=BCI | col47=NOA | col48=Color Group | col49=Standardized Color | col50=Price Range | col51=Silhouette | col52=Width | col53=Material - Upper | col54=Fastening | col55=Franchise | col56=Content | col57=Fabric | col58=Pattern/Print | col59=Fit | col60=Style | col61=Material | col62=Pack Details | col63=Brand Category | col64=Vendor Code | col65=Product Flag | col66=Merchandise Hierarchy | col67=Ecom Indicator | col68=BY Indicator | col69=Principal Style Decription
+r  2: col1=1 | col2=ELLESSE | col3=SS27 | col4=FJB | col5=A240 | col8=Brown | col10=C | col12=A240Brown | col13=Footwear | col14=Running | col15=R | col16=80%PHYLON+20%TPR SOLE | col17=UPPER:60%POLIURETAN+40%POLIESTER | col18=Male | col19=M | col20=Adult | col21=39-44 | col22=License | col24=USD | col25=110 | col32=ELLFJHK01
+r  3: col1=1 | col2=ELLESSE | col3=SS27 | col4=FJB | col5=A215 | col8=Pink | col10=P | col12=A215Pink | col13=Accessories | col14=Backpack / Other Bags | col15=B | col18=Girls | col19=G | col20=Infant | col21=S | col22=License | col24=USD | col25=50
+r  4: col1=1 | col2=ELLESSE | col3=SS27 | col4=FJB | col5=A216 | col8=Purple | col10=E | col12=A216Purple | col13=Apparel | col14=Jacket | col15=J | col18=Female | col19=F | col20=Adult | col21=S-XL | col22=License | col24=USD | col25=100
+/home/z/.venv/lib/python3.12/site-packages/openpyxl/worksheet/_reader.py:329: UserWarning: Data Validation extension is not supported and will be removed
+  warn(msg)
+(4 non-empty rows)
+
+--- 'Mapping' dims 89x6, dumping rows 1..89 cols<= 6 ---
+r  2: col1=MD Tools (BY Buyingplan) | col2=1st Ingestion Line List (Recap Sample) | col3=Stibo | col4=Rules | col5=2nd Ingestion Line List 
+(Generated from BY Plan - MD T | col6=Question
+r  3: col1=Brand Code | col2=N/A (will be manually input in Portal) | col3=Brand Code | col5=N/A (will be manually input in Portal)
+r  4: col1=Original
+In Store Date | col2=N/A | col3=N/A | col5=N/A
+r  5: col1=Confirm Article | col2=N/A | col3=N/A | col5=N/A
+r  6: col1=Updated
+In Store Date | col2=N/A | col3=N/A | col5=N/A
+r  7: col1=Image | col2=Images | col3=Thumbnails | col5=Updated Images
+r  8: col1=Brand Principal Gen Article | col2=Supp Art # | col3=Principal Style Code | col5=Supp Art # | col6=In MD Tools Buying Plan, is this specific field for com
+r  9: col1=SAP
+Gen Article | col2=N/A (Not in specific column) - Combination is based on  | col3=Generic | col4=3 digits Brand Code + 1 digit MD Article Type + 1 digit | col5=No information (Not in specific column) - Combination i
+r 10: col1=Description | col2=N/A (Not in specific column) - Combination is based on  | col3=Generic Description | col4=3 Digits Brand Code + Max 28 Digits Principal Style Des | col5=No information (Not in specific column) - Combination i
+r 11: col1=Season | col2=Season | col3=Season | col5=Season
+r 12: col1=MPLAN
+Division | col2=N/A | col3=BY Division | col5=BY Division
+r 13: col1=MPLAN
+Sub Division | col2=N/A | col3=BY Sub Division | col5=BY Sub Division
+r 14: col1=MPLAN
+Category | col2=N/A | col3=BY Category | col5=BY Category
+r 15: col1=MPLAN
+Sub Category | col2=N/A | col3=BY Sub Category | col5=BY Sub Category
+r 16: col1=Size Range | col2=*Size Range (need to breakdown per size level) | col3=SAP Size | col5=ProductSize
+r 17: col1=FOB
+(Original Currency) | col2=FOB | col3=FOB | col5=Final FOB
+r 18: col1=FOB
+(Currency) | col2=FOB Currency | col3=FOB Currency | col5=FOB Currency
+r 19: col1=Exchange Rate | col2=N/A | col3=N/A | col5=Exchange Rate
+r 20: col1=FOB
+(In IDR) | col2=N/A | col3=N/A | col5=N/A
+r 21: col1=Freight | col2=N/A | col3=N/A | col5=N/A
+r 22: col1=SGS | col2=N/A | col3=N/A | col5=N/A
+r 23: col1=Commission
+(%) | col2=N/A | col3=N/A | col5=N/A
+r 24: col1=Safeguard Duty
+(in IDR) | col2=N/A | col3=N/A | col5=N/A
+r 25: col1=Total FOB | col2=N/A | col3=N/A | col5=N/A
+r 26: col1=Wholesales | col2=N/A | col3=N/A | col5=N/A
+r 27: col1=Royalty | col2=N/A | col3=N/A | col5=N/A
+r 28: col1=Other Fees
+(% FOB) | col2=N/A | col3=N/A | col5=N/A
+r 29: col1=Other Fees
+(% Wholesales) | col2=N/A | col3=N/A | col5=N/A
+r 30: col1=Total FOB | col2=N/A | col3=N/A | col5=N/A
+r 31: col1=SSE Retail
+Price | col2=N/A | col3=N/A | col5=N/A
+r 32: col1=Est. Landed Cost
+(OTB Calc.) | col2=N/A | col3=N/A | col5=N/A
+r 33: col1=Est. Landed Cost
+(GoIn Margin) | col2=N/A | col3=Estimated Landed Cost | col5=landed_cost
+r 34: col1=Minimum Margin | col2=N/A | col3=Margin | col5=N/A
+r 35: col1=SRP
+(Original Currency) | col2=N/A | col3=N/A | col5=N/A
+r 36: col1=SRP
+(IDR) | col2=N/A | col3=N/A | col5=N/A
+r 37: col1=Retail Price | col2=N/A | col3=Suggested Retail Price | col5=suggested_retail_price
+r 38: col1=Sls Margin (%) | col2=N/A | col3=N/A | col5=N/A
+r 39: col1=Net Margin (%) | col2=N/A | col3=N/A | col5=N/A
+r 40: col1=Retail Price | col2=N/A | col3=Proposed Retail Price | col5=proposed_retail_price
+r 41: col1=Sls Margin (%) | col2=N/A | col3=N/A | col5=N/A
+r 42: col1=Net Margin (%) | col2=N/A | col3=N/A | col5=N/A
+r 43: col1=Product Division | col2=N/A | col3=Part of BY Hierarchy (BY Division) | col5=BY Hierarchy
+r 44: col1=Country Of Origin | col2=N/A (manual input via Smartsheet) | col3=Country Of Origin | col5=Country Of Origin
+r 45: col1=Est. Landing Cost | col2=N/A | col3=N/A | col5=N/A
+r 46: col1=Landed Cost Factor | col2=N/A | col3=N/A | col5=N/A
+r 47: col1=EAN Code | col2=N/A | col3=N/A | col5=N/A
+r 48: col1=SBU ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 49: col1=Brand ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 50: col1=Division ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 51: col1=Sub Division ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 52: col1=Category ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 53: col1=Sub Category ID | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 54: col1=Division Name | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 55: col1=Sub Division Name | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 56: col1=Category Name | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 57: col1=Sub Category Name | col2=N/A | col3=BY Hierarchy | col5=BY Hierarchy
+r 58: col1=Article Type | col2=N/A (Manual input based on Portal) | col3=BY Article Type | col5=BY Article Type
+r 59: col1=BCI | col2=N/A (manual input via Smartsheet) | col3=BCI | col5=BCI
+r 60: col1=NOA | col2=N/A (manual input via Smartsheet) | col3=	
+Nature of Article | col5=	
+Nature of Article
+r 61: col1=Color Group | col2=N/A (AI images analysis) | col3=BY Color Group | col5=BY Color Group
+r 62: col1=Standardized Color | col2=N/A (AI images analysis) | col3=BY Standardized Color | col5=BY Standardized Color
+r 63: col1=Age | col2=N/A (*require for Mapping) | col3=BY Age | col4=*Several brands are required for mapping from Principal | col5=BY Age
+r 64: col1=Gender | col2=N/A (*require for Mapping) | col3=BY Gender | col4=*Several brands are required for mapping from Principal | col5=BY Gender
+r 65: col1=Price Range | col2=N/A | col3=Price Range | col5=Price Range
+r 66: col1=Silhouette | col2=N/A (Input Manual via Smartsheet) | col3=Silhouette | col5=Silhouette
+r 67: col1=Width | col2=N/A (Input Manual via Smartsheet) | col3=Width | col5=Width
+r 68: col1=Material - Upper | col2=N/A (Input Manual via Smartsheet) | col3=Material - Upper | col5=Material - Upper
+r 69: col1=Fastening | col2=N/A (Input Manual via Smartsheet) | col3=Fastening | col5=Fastening
+r 70: col1=Franchise | col2=N/A (Input Manual via Smartsheet) | col3=Franchise | col5=Franchise
+r 71: col1=Content | col2=N/A (Input Manual via Smartsheet) | col3=Content | col5=Content
+r 72: col1=Fabric | col2=N/A (Input Manual via Smartsheet) | col3=Fabric | col5=Fabric
+r 73: col1=Pattern/Print | col2=N/A (Input Manual via Smartsheet) | col3=Pattern/Print | col5=Pattern/Print
+r 74: col1=Fit | col2=N/A (Input Manual via Smartsheet) | col3=Fit | col5=Fit
+r 75: col1=Style | col2=N/A (Input Manual via Smartsheet) | col3=Style | col5=Style
+r 76: col1=Material | col2=N/A (Input Manual via Smartsheet) | col3=Material | col5=Material
+r 77: col1=Pack Details | col2=N/A (Input Manual via Smartsheet) | col3=Pack Details | col5=Pack Details
+r 78: col1=Style Type | col2=N/A (Golf) | col3=Style Type
+r 79: col1=Golf Club Flex | col2=N/A (Golf) | col3=Golf Club Flex
+r 80: col1=Golf Club Loft | col2=N/A (Golf) | col3=Golf Club Loft
+r 81: col1=Golf Club Length | col2=N/A (Golf) | col3=Golf Club Length
+r 82: col1=Heel Height | col2=N/A (Fashion Footwear) | col3=Heel Height
+r 83: col1=Heel Type | col2=N/A (Fashion Footwear) | col3=Heel Type
+r 84: col1=Occasion | col2=N/A (Fashion Footwear) | col3=Occasion
+r 85: col1=Interest | col2=N/A (Fashion Footwear) | col3=Interest
+r 86: col1=Source | col2=N/A (Kids) | col3=Source
+r 87: col1=Compcode | col2=N/A (Manual input based on Portal) | col3=Company (Co dependent Company & Company Code)
+r 88: col1=Color Code | col2=Color Code | col3=Principal Color Code | col5=Updated Color Code
+r 89: col1=Color Description | col2=Color | col3=Principal Color Description | col5=Updated Color
+(88 non-empty rows)
+
+--- 'MAPPING GEN ART' dims 50x21, dumping rows 1..50 cols<= 21 ---
+r  2: col1=Art Type (Column Q) | col2=Code Art Type | col4=Category (Column L) | col5=Code | col7=Gender (Column O) | col8=Code | col10=Color | col11=Color Code (Column J) | col12=Color Blueyonder  (TBC) | col14=Gen Art For Stibo License
+r  3: col1=License | col2=R | col4=Footwear | col5=Code | col7=Female | col8=F | col10=Green | col11=A | col14=Brand | col15=Art Type | col16=Year | col17=Category | col18=Supplier Code (4 Digit Terakhir) | col19=Gender | col20=Color | col21=Gen Art
+r  4: col1=SSE | col2=X | col4=Casual | col5=C | col7=Male | col8=M | col10=Sage | col14=DIA | col15=R | col16=6 | col17=R | col18=T123 | col19=M | col20=B | col21=DIAR6RT123MB
+r  5: col1=Wholesale | col2=W | col4=Basketball | col5=D | col7=Boys | col8=B | col10=Light Green | col14=DIA | col15=X | col16=8 | col17=A | col18=AA23 | col19=F | col20=B | col21=DIAX8AAA23FB
+r  6: col1=Sample | col2=S | col4=Lifestyle | col5=E | col7=Girls | col8=G | col10=Black | col11=B | col14=DIA | col15=W | col16=3 | col17=A | col18=C323 | col19=B | col20=B | col21=DIAW3AC323BB
+r  7: col4=Soccer | col5=F | col7=Unisex | col8=U | col10=Brown | col11=C | col14=DIA | col15=S | col16=4 | col17=A | col18=ET23 | col19=G | col20=B | col21=DIAS4AET23GB
+r  8: col4=Fitness | col5=I | col10=Dark Grey | col11=D
+r  9: col4=Kids | col5=K | col10=Purple | col11=E
+r 10: col4=Tennis / Badminton | col5=N | col10=Plum
+r 11: col1=Division | col4=Tennis | col5=N | col7=Age Group (Column U) | col10=Fuschia | col11=F
+r 12: col1=Footwear | col4=Badminton | col5=N | col7=Adult | col10=Grey | col11=G
+r 13: col1=Apparel | col4=Outdoor | col5=O | col7=Kids | col10=Light grey
+r 14: col1=Accessories | col4=Running | col5=R | col7=All Ages | col10=Beige | col11=H
+r 15: col4=Sandal | col5=S | col7=Infant | col10=Sand
+r 16: col4=Skate | col5=U | col7=Preschool | col10=Cream
+r 17: col4=Apparel | col7=Grade School | col10=Khaki
+r 18: col4=Short/Skirt/Skort | col5=H | col10=Lime | col11=I
+r 19: col4=Short | col5=H | col10=Dark Green | col11=J
+r 20: col4=Skirt | col5=H | col10=Dark Blue | col11=K
+r 21: col4=Skort | col5=H | col10=Lilac | col11=L
+r 22: col4=Jacket | col5=J | col10=Light Purple
+r 23: col4=Polo | col5=L | col10=Mono Black | col11=M
+r 24: col4=Pants/Legging | col5=P | col10=Navy | col11=N
+r 25: col4=Pants | col5=P | col10=Orange | col11=O
+r 26: col4=Legging | col5=P | col10=Pink | col11=P
+r 27: col4=T-Shirt/Sleveless/Longsleeve | col5=T | col10=Olive | col11=Q
+r 28: col4=T-Shirt | col5=T | col10=Red | col11=R
+r 29: col4=Sleveless | col5=T | col10=Maroon
+r 30: col4=Longsleeve | col5=T | col10=Silver | col11=S
+r 31: col4=Swimwear | col5=W | col10=Turqoise | col11=T
+r 32: col4=Sport Bra | col5=X | col10=Blue | col11=U
+r 33: col4=Acc | col10=Light Blue
+r 34: col4=Racket | col5=A | col10=Royal Blue
+r 35: col4=Backpack / Other Bags | col5=B | col10=Peach | col11=V
+r 36: col4=Backpack | col5=B | col10=White | col11=W
+r 37: col4=Other Bags | col5=B | col10=Teal Blue | col11=X
+r 38: col4=Goggles | col5=G | col10=Yellow | col11=Y
+r 39: col4=Equipment | col5=M | col10=Mustard
+r 40: col4=Socks | col5=Q | col10=Mint | col11=Z
+r 41: col4=Balls | col5=V | col11=0
+r 42: col4=Other Accs | col5=Y | col11=1
+r 43: col4=Caps/  Headwear | col5=Z | col11=2
+r 44: col4=Caps | col5=Z | col11=3
+r 45: col4=Headwear | col5=Z | col11=4
+r 46: col11=5
+r 47: col11=6
+r 48: col11=7
+r 49: col11=8
+r 50: col11=9
+(49 non-empty rows)
+
+--- 'Sheet2' dims 29x18, dumping rows 1..29 cols<= 18 ---
+r  1: col4=LOT SKU | col5=111 | col6=166.5
+r  3: col1=Row Labels | col2=Count of Supp Art #
+r  4: col1=CND | col2=26 | col8=SKU Count | col9=Sample Request | col10=CAD Selected | col13=SKU COUNT | col14=Sample Request | col15=CAD Selected | col16=Remarks
+r  5: col1=HIKING | col2=10 | col7=LOT SKU Count | col8=111 | col9=167 | col10=305 | col12=LOT SKU Count | col13=111 | col14=166.5 | col15=304 | col18=406
+r  6: col1=LIFESTYLE | col2=6 | col7=Asmara | col8=111 | col9=167 | col12=Badminton
+r  7: col1=RUNNING | col2=10 | col7=Cnd | col10=26 | col12=Basket
+r  8: col1=FJB | col2=19 | col7=FJB | col10=19 | col12=Indoor
+r  9: col1=RUNNING | col2=19 | col7=Mingwei | col10=47 | col12=Lifestyle | col13=20 | col14=30 | col15=64 | col18=96
+r 10: col1=Mingwei | col2=47 | col7=Tonmeng | col10=85 | col12=Running | col13=38 | col14=57 | col15=138 | col18=178
+r 11: col1=KIDS | col2=11 | col7=Tonrui | col10=74 | col12=Sandal | col13=18 | col14=27 | col15=14
+r 12: col1=LIFESTYLE | col2=11 | col7=Xinwei | col10=45 | col12=Tennis | col13=13 | col14=19.5 | col15=19 | col18=29
+r 13: col1=RUNNING | col2=15 | col7=Sugi | col10=9 | col12=Hiking | col13=7 | col14=10.5 | col15=10 | col18=18
+r 14: col1=TENNIS | col2=10 | col12=Futsal | col13=2 | col14=3 | col15=12 | col18=24
+r 15: col1=Tonrui | col2=74 | col12=Kids | col13=13 | col14=19.5 | col15=47 | col18=61
+r 16: col1=KIDS | col2=36 | col12=Soccer
+r 17: col1=RUNNING | col2=38
+r 18: col1=Xinwei | col2=45
+r 19: col1=LIFESTYLE | col2=14
+r 20: col1=RUNNING | col2=10
+r 21: col1=TENNIS | col2=9
+r 22: col1=FUTSAL | col2=12
+r 23: col1=Sugi | col2=9
+r 24: col1=LIFESTYLE | col2=9
+r 25: col1=Tonmeng | col2=85
+r 26: col1=LIFESTYLE | col2=24
+r 27: col1=RUNNING | col2=46
+r 28: col1=TRAIL RUN | col2=15
+r 29: col1=Grand Total | col2=305
+(28 non-empty rows)
+
+--- 'Sheet1' dims 504x31, dumping rows 1..12 cols<= 31 ---
+r  1: col1=SUPP: All | col6=RECAP DEVELOPMENT SAMPLE - SS27
+r  3: col1=No | col2=Brand | col3=Season | col4=Supplier | col5=Supp Art # | col6=Image | col7=Updated Image | col8=Color | col9=Updated Color | col10=ARTCO | col11=Category | col12=Outsole Material | col13=Upper Material | col14=Gender | col15=Size Range | col16=Article Type | col17=FOB Price | col18=Target Fob | col19=Final FOB | col20=Outsole | col21=ETD DATE | col22=ETA DATE | col23=REMARKS | col24=OUTSOLE CODE | col25=Status | col26=PROTO COMMENT  | col27=REF IMAGE | col28=REVISE COMMENT  | col29=REF IMAGE | col30=PPS COMMENT  | col31=selected
+r  4: col1=1 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25121602 | col8=BLACK | col10=LT25121602BLACK | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:60%POLIURETAN+40%POLIESTER | col14=MALE | col15=39-44 | col16=REGULAR | col20=#VALUE! | col24=LOTFJHK01 | col31=LICENSED
+r  5: col1=2 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25121602 | col8=WHITE/BLACK | col10=LT25121602WHITE/BLACK | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:60%POLIURETAN+40%POLIESTER | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJHK01 | col31=LICENSED
+r  6: col1=3 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25121602 | col8=GREY | col10=LT25121602GREY | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:60%POLIURETAN+40%POLIESTER | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJHK01 | col31=LICENSED
+r  7: col1=4 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25122302 | col8=WHITE/GREEN | col10=LT25122302WHITE/GREEN | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:90%POLIESTER+10%POLIURETAN | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJRR01 | col25=Received | col31=LICENSED
+r  8: col1=5 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25122302 | col8=WHITE | col10=LT25122302WHITE | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:90%POLIESTER+10%POLIURETAN | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJRR01 | col25=Received | col31=LICENSED
+r  9: col1=6 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25122302 | col8=BLUE | col10=LT25122302BLUE | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:90%POLIESTER+10%POLIURETAN | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJRR01 | col25=Received | col31=LICENSED
+r 10: col1=7 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25122302 | col8=PINK | col10=LT25122302PINK | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:90%POLIESTER+10%POLIURETAN | col14=FEMALE | col15=36-40 | col16=REGULAR | col24=LOTFJRR01 | col25=Received | col31=LICENSED
+r 11: col1=8 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25122302 | col8=PURPLE | col10=LT25122302PURPLE | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:90%POLIESTER+10%POLIURETAN | col14=FEMALE | col15=36-40 | col16=REGULAR | col24=LOTFJRR01 | col25=Received | col31=LICENSED
+r 12: col1=9 | col2=LOTTO | col3=SS27 | col4=FJB | col5=LT25120202 | col8=MONO BLACK | col10=LT25120202MONO BLACK | col11=RUNNING | col12=80%PHYLON+20%TPR SOLE | col13=UPPER:70%POLIESTER+30%POLIURETAN | col14=MALE | col15=39-44 | col16=REGULAR | col24=LOTFJRR02 | col31=LICENSED
+(11 non-empty rows)
+
+--- 'Database Stibo' dims 74x37, dumping rows 1..12 cols<= 37 ---
+r  2: col1=BRAND | col2=SEASON | col4=Supplier | col5=Initial | col6=Footwear | col7=Apparel | col8=Acc | col10=Color | col11=Color Code (Coloumn J) | col12=Color Blueyonder  (TBC) | col14=Category (Coloumn L) | col27=Code | col30=Gen Art For Stibo License
+r  3: col1=AIRWALK | col2=SS27 | col4=ATOM | col5=AA | col6=V | col10=Green / Sage / Light Green | col11=A | col14=Footwear | col15=DIA | col16=LOTTO | col17=ASTEC | col18=AIRWALK | col19=KSWISS | col20=ELLESE | col21=NAUTICA | col22=JDK | col23=NYA | col24=CVK | col25=HUR | col26=LVK | col27=Final | col30=Brand | col31=Art Type | col32=Year | col33=Category | col34=Supplier Code | col35=Gender | col36=Color | col37=Gen Art
+r  4: col1=ASTEC | col2=FW27 | col4=UNICORN | col5=B | col8=V | col10=Black | col11=B | col14=Running | col15=RU/XR | col16=RU | col17=FW/R | col27=R | col30=DIA | col31=R | col32=6 | col33=R | col34=T123 | col35=M | col36=B | col37=DIAR6RT123MB
+r  5: col1=DIADORA | col2=SS28 | col4=CORTINA | col5=C | col6=V | col10=Brown | col11=C | col14=Casual | col15=CA/XC | col18=CM/CL/CU/CX/SK/XF | col27=C | col30=DIA | col31=X | col32=8 | col33=A | col34=AA23 | col35=F | col36=B | col37=DIAX8AAA23FB
+r  6: col1=ELLESSE | col2=FW28 | col4=CND | col5=CC | col6=V | col10=Dark Grey | col11=D | col14=Soccer | col15=FG | col16=FG | col17=FW/S | col27=F | col30=DIA | col31=W | col32=3 | col33=A | col34=C323 | col35=B | col36=B | col37=DIAW3AC323BB
+r  7: col1=KCA | col2=SS29 | col4=HINIDAIKI | col5=D | col8=V | col10=Purple /Plum | col11=E | col14=Tennis / Badminton | col15=TE | col16=TE | col17=FW/T | col19=TE | col27=N | col30=DIA | col31=S | col32=4 | col33=A | col34=ET23 | col35=G | col36=B | col37=DIAS4AET23GB
+r  8: col1=KSWISS | col2=FW29 | col4=ROENARI | col5=E | col6=V | col10=Fuschia | col11=F | col14=Fitness | col15=FI | col17=FW/F | col27=I
+r  9: col1=LOTTO | col2=SS30 | col4=FJB | col5=F | col6=V | col10=Grey / Light grey | col11=G | col14=Sandal | col15=MX/CS | col16=SD | col17=SA | col18=SL/SM ( S) | col21=SD | col27=S | col30=Art Type (Coloumn Q) | col31=Code Art Type
+r 10: col1=NAUTICA | col2=FW30 | col4=GARINDO | col5=G | col7=V | col10=Beige / Sand / Cream / Khaki | col11=H | col14=Outdoor | col16=AD | col27=O | col30=License | col31=R
+r 11: col2=SS31 | col4=HEVA | col5=H | col6=V | col10=Lime | col11=I | col14=Kids | col15=CX/XK | col18=CX/SK/XF | col27=K | col30=SSE | col31=X
+r 12: col2=SS29 | col4=TAITAT | col5=I | col8=V | col10=Dark Green | col11=J | col14=Lifestyle | col15=XW | col16=LS | col17=FW/L | col19=LS | col20=LS | col21=LS | col27=E | col30=Wholesale | col31=W
+(11 non-empty rows)
+
+--- 'Sheet5' dims 80x3, dumping rows 1..30 cols<= 3 ---
+r  1: col3=MD Tools
+r  2: col2=No | col3=N/A
+r  3: col2=Brand | col3=N/A
+(Mapping from Brand Code)
+r  4: col2=Season | col3=Season
+r  5: col2=Supplier | col3=N/A
+r  6: col2=Supp Art # | col3=Brand Principal Gen Article
+r  7: col2=Image | col3=Image
+r  8: col2=Updated Image | col3=Image
+r  9: col2=Color | col3=Color Description
+r 10: col2=Updated Color | col3=Color Description
+r 11: col2=Color Code | col3=Color Code
+r 12: col2=Updated Color Code | col3=Color Code
+r 13: col2=ARTCO | col3=N/A
+r 14: col2=Division | col3=BY Division
+r 15: col2=MD Category | col3=N/A
+(Mapping from BY Category
+r 16: col2=Code Category | col3=N/A
+(Mapping from BY Category
+r 17: col2=Outsole Material | col3=N/A
+r 18: col2=Upper Material | col3=N/A
+r 19: col2=Gender | col3=Gender
+r 20: col2=Gender Code | col3=N/A
+Mapping from Gender
+r 21: col2=Age Group | col3=Age
+r 22: col2=Size Range | col3=N/A
+Mapping from Size Range
+r 23: col2=Article Type | col3=N/A
+Mapping from Article Type
+r 24: col2=MD Article Type Code | col3=N/A
+Mapping from Article Type
+r 25: col2=FOB Currency | col3=FOB
+(Currency)
+r 26: col2=FOB Price | col3=FOB
+(Original Currency)
+r 27: col2=Target Fob | col3=N/A
+r 28: col2=Final FOB | col3=FOB
+(Original Currency)
+r 29: col2=Outsole | col3=N/A
+r 30: col2=ETD DATE | col3=N/A
+--- 'Sheet3' dims 42x1, dumping rows 1..42 cols<= 1 ---
+r  1: col1=Line List
+r  2: col1=Brand
+r  3: col1=Season
+r  4: col1=Supplier
+r  5: col1=Supp Art #
+r  6: col1=Image
+r  7: col1=Updated Image
+r  8: col1=Color
+r  9: col1=Updated Color
+r 10: col1=Color Code
+r 11: col1=Updated Color Code
+r 12: col1=ARTCO
+r 13: col1=Division
+r 14: col1=Category
+r 15: col1=Code Category
+r 16: col1=Outsole Material
+r 17: col1=Upper Material
+r 18: col1=Gender
+r 19: col1=Gender Code
+r 20: col1=Age Group
+r 21: col1=Size Range
+r 22: col1=Article Type
+r 23: col1=Article Type Code
+r 24: col1=FOB Currency
+r 25: col1=FOB Price
+r 26: col1=Target Fob
+r 27: col1=Final FOB
+r 28: col1=Outsole
+r 29: col1=ETD DATE
+r 30: col1=ETA DATE
+r 31: col1=REMARKS
+r 32: col1=OUTSOLE CODE
+r 33: col1=Status
+r 34: col1=ProductSize
+r 35: col1=suggested_retail_price
+r 36: col1=proposed_retail_price
+r 37: col1=landed_cost
+r 38: col1=PROTO COMMENT 
+r 39: col1=REF IMAGE
+r 40: col1=REVISE COMMENT 
+r 41: col1=REF IMAGE
+r 42: col1=PPS COMMENT 
+--- 'Sheet4' dims 1x1, dumping rows 1..2 cols<= 1 ---

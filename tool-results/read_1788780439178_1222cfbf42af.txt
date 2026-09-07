@@ -1,0 +1,651 @@
+   700→        skipped_type  = 0
+   701→        for row in rows[hdr_idx + 1:]:
+   702→            if not row or not row[0]:
+   703→                continue
+   704→            name          = _s(row[0])
+   705→            attr_id       = _s(row[1]) if len(row) > 1 else ""
+   706→            validation    = _s(row[2]) if len(row) > 2 else ""
+   707→            mapping_type  = _s(row[6]) if len(row) > 6 else ""
+   708→            source_column = _s(row[9]) if len(row) > 9 else ""
+   709→            mapping_logic = row[10] if len(row) > 10 else ""
+   710→
+   711→            if not attr_id:
+   712→                skipped_no_id += 1
+   713→                continue
+   714→
+   715→            mt = mapping_type.strip()
+   716→            include = (
+   717→                (mt == "Direct from Principal" and source_column)
+   718→                or (mt.startswith("Formula in System") and source_column)
+   719→                or (mt == "Mapping from Principal Data" and source_column)
+   720→            )
+   721→            if not include:
+   722→                skipped_type += 1
+   723→                continue
+   724→
+   725→            self.rules.append(AttributeRule(
+   726→                name=name, attr_id=attr_id, validation=validation,
+   727→                mapping_type=mt, source_column=source_column,
+   728→                mapping_logic_raw=mapping_logic,
+   729→            ))
+   730→
+   731→        log.info(
+   732→            "[AttrMap] Loaded %d active attribute rule(s) from '%s' tab "
+   733→            "(%d skipped: no valid attribute ID, %d skipped: mapping type not eligible)",
+   734→            len(self.rules), self.sheet_name, skipped_no_id, skipped_type,
+   735→        )
+   736→        for r in self.rules:
+   737→            log.info(
+   738→                "[AttrMap]   %-38s -> %-32s  col='%s'  %s  mode=%s",
+   739→                r.name, r.attr_id, r.source_column,
+   740→                "LOV(id)" if r.is_lov else "text(value)", r.mode,
+   741→            )
+   742→
+   743→    def find(self, attr_id: str) -> AttributeRule | None:
+   744→        return next((r for r in self.rules if r.attr_id == attr_id), None)
+   745→
+   746→
+   747→# ======================================================================
+   748→# INPUT FILE LOADER  ("1. Template" sheet — header row/columns discovered
+   749→# dynamically from the attribute rules' Col J source-column names)
+   750→# ======================================================================
+   751→
+   752→class AntaLinelistLoader:
+   753→    def __init__(self, path: Path, needed_columns: list[str], sheet_name: str = INPUT_SHEET_NAME):
+   754→        self.path = path
+   755→        self.sheet_name = sheet_name
+   756→        self.headers: list[str] = []
+   757→        self.rows: list[dict] = []
+   758→        self._needed = {_norm_header(c) for c in needed_columns if c}
+   759→        self._load()
+   760→
+   761→    def _load(self) -> None:
+   762→        log.info("[Anta-Linelist] Loading: %s", self.path.name)
+   763→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   764→        target = next(
+   765→            (s for s in wb.sheetnames if s.strip().upper() == self.sheet_name.upper()),
+   766→            None,
+   767→        )
+   768→        if not target:
+   769→            target = next((s for s in wb.sheetnames if "template" in s.lower()), None)
+   770→        if not target:
+   771→            wb.close()
+   772→            raise ValueError(
+   773→                f"[Anta-Linelist] Sheet '{self.sheet_name}' not found. "
+   774→                f"Available: {wb.sheetnames}"
+   775→            )
+   776→        log.info("[Anta-Linelist] Using sheet: '%s'", target)
+   777→
+   778→        raw_rows = list(wb[target].iter_rows(values_only=True))
+   779→        wb.close()
+   780→
+   781→        if not raw_rows:
+   782→            log.warning("[Anta-Linelist] Sheet '%s' is empty", target)
+   783→            return
+   784→
+   785→        # ── Locate header row: the row (within the first 20) whose cells
+   786→        #    match the most Col-J source-column names from the mapping sheet.
+   787→        best_idx, best_score = 0, -1
+   788→        for i in range(min(20, len(raw_rows))):
+   789→            r = raw_rows[i]
+   790→            if not r:
+   791→                continue
+   792→            cells = {_norm_header(c) for c in r if c is not None}
+   793→            score = len(cells & self._needed)
+   794→            if score > best_score:
+   795→                best_idx, best_score = i, score
+   796→        if best_score <= 0:
+   797→            log.warning(
+   798→                "[Anta-Linelist] Could not confidently locate header row "
+   799→                "(no cell matched any expected column name) — defaulting to row 0"
+   800→            )
+   801→        log.info(
+   802→            "[Anta-Linelist] Header at row %d (0-indexed), matched %d/%d expected columns",
+   803→            best_idx, max(best_score, 0), len(self._needed),
+   804→        )
+   805→
+   806→        raw_header = raw_rows[best_idx]
+   807→        header = [str(h).strip() if h is not None else f"col_{i}" for i, h in enumerate(raw_header)]
+   808→        seen: dict[str, int] = {}
+   809→        for i, col in enumerate(header):
+   810→            if col in seen:
+   811→                seen[col] += 1
+   812→                header[i] = f"{col}_{seen[col]}"
+   813→            else:
+   814→                seen[col] = 0
+   815→        self.headers = header
+   816→
+   817→        for r in raw_rows[best_idx + 1:]:
+   818→            if not r or all(c is None for c in r):
+   819→                continue
+   820→            self.rows.append({header[i]: (r[i] if i < len(r) else None) for i in range(len(header))})
+   821→
+   822→        log.info("[Anta-Linelist] Loaded %d data rows", len(self.rows))
+   823→
+   824→    def find_col(self, name: str) -> str | None:
+   825→        """Case/whitespace-insensitive header lookup."""
+   826→        target = _norm_header(name)
+   827→        for h in self.headers:
+   828→            if _norm_header(h) == target:
+   829→                return h
+   830→        return None
+   831→
+   832→
+   833→def _resolve_source_col(loader: "AntaLinelistLoader", rule: "AttributeRule") -> str | None:
+   834→    """
+   835→    Resolve the actual input-sheet column for a rule: the mapping sheet's
+   836→    Col J is always tried first; if that column isn't present in the input
+   837→    file, fall back to COLUMN_FALLBACKS[rule.attr_id] (if any).
+   838→    """
+   839→    col = loader.find_col(rule.source_column)
+   840→    if col:
+   841→        return col
+   842→    fallback_name = COLUMN_FALLBACKS.get(rule.attr_id)
+   843→    if not fallback_name:
+   844→        return None
+   845→    col = loader.find_col(fallback_name)
+   846→    if col:
+   847→        log.info(
+   848→            "[AttrMap] '%s': Col-J column '%s' not found in input file — "
+   849→            "using fallback column '%s'",
+   850→            rule.attr_id, rule.source_column, fallback_name,
+   851→        )
+   852→    return col
+   853→
+   854→
+   855→# ======================================================================
+   856→# GROUPER — one Generic Article per unique Style Code
+   857→# ======================================================================
+   858→
+   859→def group_rows(rows: list[dict], style_col: str) -> dict[str, dict]:
+   860→    """First-row-wins grouping by Style Code (no colour/size variants — see
+   861→    module docstring)."""
+   862→    groups: dict[str, dict] = {}
+   863→    for row in rows:
+   864→        style = _s(row.get(style_col, ""))
+   865→        if not style:
+   866→            continue
+   867→        if style not in groups:
+   868→            groups[style] = row
+   869→    log.info("[Grouper] %d rows -> %d generic(s) (grouped by Style Code)", len(rows), len(groups))
+   870→    return groups
+   871→
+   872→
+   873→# ======================================================================
+   874→# CLASSIFICATIONS BUILDER  (same 3-tier pattern used across every brand)
+   875→# ======================================================================
+   876→
+   877→_SEASON_LABELS = {
+   878→    "SS": "Spring Summer", "FW": "Fall Winter",
+   879→    "AW": "Autumn Winter", "HO": "Holiday",
+   880→    "SP": "Spring",        "SM": "Summer",
+   881→}
+   882→
+   883→
+   884→def build_classifications(brand: str, brand_code: str, season_code: str) -> ET.Element:
+   885→    cls_root = ET.Element(f"{{{STIBO_NS}}}Classifications")
+   886→
+   887→    sea_prefix = season_code[:2].upper() if len(season_code) >= 2 else season_code
+   888→    sea_tail   = season_code[2:]
+   889→    sea_year   = f"20{sea_tail}" if len(sea_tail) == 2 else sea_tail
+   890→    full_season = f"{sea_prefix}{sea_year}"
+   891→
+   892→    season_id      = f"CLH_{brand_code}_{full_season}"
+   893→    batches_parent = f"CLH_{brand}Batches"
+   894→    sea_name       = _SEASON_LABELS.get(sea_prefix, sea_prefix)
+   895→    season_display = f"{brand} {sea_name} {sea_year}".strip()
+   896→    season_short    = f"{sea_prefix} {sea_year}".strip()
+   897→
+   898→    season_cls = ET.SubElement(cls_root, f"{{{STIBO_NS}}}Classification")
+   899→    season_cls.set("ID", season_id)
+   900→    season_cls.set("UserTypeID", "CLS_Season")
+   901→    season_cls.set("ParentID", batches_parent)
+   902→    ET.SubElement(season_cls, f"{{{STIBO_NS}}}Name").text = season_display
+   903→
+   904→    confirmed = ET.SubElement(season_cls, f"{{{STIBO_NS}}}Classification")
+   905→    confirmed.set("ID", f"{season_id}CA")
+   906→    confirmed.set("UserTypeID", "CLS_ConfirmedArticles")
+   907→    ET.SubElement(confirmed, f"{{{STIBO_NS}}}Name").text = f"{season_short} Confirmed Articles"
+   908→
+   909→    unconfirmed = ET.SubElement(season_cls, f"{{{STIBO_NS}}}Classification")
+   910→    unconfirmed.set("ID", f"{season_id}UA")
+   911→    unconfirmed.set("UserTypeID", "CLS_UnconfirmedArticles")
+   912→    ET.SubElement(unconfirmed, f"{{{STIBO_NS}}}Name").text = f"{season_short} Unconfirmed Articles"
+   913→
+   914→    return cls_root
+   915→
+   916→
+   917→# ======================================================================
+   918→# XML BUILDER
+   919→# ======================================================================
+   920→
+   921→def build_generic_product(
+   922→    row: dict,
+   923→    loader: AntaLinelistLoader,
+   924→    rules: list[AttributeRule],
+   925→    brand: str,
+   926→    brand_code: str,
+   927→    comp_code: str,
+   928→    sbu: str,
+   929→    season: str,
+   930→    season_id: str,
+   931→    country_code: str,
+   932→    brand_lov_id: str = "",
+   933→    brand_type: str = "",
+   934→    brand_status: str = "",
+   935→    brand_group: str = "",
+   936→    mdd: "MDDLoader | None" = None,
+   937→) -> str:
+   938→    style_rule = next((r for r in rules if r.attr_id == "AT_PrincipalStyleCode"), None)
+   939→    style_col  = _resolve_source_col(loader, style_rule) if style_rule else None
+   940→    style_code = _s(row.get(style_col, "")) if style_col else ""
+   941→    if not style_code:
+   942→        return ""
+   943→
+   944→    generic_code = f"{brand_code}{style_code}"
+   945→
+   946→    category_col = loader.find_col("Category")
+   947→    category_val = _s(row.get(category_col, "")).upper() if category_col else ""
+   948→    parent_id = CATEGORY_PARENT_IDS.get(category_val, DEFAULT_PRODUCT_PARENT_ID)
+   949→
+   950→    g_el = ET.Element(f"{{{STIBO_NS}}}Product")
+   951→    g_el.set("UserTypeID", "PRD_GenericArticle")
+   952→    g_el.set("ParentID", parent_id)
+   953→
+   954→    kv = ET.SubElement(g_el, f"{{{STIBO_NS}}}KeyValue")
+   955→    kv.set("KeyID", "KEY_InboundArticle")
+   956→    kv.text = generic_code
+   957→
+   958→    # Name: prefer AT_PrincipalStyleDescription's resolved value, else style code.
+   959→    name_text = generic_code
+   960→    desc_rule = next((r for r in rules if r.attr_id == "AT_PrincipalStyleDescription"), None)
+   961→    if desc_rule:
+   962→        desc_col = _resolve_source_col(loader, desc_rule)
+   963→        desc_val = desc_rule.resolve(row.get(desc_col, "")) if desc_col else None
+   964→        if desc_val:
+   965→            name_text = desc_val
+   966→    ET.SubElement(g_el, f"{{{STIBO_NS}}}Name").text = name_text
+   967→
+   968→    cr_merch = ET.SubElement(g_el, f"{{{STIBO_NS}}}ClassificationReference")
+   969→    cr_merch.set("ClassificationID", f"CLH_{brand}Articles")
+   970→    cr_merch.set("Type", "CPL_Merchandiser")
+   971→
+   972→    cr_unconf = ET.SubElement(g_el, f"{{{STIBO_NS}}}ClassificationReference")
+   973→    cr_unconf.set("ClassificationID", f"{season_id}UA")
+   974→    cr_unconf.set("Type", "CPL_UnConfirmedForSeason")
+   975→
+   976→    gv = ET.SubElement(g_el, f"{{{STIBO_NS}}}Values")
+   977→
+   978→    # AT_InboundGenericCode: same value as the KEY_InboundArticle KeyValue
+   979→    # above — not in the ANTA mapping tab (no Col J source), populated
+   980→    # structurally the same way clarks/order_form_footwear_main.py does
+   981→    # (generic["AT_InboundGenericCode"] = generic_key).
+   982→    _val_text(gv, "AT_InboundGenericCode", generic_code)
+   983→
+   984→    # AT_SAPAge: mapping sheet says "Default : Adults" with no Col J source
+   985→    # — same fixed default clarks/order_form_footwear_main.py sends ("AD").
+   986→    _val_lov(gv, "AT_SAPAge", "AD")
+   987→
+   988→    # AT_CountryOrigin: mapping sheet says "Default : China" with no Col J
+   989→    # source — fixed default, not derived from any input column.
+   990→    _val_lov(gv, "AT_CountryOrigin", "CN")
+   991→
+   992→    # AT_PricingDistributionChannel: mapping sheet says "Default : Retailer"
+   993→    # with no Col J source — fixed default, same "01" every other brand uses.
+   994→    _val_lov(gv, "AT_PricingDistributionChannel", "01")
+   995→
+   996→    # AT_SAPProductFlag: mapping sheet says "Default : A - Intercompany" with
+   997→    # no Col J source — fixed default, same "A" every other brand uses.
+   998→    _val_lov(gv, "AT_SAPProductFlag", "A")
+   999→
+  1000→    # AT_MaterialType: mapping sheet says "Default : Intercompany" with no
+  1001→    # Col J source — fixed default, same "ZINA" every other brand uses.
+  1002→    _val_lov(gv, "AT_MaterialType", "ZINA")
+  1003→
+  1004→    # AT_SAPArticleCategory: mapping sheet says "Default : Generic" with no
+  1005→    # Col J source — fixed default, same "01" every other brand uses.
+  1006→    _val_lov(gv, "AT_SAPArticleCategory", "01")
+  1007→
+  1008→    # AT_UOM: mapping sheet says "Default : EA" with no Col J source —
+  1009→    # fixed default, same "EA" every other brand uses.
+  1010→    _val_lov(gv, "AT_UOM", "EA")
+  1011→
+  1012→    # AT_BYArticleType: not on the ANTA tab under a valid attribute ID
+  1013→    # ("Article Type" row has attr_id #N/A) — same unconditional "Inline"
+  1014→    # default clarks/order_form_footwear_main.py sends.
+  1015→    _val_lov(gv, "AT_BYArticleType", "Inline")
+  1016→
+  1017→    # AT_BYAge: mapping sheet says "Default : Adults" with no Col J source
+  1018→    # — same fixed default clarks/order_form_footwear_main.py sends ("ADULT").
+  1019→    _val_lov(gv, "AT_BYAge", "ADULT")
+  1020→
+  1021→    # AT_ArticleStatus: mapping sheet says "Default when created: Active"
+  1022→    # with no Col J source — fixed default, same "A" every other brand uses.
+  1023→    _val_lov(gv, "AT_ArticleStatus", "A")
+  1024→
+  1025→    # ── System-level fields: "Manual Input in Portal" per the mapping sheet
+  1026→    #    — supplied from run() args, not from the dynamic per-row engine.
+  1027→    _multival(gv, "AT_CompanyCode", comp_code)
+  1028→    _multival(gv, "AT_SBU", sbu)
+  1029→    if country_code:
+  1030→        _val_lov(gv, "AT_Country", country_code.upper())
+  1031→
+  1032→    # AT_RetailPriceCurrency: derived from country_code, not any input
+  1033→    # column — same country-to-currency map as Clarks footwear.
+  1034→    currency_lov_id = _resolve_currency_from_country(country_code)
+  1035→    if currency_lov_id:
+  1036→        _val_lov(gv, "AT_RetailPriceCurrency", currency_lov_id)
+  1037→
+  1038→    sea_code = season[:2].upper() if len(season) >= 2 else season
+  1039→    _val_lov(gv, "AT_Season", sea_code)
+  1040→    year_match = re.search(r"20\d{2}", season)
+  1041→    season_year = year_match.group() if year_match else ""
+  1042→    if not season_year:
+  1043→        tail = re.search(r"\d{2}$", season)
+  1044→        season_year = f"20{tail.group()}" if tail else ""
+  1045→    if season_year:
+  1046→        _val_text(gv, "AT_SeasonYear", season_year)
+  1047→
+  1048→    # ── Brand / Brand Type / Brand Status / Brand Group ──────────
+  1049→    # "Formula in System" / "Mapping from RNA" per the mapping sheet (no Col J
+  1050→    # source) — resolved the same way as clarks/order_form_footwear_main.py:
+  1051→    # AT_Brand from the MDD Brand LOV; Type/Status/Group from RNA, with each
+  1052→    # RNA value looked up in its own MDD LOV and a raw-text fallback if the
+  1053→    # LOV has no match.
+  1054→    _val_lov(gv, "AT_Brand", brand_lov_id or brand_code)
+  1055→
+  1056→    if brand_type:
+  1057→        bt_lov_id = (mdd.lovs.get("AT_BrandType", {}) if mdd else {}).get(brand_type.upper(), "")
+  1058→        if bt_lov_id:
+  1059→            _val_lov(gv, "AT_BrandType", bt_lov_id)
+  1060→        else:
+  1061→            _val_text(gv, "AT_BrandType", brand_type)
+  1062→
+  1063→    if brand_status:
+  1064→        bs_lov_id = (mdd.lovs.get("AT_BrandStatus", {}) if mdd else {}).get(brand_status.upper(), "")
+  1065→        if bs_lov_id:
+  1066→            _val_lov(gv, "AT_BrandStatus", bs_lov_id)
+  1067→        else:
+  1068→            _val_text(gv, "AT_BrandStatus", brand_status)
+  1069→
+  1070→    if brand_group:
+  1071→        bg_lov_id = (mdd.lovs.get("AT_BrandGroup", {}) if mdd else {}).get(brand_group.upper(), "")
+  1072→        if bg_lov_id:
+  1073→            _val_lov(gv, "AT_BrandGroup", bg_lov_id)
+  1074→        else:
+  1075→            _val_text(gv, "AT_BrandGroup", brand_group)
+  1076→
+  1077→    # AT_CountrySize: derived from input "Category" column.
+  1078→    #   FTW -> US
+  1079→    #   APP -> ASIA
+  1080→    #   ACC -> skip attribute
+  1081→    category_col = loader.find_col("Category")
+  1082→    if category_col:
+  1083→        category_val = _s(row.get(category_col, "")).upper()
+  1084→        if category_val == "FTW":
+  1085→            _val_lov(gv, "AT_CountrySize", "US")
+  1086→        elif category_val == "APP":
+  1087→            _val_lov(gv, "AT_CountrySize", "ASIA")
+  1088→
+  1089→    # ── Dynamic per-row attributes — driven entirely by the ANTA mapping tab.
+  1090→    for rule in rules:
+  1091→        if rule.attr_id in SPECIAL_ATTRIBUTE_IDS:
+  1092→            continue
+  1093→        col = _resolve_source_col(loader, rule)
+  1094→        if not col:
+  1095→            continue
+  1096→        value = rule.resolve(row.get(col, ""))
+  1097→        if value is None:
+  1098→            continue
+  1099→        if rule.is_lov:
+  1100→            _val_lov(gv, rule.attr_id, value)
+  1101→        else:
+  1102→            _val_text(gv, rule.attr_id, value)
+  1103→
+  1104→    # AT_IncomingMonth: same source column as AT_LaunchingDate ("Launching
+  1105→    # Date"), reformatted from the input's M/D/YYYY (e.g. "9/23/2026.") to
+  1106→    # DD-MM-YYYY and sent as a text value.
+  1107→    incoming_month_rule = next((r for r in rules if r.attr_id == "AT_IncomingMonth"), None)
+  1108→    if incoming_month_rule:
+  1109→        im_col = _resolve_source_col(loader, incoming_month_rule)
+  1110→        if im_col:
+  1111→            formatted = _format_date_ddmmyyyy(row.get(im_col))
+  1112→            if formatted:
+  1113→                _val_text(gv, "AT_IncomingMonth", formatted)
+  1114→
+  1115→    # AT_LaunchingDate: reformatted from the input's M/D/YY(YY) (e.g.
+  1116→    # "9/23/26") to DD-Mon-YYYY (e.g. "23-Sep-2026") and sent as a text
+  1117→    # value, instead of the mapping sheet's raw Direct-from-Principal
+  1118→    # passthrough (which would send the input's raw datetime string).
+  1119→    launching_date_rule = next((r for r in rules if r.attr_id == "AT_LaunchingDate"), None)
+  1120→    if launching_date_rule:
+  1121→        ld_col = _resolve_source_col(loader, launching_date_rule)
+  1122→        if ld_col:
+  1123→            formatted = _format_date_ddmonyyyy(row.get(ld_col))
+  1124→            if formatted:
+  1125→                _val_text(gv, "AT_LaunchingDate", formatted)
+  1126→
+  1127→    # AT_EComAgesCategory: raw value from "Ages Category" looked up in the
+  1128→    # MDD "E-com Ages Category LOV" tab (Col B display name -> Col A LOV
+  1129→    # id). No fallback — skipped if the raw value isn't in the LOV.
+  1130→    ecom_ages_rule = next((r for r in rules if r.attr_id == "AT_EComAgesCategory"), None)
+  1131→    if ecom_ages_rule:
+  1132→        ea_col = _resolve_source_col(loader, ecom_ages_rule)
+  1133→        if ea_col:
+  1134→            raw_val = _s(row.get(ea_col, ""))
+  1135→            if raw_val:
+  1136→                lov_id = (mdd.lovs.get("AT_EComAgesCategory", {}) if mdd else {}).get(raw_val.upper(), "")
+  1137→                if lov_id:
+  1138→                    _val_lov(gv, "AT_EComAgesCategory", lov_id)
+  1139→                else:
+  1140→                    log.info(
+  1141→                        "[EComAgesCategory] raw value '%s' not found in MDD LOV — attribute skipped",
+  1142→                        raw_val,
+  1143→                    )
+  1144→
+  1145→    # AT_SportsCategoryEN: raw value from "Sports Category" looked up in the
+  1146→    # MDD "Sports Category LOV" tab (Col A display name -> Col B LOV id),
+  1147→    # zero-padded to 2 digits when the id is a single digit. No fallback —
+  1148→    # skipped if the raw value isn't in the LOV.
+  1149→    sports_cat_rule = next((r for r in rules if r.attr_id == "AT_SportsCategoryEN"), None)
+  1150→    if sports_cat_rule:
+  1151→        sc_col = _resolve_source_col(loader, sports_cat_rule)
+  1152→        if sc_col:
+  1153→            raw_val = _s(row.get(sc_col, ""))
+  1154→            if raw_val:
+  1155→                lov_id = (mdd.lovs.get("AT_SportsCategoryEN", {}) if mdd else {}).get(raw_val.upper(), "")
+  1156→                if lov_id:
+  1157→                    if len(lov_id) == 1 and lov_id.isdigit():
+  1158→                        lov_id = f"0{lov_id}"
+  1159→                    _val_lov(gv, "AT_SportsCategoryEN", lov_id)
+  1160→                else:
+  1161→                    log.info(
+  1162→                        "[SportsCategoryEN] raw value '%s' not found in MDD LOV — attribute skipped",
+  1163→                        raw_val,
+  1164→                    )
+  1165→
+  1166→    return ET.tostring(g_el, encoding="unicode")
+  1167→
+  1168→
+  1169→# ======================================================================
+  1170→# ORCHESTRATOR
+  1171→# ======================================================================
+  1172→
+  1173→def run(args, auditor=None):
+  1174→    brand        = getattr(args, "brand", BRAND_NAME) or BRAND_NAME
+  1175→    brand_code   = getattr(args, "brand_code", BRAND_CODE) or BRAND_CODE
+  1176→    comp_code    = getattr(args, "comp_code", "0888") or "0888"
+  1177→    sbu          = getattr(args, "sbu", "SP") or "SP"
+  1178→    season       = getattr(args, "season", "SS27") or "SS27"
+  1179→    country_code = getattr(args, "country_code", "") or ""
+  1180→
+  1181→    log.info("[Anta-Linelist] Starting: brand=%s code=%s season=%s", brand, brand_code, season)
+  1182→
+  1183→    # ── Load MDD (Brand / BrandType / BrandStatus / BrandGroup / Country LOVs) ──
+  1184→    mdd = None
+  1185→    mdd_file = next(MDD_DIR.glob("*.xlsx"), None) or next(MDD_DIR.glob("*.xlsm"), None)
+  1186→    if mdd_file:
+  1187→        mdd = MDDLoader(mdd_file)
+  1188→    else:
+  1189→        log.warning("[Anta-Linelist] No MDD file found in %s — LOV lookups disabled", MDD_DIR)
+  1190→
+  1191→    # ── Load attribute mapping rules from the ANTA tab ────────────────
+  1192→    mapping_file = next(ATTR_DIR.glob("*.xlsx"), None) or next(ATTR_DIR.glob("*.xlsm"), None)
+  1193→    if not mapping_file:
+  1194→        raise FileNotFoundError(
+  1195→            f"No brand-mapping workbook found in {ATTR_DIR} — cannot load "
+  1196→            f"the '{MAPPING_SHEET_NAME}' attribute rules"
+  1197→        )
+  1198→    attr_map = AttributeMappingLoader(mapping_file, MAPPING_SHEET_NAME)
+  1199→    if not attr_map.rules:
+  1200→        log.warning("[Anta-Linelist] No active attribute rules found — nothing will be sent")
+  1201→
+  1202→    # ── RNA lookup: brand_type, brand_status, brand_group ─────────────
+  1203→    # Same file as the attribute mapping (mapping_file) — "Source Mapping
+  1204→    # related RNA" is a separate tab in the same brand-mapping workbook.
+  1205→    rna = RNALoader(mapping_file)
+  1206→
+  1207→    brand_lov_id = brand_code
+  1208→    if mdd:
+  1209→        looked_up = mdd.lovs.get("AT_Brand", {}).get(brand.upper())
+  1210→        brand_lov_id = looked_up if looked_up else brand_code
+  1211→        log.info(
+  1212→            "[Anta-Linelist] Brand LOV lookup: key='%s' -> LOV ID='%s' %s",
+  1213→            brand.upper(), brand_lov_id,
+  1214→            "(FOUND)" if looked_up else f"(NOT FOUND -- fallback to '{brand_code}')",
+  1215→        )
+  1216→
+  1217→    rna_country = mdd.country_id_to_name(country_code) if mdd and country_code else ""
+  1218→    if not rna_country:
+  1219→        rna_country = country_code
+  1220→
+  1221→    brand_type = brand_status = brand_group = ""
+  1222→    log.info(
+  1223→        "[RNA] Searching with: country='%s' comp='%s' sbu='%s' brand='%s'",
+  1224→        rna_country, comp_code, sbu, brand_lov_id,
+  1225→    )
+  1226→    rna_result = rna.get(rna_country, comp_code, sbu, brand_lov_id)
+  1227→    if not rna_result.get("brand_type"):
+  1228→        rna_result = rna.get_fuzzy(rna_country, sbu, brand_lov_id)
+  1229→    if not rna_result.get("brand_type"):
+  1230→        rna_result = rna.get_fuzzy(rna_country, sbu, brand_code)
+  1231→    if not rna_result.get("brand_type"):
+  1232→        rna_result = rna.get_by_brand_only(brand_lov_id) or rna.get_by_brand_only(brand_code)
+  1233→    brand_type   = rna_result.get("brand_type", "")
+  1234→    brand_status = rna_result.get("brand_status", "")
+  1235→    brand_group  = rna_result.get("brand_group", "")
+  1236→    log.info(
+  1237→        "[RNA] Resolved -- brand_type='%s' brand_status='%s' brand_group='%s'",
+  1238→        brand_type, brand_status, brand_group,
+  1239→    )
+  1240→
+  1241→    # ── Load the Anta linelist input file ──────────────────────────────
+  1242→    input_file = next(INPUT_DIR.glob("*.xls*"), None)
+  1243→    if not input_file:
+  1244→        raise FileNotFoundError(f"No Anta linelist file found in {INPUT_DIR}")
+  1245→
+  1246→    needed_columns = [r.source_column for r in attr_map.rules] + list(COLUMN_FALLBACKS.values())
+  1247→    loader = AntaLinelistLoader(input_file, needed_columns, INPUT_SHEET_NAME)
+  1248→    if not loader.rows:
+  1249→        log.warning("[Anta-Linelist] No data rows found — nothing to process")
+  1250→        return
+  1251→
+  1252→    style_rule = attr_map.find("AT_PrincipalStyleCode")
+  1253→    if not style_rule:
+  1254→        raise ValueError(
+  1255→            "[Anta-Linelist] ANTA mapping tab has no active 'AT_PrincipalStyleCode' "
+  1256→            "rule — cannot group rows into Generic Articles"
+  1257→        )
+  1258→    style_col = _resolve_source_col(loader, style_rule)
+  1259→    if not style_col:
+  1260→        raise ValueError(
+  1261→            f"[Anta-Linelist] Could not find column '{style_rule.source_column}' "
+  1262→            f"(AT_PrincipalStyleCode source) in sheet '{INPUT_SHEET_NAME}'. "
+  1263→            f"Headers found: {loader.headers}"
+  1264→        )
+  1265→
+  1266→    generics = group_rows(loader.rows, style_col)
+  1267→    if not generics:
+  1268→        log.warning("[Anta-Linelist] No valid generics produced")
+  1269→        return
+  1270→
+  1271→    sp_code  = season[:2].upper() if len(season) >= 2 else season
+  1272→    sys_part = season[2:] if len(season) > 2 else ""
+  1273→    sy       = f"20{sys_part}" if len(sys_part) == 2 else sys_part
+  1274→    season_id = f"CLH_{brand_code}_{sp_code}{sy}"
+  1275→
+  1276→    xml_filename = f"{input_file.stem}.xml"
+  1277→    xml_path     = XML_OUT_DIR / xml_filename
+  1278→    export_time  = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+  1279→    generic_count = 0
+  1280→
+  1281→    cls_el  = build_classifications(brand, brand_code, season)
+  1282→    cls_str = _XMLNS_RE.sub("", ET.tostring(cls_el, encoding="unicode"))
+  1283→
+  1284→    log.info("[Anta-Linelist] Writing XML -> %s", xml_filename)
+  1285→    with open(xml_path, "w", encoding="utf-8", buffering=1 << 20) as f:
+  1286→        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+  1287→        f.write(
+  1288→            f'<STEP-ProductInformation '
+  1289→            f'xmlns="{STIBO_NS}" '
+  1290→            f'xmlns:xsi="{STIBO_XSI}" '
+  1291→            f'xsi:schemaLocation="{STIBO_SCHEMA}" '
+  1292→            f'ExportTime="{export_time}" '
+  1293→            f'ExportContext="Context1" '
+  1294→            f'WorkspaceID="Main" '
+  1295→            f'UseContextLocale="false">\n\n'
+  1296→        )
+  1297→        f.write(f"  {cls_str}\n\n")
+  1298→        f.write("  <Products>\n")
+  1299→
+  1300→        for row in generics.values():
+  1301→            px = build_generic_product(
+  1302→                row, loader, attr_map.rules, brand, brand_code,
+  1303→                comp_code, sbu, season, season_id, country_code,
+  1304→                brand_lov_id=brand_lov_id, brand_type=brand_type,
+  1305→                brand_status=brand_status, brand_group=brand_group, mdd=mdd,
+  1306→            )
+  1307→            if px:
+  1308→                f.write(f"    {_XMLNS_RE.sub('', px)}\n")
+  1309→                generic_count += 1
+  1310→
+  1311→        f.write("  </Products>\n</STEP-ProductInformation>\n")
+  1312→
+  1313→    file_kb = xml_path.stat().st_size // 1024
+  1314→    log.info("[Anta-Linelist] XML written: %s (%d KB)", xml_path.name, file_kb)
+  1315→    print(
+  1316→        f"=== ANTA LINELIST SUMMARY ===\n"
+  1317→        f"  Input rows : {len(loader.rows)}\n"
+  1318→        f"  Generics   : {generic_count}\n"
+  1319→        f"  XML size   : {file_kb} KB",
+  1320→        flush=True,
+  1321→    )
+  1322→
+  1323→    if auditor:
+  1324→        auditor.set_xml_uploads([str(xml_path)])
+  1325→
+  1326→    return xml_path
+  1327→
+  1328→
+  1329→# ======================================================================
+  1330→# CLI  (local test)
+  1331→# ======================================================================
+  1332→
+  1333→if __name__ == "__main__":
+  1334→    parser = argparse.ArgumentParser(description="Anta Line List -> Stibo XML")
+  1335→    parser.add_argument("--brand",        default=BRAND_NAME)
+  1336→    parser.add_argument("--brand_code",   default=BRAND_CODE)
+  1337→    parser.add_argument("--comp_code",    default="0888")
+  1338→    parser.add_argument("--sbu",          default="SP")
+  1339→    parser.add_argument("--season",       default="SS27")
+  1340→    parser.add_argument("--country_code", default="")
+  1341→    cli_args = parser.parse_args()
+  1342→
+  1343→    logging.basicConfig(
+  1344→        level=logging.INFO,
+  1345→        format="%(asctime)s  %(levelname)-8s  %(message)s",
+  1346→        handlers=[logging.StreamHandler(sys.stdout)],
+  1347→    )
+  1348→    run(cli_args)
+
+[showing lines 700-1348 of 1349; use offset=1349 with limit to continue reading]

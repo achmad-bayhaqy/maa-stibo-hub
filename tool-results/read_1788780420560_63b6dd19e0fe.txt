@@ -1,0 +1,702 @@
+     1→"""
+     2→╔══════════════════════════════════════════════════════════════════╗
+     3→║   STIBO INBOUND XML GENERATOR — Anta Line List (Inline) v1.0     ║
+     4→║   Fully mapping-driven: no per-attribute Python code              ║
+     5→╚══════════════════════════════════════════════════════════════════╝
+     6→
+     7→Input file : "Stibo Line List Template - Anta.xlsx"  (sheet "1. Template")
+     8→
+     9→Unlike every other brand module in this repo, this ETL does NOT hardcode
+    10→which attributes to send or where they come from. Instead it reads the
+    11→"ANTA" tab of the shared brand-mapping workbook
+    12→("NEW - Brand mapping files Template.xlsx") at runtime and builds the list
+    13→of attributes to emit from these columns:
+    14→
+    15→  A  Stibo Attribute            — human label (log/debug only)
+    16→  B  Stibo Attribute ID         — AT_xxx id written into the XML. Rows with
+    17→                                   a missing/#N/A id are always skipped.
+    18→  C  Stibo Validation           — "LOV"  -> value is written as the Value
+    19→                                   element's ID attribute (id-type).
+    20→                                   anything else (text/regexp/date/number/
+    21→                                   legacyisodatetime/...) -> written as
+    22→                                   element text (value-type).
+    23→  G  Field Mapping Type         — decides whether the attribute is included:
+    24→                                     "Direct from Principal"       + Col J -> include, raw passthrough
+    25→                                     "Formula in System*"          + Col J -> include, raw passthrough
+    26→                                     "Mapping from Principal Data" + Col J -> include, value translated via Col K
+    27→                                     anything else (Manual Input, N/A,
+    28→                                     AI Translation, AI Image Analysis,
+    29→                                     Mapping from RNA/MD, or "Formula in
+    30→                                     System" with no Col J)              -> excluded
+    31→  J  Field Name in the Brand File — column to read on the "1. Template"
+    32→                                     sheet of the Anta input file.
+    33→  K  Mapping Logic              — for "Mapping from Principal Data" rows,
+    34→                                   parsed as newline-separated
+    35→                                   "source : id - label" entries
+    36→                                   (e.g. "M : M - Male") into a lookup
+    37→                                   table. A raw value with no match in the
+    38→                                   table is skipped for that attribute
+    39→                                   (no default guess — same no-fallback
+    40→                                   convention used for Clarks AT_Gender).
+    41→
+    42→Adding/removing/re-pointing an attribute is a spreadsheet edit on the ANTA
+    43→tab — this file does not need to change.
+    44→
+    45→System-level fields (Company, SBU, Country, Season, Season Year) are marked
+    46→"Manual Input in Portal" in the mapping sheet — i.e. not sourced from the
+    47→brand file at all — so they are supplied structurally from run() args /
+    48→filename metadata, exactly like every other brand module, not from the
+    49→dynamic per-row engine below.
+    50→
+    51→AT_Brand / AT_BrandType / AT_BrandStatus / AT_BrandGroup are marked
+    52→"Formula in System" / "Mapping from RNA" with no Col J source, so they're
+    53→also outside the dynamic engine — resolved the same way as
+    54→clarks/order_form_footwear_main.py: AT_Brand from the MDD Brand LOV
+    55→(brand name -> LOV ID, e.g. "Anta" -> "ATA"), and Type/Status/Group from the
+    56→attributes workbook's "Source Mapping related RNA" tab (keyed by country +
+    57→comp_code + sbu + brand code, with the same 4-pass fallback: exact match ->
+    58→fuzzy without comp_code -> fuzzy with the raw brand_code -> brand-code-only),
+    59→each then translated through its own MDD LOV with a raw-text fallback if
+    60→unmapped. See MDDLoader / RNALoader below.
+    61→
+    62→Grouping: one Generic Article per unique Style Code (the source column of
+    63→AT_PrincipalStyleCode). SAP Color ("AI Images Analysis") and SAP Size
+    64→("Formula in System" / "BY Feedback") have no source column in the mapping
+    65→sheet — there's currently no way to derive a 3-digit SAP color/size code
+    66→from the input file, so this module emits Generic Articles only, no
+    67→colour/size Variant sub-products (same simplification already used by
+    68→clarks/order_form_footwear_main.py).
+    69→
+    70→ASSUMPTION flagged for confirmation: the Generic Article ParentID
+    71→(division routing — Footwear/Apparel/Accessories/Equipment) defaults to
+    72→Footwear (PPH_F-TempSubCat) below, since "SAP Product Division" is excluded
+    73→from the dynamic engine (its Stibo Attribute ID is #N/A in the mapping
+    74→sheet). Change DEFAULT_PRODUCT_PARENT_ID if Anta linelists are not
+    75→Footwear-only.
+    76→"""
+    77→
+    78→from __future__ import annotations
+    79→
+    80→import argparse
+    81→import logging
+    82→import os
+    83→import re
+    84→import sys
+    85→from datetime import datetime
+    86→from pathlib import Path
+    87→from xml.etree import ElementTree as ET
+    88→
+    89→import openpyxl
+    90→
+    91→log = logging.getLogger(__name__)
+    92→
+    93→# ======================================================================
+    94→# PATHS
+    95→# ======================================================================
+    96→BASE_DIR = Path(os.environ.get("LAMBDA_TMP_DIR", Path(__file__).resolve().parent))
+    97→
+    98→INPUT_DIR   = BASE_DIR / "input" / "linelist"
+    99→MDD_DIR     = BASE_DIR / "input" / "mdd"
+   100→ATTR_DIR    = BASE_DIR / "input" / "attributes"
+   101→XML_OUT_DIR = BASE_DIR / "output" / "xml"
+   102→LOG_DIR     = BASE_DIR / "output" / "logs"
+   103→
+   104→for _d in (INPUT_DIR, MDD_DIR, ATTR_DIR, XML_OUT_DIR, LOG_DIR):
+   105→    _d.mkdir(parents=True, exist_ok=True)
+   106→
+   107→# ======================================================================
+   108→# BRAND CONSTANTS
+   109→# ======================================================================
+   110→BRAND_NAME = "Anta"
+   111→BRAND_CODE = "ATA"
+   112→
+   113→MAPPING_SHEET_NAME = "ANTA"          # tab in the brand-mapping workbook
+   114→INPUT_SHEET_NAME   = "1. Template"   # sheet in the Anta linelist file
+   115→
+   116→# See "ASSUMPTION flagged" note in the module docstring.
+   117→DEFAULT_PRODUCT_PARENT_ID = "PPH_F-TempSubCat"
+   118→
+   119→# ParentID by Category column value.
+   120→CATEGORY_PARENT_IDS: dict[str, str] = {
+   121→    "FTW": "PPH_F-TempSubCat",
+   122→    "APP": "PPH_A-TempSubCat",
+   123→    "ACC": "PPH_E-TempSubCat",
+   124→}
+   125→
+   126→# Attributes whose Col-J source column (from the ANTA mapping tab) has a
+   127→# known mismatch against the actual "1. Template" header — the mapping
+   128→# sheet's Col J is always tried first; if that column isn't found in the
+   129→# input file, this fallback column name is tried instead.
+   130→#   AT_PrincipalMerchandiseHierarchyL3: mapping sheet Col J says
+   131→#   "Sport Category", but the real input file's header is "Sports Category".
+   132→COLUMN_FALLBACKS: dict[str, str] = {
+   133→    "AT_PrincipalMerchandiseHierarchyL3": "Sports Category",
+   134→}
+   135→
+   136→# Attribute IDs handled by dedicated logic in build_generic_product()
+   137→# instead of the generic per-row passthrough/mapped engine — excluded from
+   138→# the dynamic loop to avoid double-emission.
+   139→#   AT_IncomingMonth: needs a date reformat (input M/D/YYYY -> DD-MM-YYYY)
+   140→#   before being sent as a text value.
+   141→#   AT_EComAgesCategory: raw value looked up in the MDD "E-com Ages
+   142→#   Category LOV" tab (Col B display name -> Col A LOV id) instead of the
+   143→#   mapping sheet's raw Direct-from-Principal passthrough.
+   144→#   AT_SportsCategoryEN: raw value from "Sports Category" looked up in the
+   145→#   MDD "Sports Category LOV" tab (Col A display name -> Col B LOV id),
+   146→#   zero-padded to 2 digits when the id is a single digit (e.g. "2" -> "02").
+   147→#   AT_LaunchingDate: needs a date reformat (input M/D/YY(YY) -> DD-Mon-YYYY,
+   148→#   e.g. "9/23/26" -> "23-Sep-2026") before being sent as a text value.
+   149→#   AT_CountrySize: derived from "Category" column with fixed LOV IDs:
+   150→#     FTW -> US, APP -> ASIA, ACC -> skipped.
+   151→SPECIAL_ATTRIBUTE_IDS: set[str] = {
+   152→    "AT_IncomingMonth", "AT_EComAgesCategory", "AT_SportsCategoryEN", "AT_LaunchingDate",
+   153→    "AT_CountrySize",
+   154→}
+   155→
+   156→# ======================================================================
+   157→# XML NAMESPACE
+   158→# ======================================================================
+   159→STIBO_NS     = "http://www.stibosystems.com/step"
+   160→STIBO_XSI    = "http://www.w3.org/2001/XMLSchema-instance"
+   161→STIBO_SCHEMA = "http://www.stibosystems.com/step PIM.xsd"
+   162→ET.register_namespace("", STIBO_NS)
+   163→_XMLNS_RE = re.compile(r'\s+xmlns(?::[a-z]+)?="[^"]*"')
+   164→
+   165→
+   166→# ======================================================================
+   167→# HELPERS
+   168→# ======================================================================
+   169→
+   170→def _s(v) -> str:
+   171→    """Clean string value — returns empty string for None/nan/empty."""
+   172→    if v is None:
+   173→        return ""
+   174→    s = str(v).strip()
+   175→    return "" if s in ("None", "nan", "0", "NaT", "#N/A", "#VALUE!") else s
+   176→
+   177→
+   178→def _norm_header(s: str) -> str:
+   179→    """Case/whitespace-insensitive header key for column matching."""
+   180→    return re.sub(r"\s+", " ", str(s)).strip().lower()
+   181→
+   182→
+   183→def _resolve_currency_from_country(country_code: str) -> str:
+   184→    """
+   185→    Resolve Retail Price Currency LOV ID from country code.
+   186→    Same country-to-currency mapping as clarks/order_form_footwear_main.py.
+   187→    """
+   188→    country_to_currency = {
+   189→        "ID": "IDR",  # Indonesia -> Indonesian Rupiah
+   190→        "PH": "PHP",  # Philippines -> Philippine Peso
+   191→        "TH": "THB",  # Thailand -> Thailand Baht
+   192→        "SG": "SGD",  # Singapore -> Singapore Dollar
+   193→        "MY": "MYR",  # Malaysia -> Malaysian Ringgit
+   194→        "VN": "VND",  # Vietnam -> Vietnamese Dong
+   195→        "KH": "USD",  # Cambodia -> United States Dollar
+   196→    }
+   197→    return country_to_currency.get((country_code or "").strip().upper(), "")
+   198→
+   199→
+   200→def _format_date_ddmmyyyy(raw_value) -> str:
+   201→    """
+   202→    Format a date value as DD-MM-YYYY, for AT_IncomingMonth.
+   203→
+   204→    Accepts a datetime/date object (openpyxl returns these for date-typed
+   205→    cells) or a string in M/D/YYYY format (e.g. "9/23/2026" or "9/23/2026."
+   206→    with a trailing period, as the Anta input file uses). Returns "" if the
+   207→    value can't be parsed as a date — no guessing.
+   208→    """
+   209→    if raw_value is None:
+   210→        return ""
+   211→    if hasattr(raw_value, "day") and hasattr(raw_value, "month") and hasattr(raw_value, "year"):
+   212→        return f"{raw_value.day:02d}-{raw_value.month:02d}-{raw_value.year}"
+   213→    s = str(raw_value).strip().rstrip(".").strip()
+   214→    m = re.match(r"^(\d{1,2})/(\d{1,2})/(\d{4})$", s)
+   215→    if not m:
+   216→        return ""
+   217→    month, day, year = int(m.group(1)), int(m.group(2)), m.group(3)
+   218→    return f"{day:02d}-{month:02d}-{year}"
+   219→
+   220→
+   221→_MONTH_ABBR = {
+   222→    1: "Jan", 2: "Feb", 3: "Mar", 4: "Apr", 5: "May", 6: "Jun",
+   223→    7: "Jul", 8: "Aug", 9: "Sep", 10: "Oct", 11: "Nov", 12: "Dec",
+   224→}
+   225→
+   226→
+   227→def _format_date_ddmonyyyy(raw_value) -> str:
+   228→    """
+   229→    Format a date value as DD-Mon-YYYY (e.g. "23-Sep-2026"), for
+   230→    AT_LaunchingDate.
+   231→
+   232→    Accepts a datetime/date object (openpyxl returns these for date-typed
+   233→    cells) or a string in M/D/YYYY or M/D/YY format (e.g. "9/23/2026" or
+   234→    "9/23/26", optionally with a trailing period). Returns "" if the value
+   235→    can't be parsed as a date — no guessing.
+   236→    """
+   237→    if raw_value is None:
+   238→        return ""
+   239→    if hasattr(raw_value, "day") and hasattr(raw_value, "month") and hasattr(raw_value, "year"):
+   240→        return f"{raw_value.day:02d}-{_MONTH_ABBR[raw_value.month]}-{raw_value.year}"
+   241→    s = str(raw_value).strip().rstrip(".").strip()
+   242→    m = re.match(r"^(\d{1,2})/(\d{1,2})/(\d{2}|\d{4})$", s)
+   243→    if not m:
+   244→        return ""
+   245→    month, day, year = int(m.group(1)), int(m.group(2)), m.group(3)
+   246→    if len(year) == 2:
+   247→        year = f"20{year}"
+   248→    if month not in _MONTH_ABBR:
+   249→        return ""
+   250→    return f"{day:02d}-{_MONTH_ABBR[month]}-{year}"
+   251→
+   252→
+   253→# ======================================================================
+   254→# XML HELPERS
+   255→# ======================================================================
+   256→
+   257→def _val(parent: ET.Element, attr_id: str, text: str = "", lov_id: str = "") -> None:
+   258→    if not text and not lov_id:
+   259→        return
+   260→    v = ET.SubElement(parent, f"{{{STIBO_NS}}}Value")
+   261→    v.set("AttributeID", attr_id)
+   262→    if lov_id:
+   263→        v.set("ID", lov_id)
+   264→    if text:
+   265→        v.text = text
+   266→
+   267→
+   268→def _val_text(parent: ET.Element, attr_id: str, text: str) -> None:
+   269→    t = _s(text)
+   270→    if t:
+   271→        _val(parent, attr_id, text=t)
+   272→
+   273→
+   274→def _val_lov(parent: ET.Element, attr_id: str, lov_id: str) -> None:
+   275→    lid = _s(lov_id)
+   276→    if lid:
+   277→        _val(parent, attr_id, lov_id=lid)
+   278→
+   279→
+   280→def _multival(parent: ET.Element, attr_id: str, id_val: str) -> None:
+   281→    v = _s(id_val)
+   282→    if not v:
+   283→        return
+   284→    mv = ET.SubElement(parent, f"{{{STIBO_NS}}}MultiValue")
+   285→    mv.set("AttributeID", attr_id)
+   286→    ET.SubElement(mv, f"{{{STIBO_NS}}}Value").set("ID", v)
+   287→
+   288→
+   289→# ======================================================================
+   290→# MDD LOADER  (Brand / Brand Type / Brand Status / Brand Group / Country
+   291→# LOVs — same sheet-layout convention as clarks/order_form_footwear_main.py)
+   292→# ======================================================================
+   293→
+   294→class MDDLoader:
+   295→    """Loads the LOV tables needed to resolve AT_Brand / AT_BrandType /
+   296→    AT_BrandStatus / AT_BrandGroup, plus Country (id -> name, used to key
+   297→    the RNA lookup)."""
+   298→
+   299→    def __init__(self, path: Path):
+   300→        self.path = path
+   301→        self.lovs: dict[str, dict] = {}
+   302→        self._load()
+   303→
+   304→    def _load(self) -> None:
+   305→        log.info("[MDD] Loading: %s", self.path.name)
+   306→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   307→        self._load_brand_lov(wb)
+   308→        self._load_brand_type_lov(wb)
+   309→        self._load_brand_status_lov(wb)
+   310→        self._load_brand_group_lov(wb)
+   311→        self._load_country_lov(wb)
+   312→        self._load_ecom_ages_category_lov(wb)
+   313→        self._load_sports_category_lov(wb)
+   314→        wb.close()
+   315→        log.info("[MDD] %d LOV types loaded", len(self.lovs))
+   316→
+   317→    def _load_brand_lov(self, wb) -> None:
+   318→        """Brand LOV: col A = LOV ID, col B = display name."""
+   319→        sheet = next(
+   320→            (s for s in wb.sheetnames if "BRAND" in s.upper() and "LOV" in s.upper()
+   321→             and "TYPE" not in s.upper() and "GROUP" not in s.upper() and "STATUS" not in s.upper()),
+   322→            None,
+   323→        )
+   324→        if not sheet:
+   325→            log.warning("[MDD] Brand LOV sheet not found")
+   326→            return
+   327→        lov: dict[str, str] = {}
+   328→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   329→            if not row or len(row) < 2:
+   330→                continue
+   331→            lov_id  = str(row[0]).strip() if row[0] else ""
+   332→            display = str(row[1]).strip() if row[1] else ""
+   333→            if display and lov_id:
+   334→                lov[display.upper()] = lov_id
+   335→        self.lovs["AT_Brand"] = lov
+   336→        log.info("[MDD] Brand LOV: %d entries", len(lov))
+   337→
+   338→    def _load_brand_type_lov(self, wb) -> None:
+   339→        sheet = next(
+   340→            (s for s in wb.sheetnames if "BRAND" in s.upper() and "TYPE" in s.upper() and "LOV" in s.upper()),
+   341→            None,
+   342→        )
+   343→        if not sheet:
+   344→            log.warning("[MDD] Brand Type LOV sheet not found")
+   345→            return
+   346→        lov: dict[str, str] = {}
+   347→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   348→            if not row or len(row) < 2:
+   349→                continue
+   350→            lov_id  = str(row[0]).strip() if row[0] else ""
+   351→            display = str(row[1]).strip() if row[1] else ""
+   352→            if display and lov_id:
+   353→                lov[display.upper()] = lov_id
+   354→        self.lovs["AT_BrandType"] = lov
+   355→        log.info("[MDD] Brand Type LOV: %d entries", len(lov))
+   356→
+   357→    def _load_brand_status_lov(self, wb) -> None:
+   358→        sheet = next(
+   359→            (s for s in wb.sheetnames if "BRAND" in s.upper() and "STATUS" in s.upper() and "LOV" in s.upper()),
+   360→            None,
+   361→        )
+   362→        if not sheet:
+   363→            log.warning("[MDD] Brand Status LOV sheet not found")
+   364→            return
+   365→        lov: dict[str, str] = {}
+   366→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   367→            if not row or len(row) < 2:
+   368→                continue
+   369→            lov_id  = str(row[0]).strip() if row[0] else ""
+   370→            display = str(row[1]).strip() if row[1] else ""
+   371→            if display and lov_id:
+   372→                lov[display.upper()] = lov_id
+   373→        self.lovs["AT_BrandStatus"] = lov
+   374→        log.info("[MDD] Brand Status LOV: %d entries", len(lov))
+   375→
+   376→    def _load_brand_group_lov(self, wb) -> None:
+   377→        sheet = next(
+   378→            (s for s in wb.sheetnames if "BRAND" in s.upper() and "GROUP" in s.upper() and "LOV" in s.upper()),
+   379→            None,
+   380→        )
+   381→        if not sheet:
+   382→            sheet = next((s for s in wb.sheetnames if s.strip().upper() == "BRAND GROUP"), None)
+   383→        if not sheet:
+   384→            log.warning("[MDD] Brand Group LOV sheet not found")
+   385→            return
+   386→        lov: dict[str, str] = {}
+   387→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   388→            if not row or len(row) < 2:
+   389→                continue
+   390→            lov_id  = str(row[0]).strip() if row[0] else ""
+   391→            display = str(row[1]).strip() if row[1] else ""
+   392→            if display and lov_id:
+   393→                lov[display.upper()] = lov_id
+   394→        self.lovs["AT_BrandGroup"] = lov
+   395→        log.info("[MDD] Brand Group LOV: %d entries", len(lov))
+   396→
+   397→    def _load_country_lov(self, wb) -> None:
+   398→        """Country LOV: col A = LOV ID (e.g. 'ID'), col B = display name (e.g. 'Indonesia')."""
+   399→        sheet = next(
+   400→            (s for s in wb.sheetnames if s.strip().upper() == "COUNTRY LOV"),
+   401→            next((s for s in wb.sheetnames if "COUNTRY" in s.upper() and "LOV" in s.upper()
+   402→                  and "ORIGIN" not in s.upper()), None),
+   403→        )
+   404→        if not sheet:
+   405→            log.warning("[MDD] Country LOV sheet not found")
+   406→            return
+   407→        id_to_name: dict[str, str] = {}
+   408→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   409→            if not row or len(row) < 2:
+   410→                continue
+   411→            lov_id  = str(row[0]).strip() if row[0] else ""
+   412→            display = str(row[1]).strip() if row[1] else ""
+   413→            if lov_id and display:
+   414→                id_to_name[lov_id.upper()] = display
+   415→        self.lovs["CountryLOV"] = id_to_name
+   416→        log.info("[MDD] Country LOV: %d entries", len(id_to_name))
+   417→
+   418→    def country_id_to_name(self, country_id: str) -> str:
+   419→        return self.lovs.get("CountryLOV", {}).get((country_id or "").strip().upper(), "")
+   420→
+   421→    def _load_ecom_ages_category_lov(self, wb) -> None:
+   422→        """E-com Ages Category LOV: col A = LOV ID (Code), col B = display name."""
+   423→        sheet = next(
+   424→            (s for s in wb.sheetnames if s.strip().upper() == "E-COM AGES CATEGORY LOV"),
+   425→            next(
+   426→                (s for s in wb.sheetnames
+   427→                 if "AGES" in s.upper() and "CATEGORY" in s.upper() and "LOV" in s.upper()),
+   428→                None,
+   429→            ),
+   430→        )
+   431→        if not sheet:
+   432→            log.warning("[MDD] E-com Ages Category LOV sheet not found")
+   433→            return
+   434→        lov: dict[str, str] = {}
+   435→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   436→            if not row or len(row) < 2:
+   437→                continue
+   438→            lov_id  = str(row[0]).strip() if row[0] else ""
+   439→            display = str(row[1]).strip() if row[1] else ""
+   440→            if display and lov_id:
+   441→                lov[display.upper()] = lov_id
+   442→        self.lovs["AT_EComAgesCategory"] = lov
+   443→        log.info("[MDD] E-com Ages Category LOV: %d entries", len(lov))
+   444→
+   445→    def _load_sports_category_lov(self, wb) -> None:
+   446→        """Sports Category LOV: col A = display name, col B = LOV ID."""
+   447→        sheet = next(
+   448→            (s for s in wb.sheetnames if s.strip().upper() == "SPORTS CATEGORY LOV"),
+   449→            next(
+   450→                (s for s in wb.sheetnames
+   451→                 if "SPORTS" in s.upper() and "CATEGORY" in s.upper() and "LOV" in s.upper()),
+   452→                None,
+   453→            ),
+   454→        )
+   455→        if not sheet:
+   456→            log.warning("[MDD] Sports Category LOV sheet not found")
+   457→            return
+   458→        lov: dict[str, str] = {}
+   459→        for row in list(wb[sheet].iter_rows(values_only=True))[1:]:
+   460→            if not row or len(row) < 2:
+   461→                continue
+   462→            display = str(row[0]).strip() if row[0] else ""
+   463→            lov_id  = str(row[1]).strip() if row[1] else ""
+   464→            if lov_id.endswith(".0"):
+   465→                lov_id = lov_id[:-2]
+   466→            if display and lov_id:
+   467→                lov[display.upper()] = lov_id
+   468→        self.lovs["AT_SportsCategoryEN"] = lov
+   469→        log.info("[MDD] Sports Category LOV: %d entries", len(lov))
+   470→
+   471→
+   472→# ======================================================================
+   473→# RNA LOADER  (Brand Type / Brand Status / Brand Group — same
+   474→# "Source Mapping related RNA" sheet + 4-pass lookup used by Clarks)
+   475→# ======================================================================
+   476→
+   477→class RNALoader:
+   478→    RNA_SHEET_KEYWORDS = ["SOURCE MAPPING", "RNA", "BRAND MAPPING"]
+   479→
+   480→    @staticmethod
+   481→    def _norm_country(v: str) -> str:
+   482→        return (v or "").strip().upper()
+   483→
+   484→    @staticmethod
+   485→    def _norm_comp_code(v: str) -> str:
+   486→        s = (v or "").strip()
+   487→        if not s:
+   488→            return ""
+   489→        if s.endswith(".0"):
+   490→            s = s[:-2]
+   491→        s2 = s.lstrip("0")
+   492→        return s2 if s2 else "0"
+   493→
+   494→    def __init__(self, path: Path):
+   495→        self.path = path
+   496→        self.lookup: dict[tuple, dict] = {}
+   497→        self._load()
+   498→
+   499→    def _load(self) -> None:
+   500→        log.info("[RNA] Loading from: %s", self.path.name)
+   501→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   502→        sheet_name = next(
+   503→            (s for s in wb.sheetnames if any(kw in s.upper() for kw in self.RNA_SHEET_KEYWORDS)),
+   504→            None,
+   505→        )
+   506→        if not sheet_name:
+   507→            log.warning("[RNA] 'Source Mapping Related RNA' tab not found in %s", self.path.name)
+   508→            wb.close()
+   509→            return
+   510→
+   511→        log.info("[RNA] Using sheet: '%s'", sheet_name)
+   512→        rows = list(wb[sheet_name].iter_rows(values_only=True))
+   513→        wb.close()
+   514→
+   515→        hdr_idx = next(
+   516→            (i for i, r in enumerate(rows)
+   517→             if any(isinstance(v, str) and "COUNTRY" in v.upper() for v in r if v)),
+   518→            None,
+   519→        )
+   520→        if hdr_idx is None:
+   521→            log.warning("[RNA] Cannot find header row in sheet '%s'", sheet_name)
+   522→            return
+   523→
+   524→        hdr = rows[hdr_idx]
+   525→        col = {str(h).strip().upper(): i for i, h in enumerate(hdr) if h}
+   526→
+   527→        def _find(*candidates) -> int | None:
+   528→            for c in candidates:
+   529→                if c.upper() in col:
+   530→                    return col[c.upper()]
+   531→            return None
+   532→
+   533→        c_country = _find("COUNTRY", "COUNTRY NAME")
+   534→        c_comp    = _find("COMPANY CODE", "COMP CODE", "COMPCODE", "COMP_CODE")
+   535→        c_sbu     = _find("SBU")
+   536→        c_bcode   = _find("BRANDCODE", "BRAND CODE", "REPORTING BRAND CODE MAPPED")
+   537→        c_btype   = _find("BRANDTYPE_DETAIL", "BRAND TYPE", "AT_BRANDTYPE", "BRANDTYPE")
+   538→        c_bgroup  = _find("BRANDGROUP", "BRAND GROUP", "AT_BRANDGROUP")
+   539→        c_bstatus = _find("BRAND STATUS", "BRANDSTATUS", "AT_BRANDSTATUS")
+   540→
+   541→        def _cell(row, idx):
+   542→            if idx is None or idx >= len(row) or row[idx] is None:
+   543→                return ""
+   544→            return str(row[idx]).strip()
+   545→
+   546→        count = 0
+   547→        for row in rows[hdr_idx + 1:]:
+   548→            country = _cell(row, c_country)
+   549→            if not country:
+   550→                continue
+   551→            key = (
+   552→                self._norm_country(country),
+   553→                self._norm_comp_code(_cell(row, c_comp)),
+   554→                _cell(row, c_sbu).upper(),
+   555→                _cell(row, c_bcode).upper(),
+   556→            )
+   557→            self.lookup[key] = {
+   558→                "brand_type":   _cell(row, c_btype),
+   559→                "brand_group":  _cell(row, c_bgroup),
+   560→                "brand_status": _cell(row, c_bstatus),
+   561→            }
+   562→            count += 1
+   563→        log.info("[RNA] %d entries loaded from '%s'", count, sheet_name)
+   564→
+   565→    def get(self, country_name: str, comp_code: str, sbu: str, brand_code: str) -> dict:
+   566→        key = (
+   567→            self._norm_country(country_name),
+   568→            self._norm_comp_code(comp_code),
+   569→            (sbu or "").strip().upper(),
+   570→            (brand_code or "").strip().upper(),
+   571→        )
+   572→        return self.lookup.get(key, {"brand_type": "", "brand_group": "", "brand_status": ""})
+   573→
+   574→    def get_fuzzy(self, country_name: str, sbu: str, brand_code: str) -> dict:
+   575→        c = self._norm_country(country_name)
+   576→        b = (brand_code or "").strip().upper()
+   577→        s = (sbu or "").strip().upper()
+   578→        for (kc, _, ks, kb), val in self.lookup.items():
+   579→            if kc == c and ks == s and kb == b:
+   580→                return val
+   581→        for (kc, _, ks, kb), val in self.lookup.items():
+   582→            if kc == c and kb == b:
+   583→                return val
+   584→        return {"brand_type": "", "brand_group": "", "brand_status": ""}
+   585→
+   586→    def get_by_brand_only(self, brand_code: str) -> dict:
+   587→        b = (brand_code or "").strip().upper()
+   588→        for (_, _, _, kb), val in self.lookup.items():
+   589→            if kb == b:
+   590→                return val
+   591→        return {"brand_type": "", "brand_group": "", "brand_status": ""}
+   592→
+   593→
+   594→# ======================================================================
+   595→# ATTRIBUTE MAPPING ENGINE  (drives everything — see module docstring)
+   596→# ======================================================================
+   597→
+   598→def _parse_mapping_logic(raw_logic) -> dict[str, str]:
+   599→    """
+   600→    Parse Col K "Mapping Logic" text into {SOURCE_UPPER: resolved_id_or_text}.
+   601→
+   602→    Expected line format: "<source> : <target_id> - <target_label>"
+   603→      e.g. "M : M - Male"   -> {"M": "M"}
+   604→           "W : F - Female" -> {"W": "F"}
+   605→    Lines that don't contain ":" (e.g. free-text notes like
+   606→    "Mapping from Principal Data") are ignored — callers fall back to raw
+   607→    passthrough when the resulting table is empty.
+   608→    """
+   609→    mapping: dict[str, str] = {}
+   610→    text = _s(raw_logic)
+   611→    if not text:
+   612→        return mapping
+   613→    for line in text.splitlines():
+   614→        line = line.strip()
+   615→        if not line or ":" not in line:
+   616→            continue
+   617→        src, _, tgt = line.partition(":")
+   618→        src = src.strip()
+   619→        tgt = tgt.strip()
+   620→        if not src or not tgt:
+   621→            continue
+   622→        # "F - Female" -> take the id token before " - "
+   623→        tgt_id = tgt.split(" - ", 1)[0].strip() or tgt
+   624→        mapping[src.upper()] = tgt_id
+   625→    return mapping
+   626→
+   627→
+   628→class AttributeRule:
+   629→    def __init__(self, name: str, attr_id: str, validation: str,
+   630→                 mapping_type: str, source_column: str, mapping_logic_raw):
+   631→        self.name          = name
+   632→        self.attr_id       = attr_id
+   633→        self.is_lov        = validation.strip().upper() == "LOV"
+   634→        self.mapping_type  = mapping_type
+   635→        self.source_column = source_column
+   636→        self.mode          = "direct"   # "direct" | "mapped"
+   637→        self.value_map: dict[str, str] = {}
+   638→
+   639→        mt = mapping_type.strip()
+   640→        if mt == "Mapping from Principal Data":
+   641→            self.mode = "mapped"
+   642→            self.value_map = _parse_mapping_logic(mapping_logic_raw)
+   643→
+   644→    def resolve(self, raw_value: str) -> str | None:
+   645→        """Return the value to write for this attribute, or None to skip it."""
+   646→        raw = _s(raw_value)
+   647→        if not raw:
+   648→            return None
+   649→        if self.mode == "direct" or not self.value_map:
+   650→            return raw
+   651→        # "mapped" mode with a real lookup table — no default guess.
+   652→        resolved = self.value_map.get(raw.upper())
+   653→        if resolved is None:
+   654→            log.info(
+   655→                "[AttrMap] '%s' (%s): raw value '%s' not in Col K mapping table "
+   656→                "%s — attribute skipped for this row",
+   657→                self.name, self.attr_id, raw, sorted(self.value_map.keys()),
+   658→            )
+   659→        return resolved
+   660→
+   661→
+   662→class AttributeMappingLoader:
+   663→    """
+   664→    Reads the brand tab (MAPPING_SHEET_NAME) from the shared brand-mapping
+   665→    workbook and turns it into the list of AttributeRule objects that
+   666→    drive XML generation. See module docstring for the column contract.
+   667→    """
+   668→
+   669→    def __init__(self, path: Path, sheet_name: str = MAPPING_SHEET_NAME):
+   670→        self.path = path
+   671→        self.sheet_name = sheet_name
+   672→        self.rules: list[AttributeRule] = []
+   673→        self._load()
+   674→
+   675→    def _load(self) -> None:
+   676→        wb = openpyxl.load_workbook(self.path, read_only=True, data_only=True)
+   677→        try:
+   678→            target = next(
+   679→                (s for s in wb.sheetnames if s.strip().upper() == self.sheet_name.upper()),
+   680→                None,
+   681→            )
+   682→            if not target:
+   683→                raise ValueError(
+   684→                    f"[AttrMap] Sheet '{self.sheet_name}' not found in {self.path.name}. "
+   685→                    f"Available: {wb.sheetnames}"
+   686→                )
+   687→            rows = list(wb[target].iter_rows(values_only=True))
+   688→        finally:
+   689→            wb.close()
+   690→
+   691→        hdr_idx = next(
+   692→            (i for i, r in enumerate(rows)
+   693→             if r and _s(r[0]).upper() == "STIBO ATTRIBUTE"),
+   694→            None,
+   695→        )
+   696→        if hdr_idx is None:
+   697→            raise ValueError(f"[AttrMap] Cannot find 'Stibo Attribute' header row in '{target}'")
+   698→
+   699→        skipped_no_id = 0
+   700→        skipped_type  = 0
+
+[showing lines 1-700 of 1349; use offset=701 with limit to continue reading]
