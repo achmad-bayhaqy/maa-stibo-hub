@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --text: #111827; --text-sub: #6B7280; --text-muted: #9CA3AF;
+    --bg: #FFFFFF; --surface: #F9FAFB; --border: #E5E7EB;
+    --teal: #1B6B7A; --teal-bg: #EDF5F6; --blue: #2563EB; --blue-bg: #EFF6FF;
+    --amber: #B45309; --amber-bg: #FFF7ED; --violet: #6D28D9; --violet-bg: #F5F3FF;
+    --green: #047857; --green-bg: #F0FDF4; --gray: #475569;
+    --connector: #94A3B8;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
+  #root { width: fit-content; min-width: 1360px; margin: 0 auto; padding: 48px 44px; background: #FFFFFF; }
+  .flow-title { font-size: 24px; font-weight: 700; text-align: center; }
+  .flow-subtitle { font-size: 14px; color: var(--text-sub); text-align: center; margin-top: 8px; margin-bottom: 36px; }
+
+  .layer { border-radius: 14px; padding: 18px 22px 20px; border: 1.5px solid var(--border); background: var(--surface); }
+  .layer-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+  .layer-name { font-size: 17px; font-weight: 700; padding: 6px 14px; border-radius: 8px; }
+  .layer-note { font-size: 12.5px; color: var(--text-sub); }
+  .nodes { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+  .node { border-radius: 10px; padding: 12px 16px; text-align: left; min-width: 200px; max-width: 320px;
+          background: #FFFFFF; border: 2px solid var(--gray); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+  .node .t { font-size: 14.5px; font-weight: 600; line-height: 1.35; }
+  .node .d { font-size: 12px; color: var(--text-sub); margin-top: 4px; line-height: 1.45; }
+  .node.portal { border-color: var(--teal); background: var(--teal-bg); }
+  .node.aws { border-color: var(--blue); background: var(--blue-bg); }
+  .node.lambda { border-color: var(--teal); background: var(--teal-bg); }
+  .node.stibo { border-color: var(--violet); background: var(--violet-bg); }
+  .node.side { border-color: #CBD5E1; background: #FFFFFF; border-style: dashed; min-width: 190px; max-width: 260px; }
+  .node.side .t { font-size: 13px; }
+  .role { display: inline-flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1.5px solid #CBD5E1;
+          border-radius: 20px; padding: 6px 16px; font-size: 13px; font-weight: 600; color: var(--gray); }
+  .arrow-row { display: flex; justify-content: center; align-items: center; gap: 14px; margin: 10px 0; }
+  .arrow { color: var(--connector); font-size: 26px; line-height: 1; }
+  .arrow-label { font-size: 12.5px; color: var(--text-sub); background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 14px; padding: 4px 12px; }
+  .legend { display: flex; gap: 26px; justify-content: center; margin-top: 34px; padding: 14px 22px;
+            background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #4B5563; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; border: 2px solid; background: #FFFFFF; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="flow-title">End-to-End System Architecture</div>
+  <div class="flow-subtitle">MAP&ndash;Stibo Master Data Inbound Pipeline &mdash; current state, September 2026</div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="layer-name" style="background:#EDF5F6;color:#134E5A;border-left:4px solid #1B6B7A;">USER LAYER</span>
+      <span class="layer-note">Human entry point &mdash; COE, Brand, IT and selected users</span></div>
+    <div class="nodes">
+      <div class="role">COE Team</div>
+      <div class="role">Brand Team</div>
+      <div class="role">IT Team</div>
+      <div class="node portal" style="min-width:340px;">
+        <div class="t">MAP Portal (web)</div>
+        <div class="d">User selects Company Code &middot; Season &middot; Brand &middot; File Type &middot; SBU &middot; License/Inline &middot; Multi/Mono &middot; Country, then uploads the Excel file</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow-row"><span class="arrow">&#8595;</span><span class="arrow-label">Standardised file name generated from dropdown values</span></div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="layer-name" style="background:#EFF6FF;color:#1E3A8A;border-left:4px solid #2563EB;">AWS INGESTION</span>
+      <span class="layer-note">Storage &amp; eventing &mdash; raw landing zone</span></div>
+    <div class="nodes">
+      <div class="node aws">
+        <div class="t">S3 raw bucket</div>
+        <div class="d">raw/metadata/{brand}/&lt;standardised file&gt;.xlsx<br>raw/metadata/&lt;global MDD / Attributes / Naming&gt;</div>
+      </div>
+      <div class="node aws">
+        <div class="t">EventBridge</div>
+        <div class="d">S3 ObjectCreated notification fires the validate-transform Lambda on every upload</div>
+      </div>
+      <div class="node side">
+        <div class="t">Audit logs (raw/logs)</div>
+        <div class="d">raw/logs/{brand}/{timestamp}.json written on every invocation</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow-row"><span class="arrow">&#8595;</span><span class="arrow-label">Event: bucket + object key</span></div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="layer-name" style="background:#EDF5F6;color:#134E5A;border-left:4px solid #1B6B7A;">TRANSFORM LAYER</span>
+      <span class="layer-note">map-stibo-inbound-validate-transform-dev (Python 3.12)</span></div>
+    <div class="nodes">
+      <div class="node lambda">
+        <div class="t">router.py</div>
+        <div class="d">Extracts brand folder from key; global files fan out to all 27 brand handlers</div>
+      </div>
+      <div class="node lambda">
+        <div class="t">Brand handler + ETL modules</div>
+        <div class="d">Classifies file type by name &middot; validates required companion files &middot; downloads to /tmp &middot; converts xlsb/csv</div>
+      </div>
+      <div class="node lambda">
+        <div class="t">Shared loaders</div>
+        <div class="d">MDD / Attributes / RNA / brand mapping / MD mapping &mdash; reference data consumed per article</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow-row"><span class="arrow">&#8595;</span><span class="arrow-label">STEPXML written per brand</span></div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="layer-name" style="background:#EFF6FF;color:#1E3A8A;border-left:4px solid #2563EB;">DELIVERY LAYER</span>
+      <span class="layer-note">map-stibo-inbound-send-to-step-dev (v2.3)</span></div>
+    <div class="nodes">
+      <div class="node aws">
+        <div class="t">S3 processed bucket</div>
+        <div class="d">processed/stepxml/{brand}/&lt;file&gt;.xml &mdash; XML landing triggers the uploader</div>
+      </div>
+      <div class="node lambda">
+        <div class="t">Stibo uploader Lambda</div>
+        <div class="d">Filename &rarr; endpoint routing &middot; OIDC client-credentials token &middot; POST binary XML with retries &middot; bgId receipt</div>
+      </div>
+      <div class="node side">
+        <div class="t">bgId receipts</div>
+        <div class="d">processed/stepxml/bgid/{brand}/&lt;file&gt;.json records the STEP background-process id</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow-row"><span class="arrow">&#8595;</span><span class="arrow-label">HTTPS POST &middot; OAuth2 bearer token</span></div>
+
+  <div class="layer">
+    <div class="layer-head"><span class="layer-name" style="background:#F5F3FF;color:#4C1D95;border-left:4px solid #6D28D9;">STIBO STEP (MDM OF RECORD)</span>
+      <span class="layer-note">Inbound Integration End Points &mdash; REST Direct Receiver</span></div>
+    <div class="nodes">
+      <div class="node stibo"><div class="t">IIEP_ArticlePlanning</div><div class="d">Line List &middot; Recap Sample &middot; Price List &middot; Order Form (FOB/Lotto)</div></div>
+      <div class="node stibo"><div class="t">IIEP_EANUpdate</div><div class="d">Backlog &middot; EAN Source &middot; Order Sheet &middot; Packing List &middot; OOR &middot; TAF</div></div>
+      <div class="node stibo"><div class="t">IIEP_ArticleMaintenance</div><div class="d">TDD &middot; DTB &middot; Ecommerce files</div></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="border-color:#1B6B7A;background:#EDF5F6;"></div>Portal / transform</div>
+    <div class="legend-item"><div class="legend-dot" style="border-color:#2563EB;background:#EFF6FF;"></div>AWS storage &amp; events</div>
+    <div class="legend-item"><div class="legend-dot" style="border-color:#6D28D9;background:#F5F3FF;"></div>Stibo STEP endpoints</div>
+    <div class="legend-item"><div class="legend-dot" style="border-color:#CBD5E1;background:#FFFFFF;border-style:dashed;"></div>Observability artifacts</div>
+  </div>
+</div>
+</body>
+</html>

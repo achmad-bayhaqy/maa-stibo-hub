@@ -168,3 +168,36 @@ Work Log:
 Stage Summary:
 - Deliverable of this phase: comprehensive assessment + proposed architecture + roadmap + open questions, delivered in conversation
 - All analysis artifacts: /home/z/my-project/analysis/, /home/z/my-project/scripts/, worklog sections by agents A/B/C
+
+---
+Task ID: 8
+Agent: Main agent
+Task: Create comprehensive English DOCX system documentation of current MAP-Stibo integration
+
+Work Log:
+- User clarified: MAP Portal exists (web upload + dropdown-based auto naming), "Manual Input in Portal" = entering in MAP Portal, users = COE/Brand/IT, Stibo credentials in env vars
+- AskUserQuestion answered: DOCX, English, all teams audience, full manual 50-80p, all 6 modules, full diagrams, full known issues, MAP Portal from description (assumptions marked)
+- Loaded docx skill (create route, docx-js-core, design-system R1+DM-1, common-rules, toc.md, report scene) + charts skill (playwright-css Layout C, _rules iron laws)
+- Outline set: 18 sections (front matter + 16 chapters + appendices A-F)
+- Next: 5 diagrams via Playwright+CSS, then docx build
+
+Stage Summary:
+- Deliverable: /home/z/my-project/download/MAP-Stibo_System_Documentation.docx
+
+---
+Task ID: 8 (completion)
+Agent: Main agent
+Task: Deliver MAP-Stibo System Documentation DOCX
+
+Work Log:
+- Rendered 5 diagrams (Playwright+CSS, charts-skill compliant): fig1 architecture, fig2 naming decoder, fig3 router flow, fig4 reference data framework, fig5 E2E walkthrough -> /home/z/my-project/analysis/diagrams/
+- Built DOCX via docx-js: cover R1/DM-1, Document Control (Roman numerals), TOC field + 107 placeholder entries, Executive Summary, 16 chapters, appendices A-F; Times New Roman Profile A; 24 tables; 5 embedded figures; code blocks for STEPXML + audit JSON
+- Post-processing: add_toc_placeholders.py (exit 0), footer instrText patched (ROMAN/arabic), empty pgNumType removed
+- postcheck.py: 0 errors (1 acceptable warning: table-cell line spacing 276 vs body 312, by design)
+- Visual verification via LibreOffice PDF render: cover, doc control, TOC, body, tables (cross-page header repeat OK), figures OK
+- Final: 61 pages A4, 2.1 MB
+
+Stage Summary:
+- DELIVERABLE: /home/z/my-project/download/MAP-Stibo_System_Documentation.docx (61 pages, English, v1.0)
+- Generator scripts preserved: /home/z/my-project/scripts/docx_gen/ (editable for revisions)
+- Diagram sources: /home/z/my-project/analysis/diagrams/*.html (editable HTML -> re-render via scripts/render_diagrams.py)

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --text: #111827; --text-sub: #6B7280; --border: #E5E7EB; --connector: #94A3B8; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background: #FFFFFF; color: var(--text); -webkit-font-smoothing: antialiased; }
+  #root { width: fit-content; min-width: 1080px; margin: 0 auto; padding: 48px 44px; }
+  .flow-title { font-size: 24px; font-weight: 700; text-align: center; }
+  .flow-subtitle { font-size: 14px; color: var(--text-sub); text-align: center; margin-top: 8px; margin-bottom: 34px; }
+
+  .phase-group { background: #F8FAFC; border-radius: 12px; padding: 18px 22px; margin-bottom: 0; }
+  .phase-title { font-size: 16px; font-weight: 700; padding: 10px 16px; border-radius: 8px; margin-bottom: 14px; }
+  .phase-steps { display: flex; flex-direction: column; gap: 8px; padding-left: 12px; }
+  .phase-step { font-size: 13.5px; color: var(--text); padding: 9px 14px; background: white; border-radius: 6px; border: 1px solid var(--border); line-height: 1.5; }
+  .phase-step .step-num { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center;
+    border-radius: 50%; font-size: 12px; font-weight: 600; margin-right: 8px; }
+  .phase-step code, .branch-box code, .side-branch code { font-family: 'SF Mono', Consolas, Menlo, monospace; font-size: 12px;
+    background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 4px; padding: 1px 5px; color: #334155; }
+  .branch-row { display: flex; gap: 12px; padding-left: 12px; margin-top: 8px; flex-wrap: wrap; }
+  .branch-box { flex: 1; min-width: 300px; max-width: 470px; font-size: 12.5px; border-radius: 8px; padding: 10px 14px; line-height: 1.55; }
+  .branch-box .b-h { font-weight: 700; font-size: 12.5px; margin-bottom: 4px; }
+  .b-yes { background: #F0FDF4; border: 1.5px solid #10B981; color: #065F46; }
+  .b-no  { background: #FFF7ED; border: 1.5px solid #F59E0B; color: #92400E; }
+  .b-alt { background: #F5F3FF; border: 1.5px solid #8B5CF6; color: #5B21B6; }
+  .side-branch { background: #EFF6FF; border: 1.5px solid #2563EB; color: #1E3A8A; }
+
+  /* Same-hue blue-gray progression (Scheme A, 5 phases -> Scheme B) */
+  .phase-1 .phase-title { background: #F8FAFC; color: #334155; border-left: 4px solid #94A3B8; }
+  .phase-1 .step-num { background: #F1F5F9; color: #475569; }
+  .phase-2 .phase-title { background: #F1F5F9; color: #334155; border-left: 4px solid #7B8FA3; }
+  .phase-2 .step-num { background: #E2E8F0; color: #475569; }
+  .phase-3 .phase-title { background: #E8EDF3; color: #2D4156; border-left: 4px solid #6B809A; }
+  .phase-3 .step-num { background: #DBEAFE; color: #2D4156; }
+  .phase-4 .phase-title { background: #E2E8F0; color: #283C52; border-left: 4px solid #5B7590; }
+  .phase-4 .step-num { background: #D0D9E4; color: #283C52; }
+  .phase-5 .phase-title { background: #DAE1EB; color: #23364D; border-left: 4px solid #4B6A87; }
+  .phase-5 .step-num { background: #C7D2E0; color: #23364D; }
+
+  .arrow { text-align: center; color: var(--connector); font-size: 24px; margin: 8px 0; line-height: 1; }
+  .arrow-label { text-align: center; font-size: 12px; color: var(--text-sub); margin-top: 2px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="flow-title">Router Decision Flow &mdash; map-stibo-inbound-validate-transform</div>
+  <div class="flow-subtitle">Entry point router.lambda_handler(event, context) &mdash; every EventBridge S3 ObjectCreated event</div>
+
+  <div class="phase-group phase-1">
+    <div class="phase-title">Phase 1 &middot; Event Ingestion</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">1</span>Receive EventBridge event; log full JSON payload</div>
+      <div class="phase-step"><span class="step-num">2</span>Parse <code>detail.bucket.name</code> and <code>detail.object.key</code>; URL-decode with <code>unquote_plus</code></div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-2">
+    <div class="phase-title">Phase 2 &middot; Path Gate</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">3</span>Key outside <code>raw/metadata/</code> and not a root global file? &rarr; respond <code>200 Ignored</code> (no processing)</div>
+      <div class="branch-row">
+        <div class="branch-box b-no"><div class="b-h">Global file (directly under raw/metadata/)</div>
+          Detected via path depth = 3 or name contains &ldquo;mdd&rdquo; / &ldquo;master data&rdquo; / &ldquo;attribute&rdquo; &rarr; <b>fan-out mode</b>: loop over all 27 brands with a synthetic key <code>raw/metadata/{brand}/.__global_trigger__</code>, one <b>AuditLogger</b> per brand, isolated try/finally per brand</div>
+        <div class="branch-box b-yes"><div class="b-h">Brand-specific upload</div>
+          Normal path &rarr; continue to Phase 3; single handler invocation for the detected brand</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-3">
+    <div class="phase-title">Phase 3 &middot; Brand Routing</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">4</span><code>extract_principal(key)</code> &rarr; path segment index 2 (e.g. <code>raw/metadata/ellesse/file.xlsx</code> &rarr; <code>ellesse</code>)</div>
+      <div class="phase-step"><span class="step-num">5</span>Lookup <code>BRAND_ROUTER[principal]</code> &mdash; 27 registered handlers (adidas, new-balance, smiggle, aldo, diadora, crocs, 2xu, lotto, onr, nike, dr-martens, staccato, birkenstock, pazzion, clarks, steve-madden, asics, ptp, implus, astec, airwalk, ellesse, k-swiss, reebok, anta, new-era, anta-1)</div>
+      <div class="branch-row">
+        <div class="branch-box b-yes"><div class="b-h">Handler found</div>Route to <code>{brand}.lambda_function.lambda_handler(event, context, auditor)</code></div>
+        <div class="branch-box b-no"><div class="b-h">No processor configured</div>Respond <code>400 "No processor configured for brand"</code> &mdash; upload stays unprocessed in S3</div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-4">
+    <div class="phase-title">Phase 4 &middot; Handler Execution (isolated)</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">6</span>Create one <b>AuditLogger</b> with router context: trigger type, original key, detected brand, routing decision</div>
+      <div class="phase-step"><span class="step-num">7</span>Invoke handler inside try/except; exceptions captured as <code>statusCode 500</code> + <code>set_lambda_status("error")</code></div>
+      <div class="branch-box side-branch" style="margin-top:8px; margin-left:12px; max-width:100%;">
+        <div class="b-h">&#9888; Known defect (see Chapter 13)</div>
+        Some ETL modules call <code>sys.exit(1)</code> &mdash; SystemExit is not an <code>Exception</code> subclass, so it bypasses this except block and terminates the whole invocation, including the remaining brands during global fan-out.
+      </div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-5">
+    <div class="phase-title">Phase 5 &middot; Audit Flush (always, in finally)</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">8</span><code>auditor.flush(brand)</code> &rarr; structured JSON to <code>raw/logs/{brand}/{YYYYMMDD_HHMMSS}.json</code> with request id, duration, and full execution evidence</div>
+      <div class="phase-step"><span class="step-num">9</span>Return composite result (fan-out mode returns per-brand status map)</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

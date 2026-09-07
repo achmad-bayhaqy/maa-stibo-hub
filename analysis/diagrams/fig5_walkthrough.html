@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --text: #111827; --text-sub: #6B7280; --border: #E5E7EB; --connector: #94A3B8; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; background: #FFFFFF; color: var(--text); -webkit-font-smoothing: antialiased; }
+  #root { width: fit-content; min-width: 1160px; margin: 0 auto; padding: 48px 44px; }
+  .flow-title { font-size: 24px; font-weight: 700; text-align: center; }
+  .flow-subtitle { font-size: 14px; color: var(--text-sub); text-align: center; margin-top: 8px; margin-bottom: 34px; }
+
+  .phase-group { background: #F8FAFC; border-radius: 12px; padding: 18px 22px; }
+  .phase-title { font-size: 16px; font-weight: 700; padding: 10px 16px; border-radius: 8px; margin-bottom: 14px; }
+  .phase-steps { display: flex; flex-direction: column; gap: 8px; padding-left: 12px; }
+  .phase-step { font-size: 13.5px; color: var(--text); padding: 9px 14px; background: white; border-radius: 6px; border: 1px solid var(--border); line-height: 1.55; }
+  .phase-step .step-num { display: inline-block; width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 50%; font-size: 12px; font-weight: 600; margin-right: 8px; }
+  .phase-step .note { display: block; font-size: 11.5px; color: #B45309; margin-top: 3px; margin-left: 30px; }
+  .phase-step .note.ok { color: #047857; }
+  .phase-step code { font-family: 'SF Mono', Consolas, Menlo, monospace; font-size: 12px; background: #F1F5F9; border: 1px solid #E2E8F0; border-radius: 4px; padding: 1px 5px; color: #334155; }
+
+  /* Scheme B neutral gray + blue accent progression (6 phases) */
+  .phase-1 .phase-title { background: #F8FAFC; color: #334155; border-left: 4px solid #94A3B8; }
+  .phase-1 .step-num { background: #F1F5F9; color: #475569; }
+  .phase-2 .phase-title { background: #F1F5F9; color: #334155; border-left: 4px solid #7B8FA3; }
+  .phase-2 .step-num { background: #E2E8F0; color: #475569; }
+  .phase-3 .phase-title { background: #E8EDF3; color: #2D4156; border-left: 4px solid #6B809A; }
+  .phase-3 .step-num { background: #DBEAFE; color: #2D4156; }
+  .phase-4 .phase-title { background: #E2E8F0; color: #283C52; border-left: 4px solid #5B7590; }
+  .phase-4 .step-num { background: #D0D9E4; color: #283C52; }
+  .phase-5 .phase-title { background: #DAE1EB; color: #23364D; border-left: 4px solid #4B6A87; }
+  .phase-5 .step-num { background: #C7D2E0; color: #23364D; }
+  .phase-6 .phase-title { background: #D2DAE5; color: #1E3048; border-left: 4px solid #3B5F7D; }
+  .phase-6 .step-num { background: #BFC9D8; color: #1E3048; }
+
+  .arrow { text-align: center; color: var(--connector); font-size: 24px; margin: 8px 0; line-height: 1; }
+</style>
+</head>
+<body>
+<div id="root">
+  <div class="flow-title">End-to-End Walkthrough &mdash; Brand-Specific Upload</div>
+  <div class="flow-subtitle">Worked example: 0888-SP-ELLESSE-Recap Sample MAA Sport Licensed-Multi-SP2027-ID-1.xlsx &rarr; Stibo IIEP_ArticlePlanning</div>
+
+  <div class="phase-group phase-1">
+    <div class="phase-title">Phase 1 &middot; Upload &amp; Trigger</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">1</span>User selects dropdowns in MAP Portal and uploads <code>0888-SP-ELLESSE-Recap Sample ...-SP2027-ID-1.xlsx</code>; portal writes it to <code>raw/metadata/ellesse/</code></div>
+      <div class="phase-step"><span class="step-num">2</span>S3 ObjectCreated &rarr; EventBridge &rarr; validate-transform Lambda</div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-2">
+    <div class="phase-title">Phase 2 &middot; Routing</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">3</span>Router extracts principal <code>ellesse</code>; creates AuditLogger (trigger = brand_specific)</div>
+      <div class="phase-step"><span class="step-num">4</span>Dispatch to <code>ellesse.lambda_function.lambda_handler</code></div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-3">
+    <div class="phase-title">Phase 3 &middot; File Classification &amp; Required-File Validation</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">5</span>Filename keyword match &rarr; type <code>recap</code> (&ldquo;Recap Sample&rdquo;); ETL target = recap_main
+        <span class="note ok">Detection is order-sensitive: first matching keyword wins</span></div>
+      <div class="phase-step"><span class="step-num">6</span>Required set = {recap, mdd, attributes}; list bucket under brand prefix + root globals, latest version wins</div>
+      <div class="phase-step"><span class="step-num">7</span>All required files present?
+        <span class="note">No &rarr; return 200 &ldquo;waiting_for_mandatory_files&rdquo; &mdash; ETL resumes automatically on the next upload</span></div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-4">
+    <div class="phase-title">Phase 4 &middot; ETL (Ellesse recap_main)</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">8</span>Download files to <code>/tmp/stibo_workdir_ellesse</code>; convert xlsb/csv &rarr; xlsx if needed</div>
+      <div class="phase-step"><span class="step-num">9</span>Load reference data: MDD (attributes + LOVs), Attributes List tab, Ellesse MD Mapping, RNA (4-pass fuzzy join)</div>
+      <div class="phase-step"><span class="step-num">10</span>Pass 1 &mdash; per article (ThreadPool, max 8 workers): map fields, resolve Gender/Age via MD mapping &rarr; MDD &rarr; LOV IDs, derive defaults from filename (0888 / SP / ELL / SP2027 / ID), validate mandatory + LOV membership</div>
+      <div class="phase-step"><span class="step-num">11</span>Pass 2 &mdash; build classifications (CLH_ELLBatches &rarr; CLH_ELL_SP2027) and stream Product/Variant XML with 1 MB buffer</div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-5">
+    <div class="phase-title">Phase 5 &middot; Delivery to Stibo</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">12</span>Upload XML &rarr; <code>processed/stepxml/ellesse/0888-SP-ELLESSE-....xml</code></div>
+      <div class="phase-step"><span class="step-num">13</span>XML landing triggers send-to-step Lambda: filename regex match &ldquo;recap\s*sample&rdquo; &rarr; endpoint <b>IIEP_ArticlePlanning</b></div>
+      <div class="phase-step"><span class="step-num">14</span>OIDC client-credentials token &rarr; POST binary XML to <code>upload-direct?fileName=&hellip;&amp;context=Context1&amp;workspace=Main</code> (3 retries, exponential backoff)
+        <span class="note">4xx (except 429) &rarr; no retry, fail fast &middot; success &rarr; bgId receipt JSON saved</span></div>
+    </div>
+  </div>
+  <div class="arrow">&#8595;</div>
+
+  <div class="phase-group phase-6">
+    <div class="phase-title">Phase 6 &middot; Audit &amp; STEP Processing</div>
+    <div class="phase-steps">
+      <div class="phase-step"><span class="step-num">15</span>Router flushes audit JSON &rarr; <code>raw/logs/ellesse/{timestamp}.json</code> (classification, downloads, article statuses, XML keys, timings)</div>
+      <div class="phase-step"><span class="step-num">16</span>STEP queues the BGP behind the IIEP; processing result is visible in STEP monitoring (<code>/restapi/integrationendpoints/{id}/log</code>) &mdash; not yet read back automatically</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
