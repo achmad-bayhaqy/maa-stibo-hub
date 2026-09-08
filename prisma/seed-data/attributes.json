@@ -1,0 +1,837 @@
+[
+ {
+  "code": "AT_Occasion",
+  "name": "Occasion",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Fastening",
+  "name": "Fastening",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Collection1",
+  "name": "Collection 1",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalAgeCode",
+  "name": "Principal Age Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EComProductNamePH",
+  "name": "Ecom Product Name PH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Royalty",
+  "name": "Royalty",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_ColorDescriptionPH",
+  "name": "Principal Color Description PH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Collection2",
+  "name": "Collection 2",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CertificateNumber",
+  "name": "Certificate No. (SNI, K3L, UTTP)",
+  "validation": "text"
+ },
+ {
+  "code": "AT_VariantDescription",
+  "name": "Variant Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_BYGender",
+  "name": "BY Gender",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EcomGenderDescriptionEN",
+  "name": "Ecom Gender Description EN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Createdon",
+  "name": "Created on",
+  "validation": "legacyisodatetime"
+ },
+ {
+  "code": "AT_LongDescriptionID",
+  "name": "Ecom Long Description ID",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Style",
+  "name": "Style",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Others",
+  "name": "Others",
+  "validation": "number"
+ },
+ {
+  "code": "AT_Silhouette",
+  "name": "Silhouette",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_MusicalBoxComponentsQty",
+  "name": "Musical Box Components Qty",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_MerchandiseCategory",
+  "name": "Merchandise Category",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LabelCost",
+  "name": "Label Cost",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_MainEANIndicator",
+  "name": "Main EAN Indicator",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_CareInstructionVN",
+  "name": "Care Instruction VN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalGenderDescription",
+  "name": "Principal Gender Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CountrySize",
+  "name": "Country Size",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_CountryOrigin",
+  "name": "Country of Origin",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_StyleType",
+  "name": "Style Type",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_InternalBarcode",
+  "name": "Internal Barcode",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_BrandGroup",
+  "name": "Brand Group",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ShortDescriptionVN",
+  "name": "Ecom Short Description VN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ProposedRetailPrice",
+  "name": "Proposed Retail Price",
+  "validation": "number"
+ },
+ {
+  "code": "AT_MarketingFee",
+  "name": "Marketing Fee",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_PrincipalStyleCode",
+  "name": "Principal Style Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ProductWeight",
+  "name": "Product Weight",
+  "validation": "number"
+ },
+ {
+  "code": "AT_FOB",
+  "name": "FOB",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_DiscountBucketRounded",
+  "name": "Discount Bucket (Rounded)",
+  "validation": "number"
+ },
+ {
+  "code": "AT_PricingDistributionChannel",
+  "name": "Pricing Distribution Channel",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_IncomingMonth",
+  "name": "Incoming Month",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_SAPIndicator",
+  "name": "SAP Indicator",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ColorGroup",
+  "name": "Color Group",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ShortDescriptionEN",
+  "name": "Ecom Short Description EN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ColorDescriptionMY",
+  "name": "Principal Color Description MY",
+  "validation": "text"
+ },
+ {
+  "code": "AT_HeelType",
+  "name": "Heel Type",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EComProductNameVN",
+  "name": "Ecom Product Name VN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ShortDescriptionMY",
+  "name": "Ecom Short Description MY",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ColorDescriptionVN",
+  "name": "Principal Color Description VN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CareInstructionID",
+  "name": "Care Instruction ID",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalColorName",
+  "name": "Principal Color Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_UOM",
+  "name": "Unit of Measurement (UoM)",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ExchangeRate",
+  "name": "Exchange Rate",
+  "validation": "number"
+ },
+ {
+  "code": "AT_SAPArticleCategory",
+  "name": "Article Category",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Fit",
+  "name": "Fit",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_SPUGroupingName",
+  "name": "SPU Grouping Name",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Width",
+  "name": "Width",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_MusicalBoxArticleDescription",
+  "name": "Musical Box Article Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CurrentPrice",
+  "name": "Current Price",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_MaterialType",
+  "name": "Material Type",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_BYArticleType",
+  "name": "BY Article Type",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_HSCode",
+  "name": "HS Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_SAPAge",
+  "name": "SAP Age",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Commission",
+  "name": "Commission",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_MaterialUpper",
+  "name": "Material - Upper",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_CareInstructionPH",
+  "name": "Care Instruction PH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PriceRange",
+  "name": "Price Range",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_SBU",
+  "name": "SBU",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalGenderCode",
+  "name": "Principal Gender Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ShortDescriptionTH",
+  "name": "Ecom Short Description TH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_BrandCategory",
+  "name": "Brand Category",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EComProductNameEN",
+  "name": "Ecom Product Name EN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LongDescriptionPH",
+  "name": "Ecom Long Description PH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EComProductNameMY",
+  "name": "Ecom Product Name MY",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EANCategory",
+  "name": "EAN Category",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalBarcode",
+  "name": "Principal Barcode",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_RetailPriceCurrency",
+  "name": "Retail Price Currency",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Size",
+  "name": "SAP Size",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_SafeguardDutyIdOnly",
+  "name": "Safeguard Duty (ID Only)",
+  "validation": "number"
+ },
+ {
+  "code": "AT_BYAge",
+  "name": "BY Age",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EComProductNameTH",
+  "name": "Ecom Product Name TH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_FOBCurrency",
+  "name": "FOB Currency",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalMerchandiseHierarchyL2",
+  "name": "Principal Merchandise Hierarchy L2",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalMerchandiseHierarchyL3",
+  "name": "Principal Merchandise Hierarchy L3",
+  "validation": "text"
+ },
+ {
+  "code": "AT_TechnologyUsed",
+  "name": "Technology Used",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LongDescriptionEN",
+  "name": "Ecom Long Description EN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalMerchandiseHierarchyL1",
+  "name": "Principal Merchandise Hierarchy L1",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EcomIndicator",
+  "name": "Ecom Indicator",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ColorDescriptionTH",
+  "name": "Principal Color Description TH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalMerchandiseHierarchyL4",
+  "name": "Principal Merchandise Hierarchy L4",
+  "validation": "text"
+ },
+ {
+  "code": "AT_GolfClubLength",
+  "name": "Golf Club Length",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_CareInstructionKH",
+  "name": "Care Instruction KH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Color",
+  "name": "SAP Color",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalMerchandiseHierarchyL5",
+  "name": "Principal Merchandise Hierarchy L5",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Createdby",
+  "name": "Created by",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PackDetails",
+  "name": "Pack Details",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_CompanyCode",
+  "name": "Company",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Country",
+  "name": "Country",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalAgeDescription",
+  "name": "Principal Age Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EComAgesCategory",
+  "name": "E-com Ages Category",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_FGBarcode",
+  "name": "FG Barcode",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_SAPStyleCode",
+  "name": "SAP Style Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PatternPrint",
+  "name": "Pattern/Print",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ColorDescriptionKH",
+  "name": "Principal Color Description KH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PackagingLength",
+  "name": "Packaging Length",
+  "validation": "number"
+ },
+ {
+  "code": "AT_ShortDescriptionKH",
+  "name": "Ecom Short Description KH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_NatureOfArticle",
+  "name": "Nature of Article",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ProductLengthWidthHeight",
+  "name": "Product Length X Width X Height (in CM)",
+  "validation": "text"
+ },
+ {
+  "code": "AT_HaddadOfficeCharge",
+  "name": "Haddad Office Charge",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_BrandStatus",
+  "name": "Brand Status",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_GolfClubLoft",
+  "name": "Golf Club Loft",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Season",
+  "name": "Season",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PackagingWidth",
+  "name": "Packaging Width",
+  "validation": "number"
+ },
+ {
+  "code": "AT_Variant",
+  "name": "Variant",
+  "validation": "text"
+ },
+ {
+  "code": "AT_RoyaltyDeduction",
+  "name": "Royalty Deduction",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_ArticleStatus",
+  "name": "Article Status",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_MusicalBoxArticleCode",
+  "name": "Musical Box Article Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_BCI",
+  "name": "BCI",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EComProductNameKH",
+  "name": "Ecom Product Name KH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Generic",
+  "name": "Generic",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LongDescriptionMY",
+  "name": "Ecom Long Description MY",
+  "validation": "text"
+ },
+ {
+  "code": "AT_HaddadOfficeChargeDeduction",
+  "name": "Haddad Office Charge - Deduction",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_SuggestedRetailPrice",
+  "name": "Suggested Retail Price",
+  "validation": "number"
+ },
+ {
+  "code": "AT_SPUGrouping",
+  "name": "SPU Grouping",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LongDescriptionVN",
+  "name": "Ecom Long Description VN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EComSize",
+  "name": "E-com Size",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Interest",
+  "name": "Interest",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Vendor",
+  "name": "Vendor",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_SGS",
+  "name": "SGS",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_LongDescriptionKH",
+  "name": "Ecom Long Description KH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_PrincipalSize",
+  "name": "Principal Size",
+  "validation": "text"
+ },
+ {
+  "code": "AT_EcommConcept",
+  "name": "Ecomm Concept",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalColorCode",
+  "name": "Principal Color Code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_ColorDescriptionID",
+  "name": "Principal Color Description ID",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Content",
+  "name": "Content",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_ShortDescriptionID",
+  "name": "Ecom Short Description ID",
+  "validation": "text"
+ },
+ {
+  "code": "AT_BYIndicator",
+  "name": "BY Indicator",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PrincipalStyleDescription",
+  "name": "Principal Style Description",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CareInstructionEN",
+  "name": "Care Instruction EN",
+  "validation": "text"
+ },
+ {
+  "code": "AT_MainVendorIdentification",
+  "name": "Main Vendor Identification",
+  "validation": "text"
+ },
+ {
+  "code": "AT_CareInstructionMY",
+  "name": "Care Instruction MY",
+  "validation": "text"
+ },
+ {
+  "code": "AT_BrandType",
+  "name": "Brand Type",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_MBAssortmentCode",
+  "name": "MB Assortment Code",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_PackagingWeight",
+  "name": "Packaging Weight",
+  "validation": "number"
+ },
+ {
+  "code": "AT_CareInstructionTH",
+  "name": "Care Instruction TH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_MBStyleCode",
+  "name": "MB Style code",
+  "validation": "text"
+ },
+ {
+  "code": "AT_MusicalBoxUOM",
+  "name": "Musical Box UOM",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_GenericDescription",
+  "name": "Generic Description",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_ImagesSource",
+  "name": "Images Source",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_StandardizedColor",
+  "name": "Standardized Color",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EcommSalesChannel",
+  "name": "Ecomm Sales Channel",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_FreightCost",
+  "name": "Freight Cost",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_PackagingHeight",
+  "name": "Packaging Height",
+  "validation": "number"
+ },
+ {
+  "code": "AT_ImageURL",
+  "name": "Image URL",
+  "validation": "url"
+ },
+ {
+  "code": "AT_EComProductNameID",
+  "name": "Ecom Product Name ID",
+  "validation": "text"
+ },
+ {
+  "code": "AT_Material",
+  "name": "Material",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Brand",
+  "name": "Brand",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Gender",
+  "name": "SAP Gender",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_SeasonYear",
+  "name": "Season Year",
+  "validation": "number"
+ },
+ {
+  "code": "AT_LaunchingDate",
+  "name": "Launching Date",
+  "validation": "date"
+ },
+ {
+  "code": "AT_SAPProductFlag",
+  "name": "SAP Product Flag",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_DiscountBucket",
+  "name": "Discount Bucket",
+  "validation": "number"
+ },
+ {
+  "code": "AT_ShortDescriptionPH",
+  "name": "Ecom Short Description PH",
+  "validation": "text"
+ },
+ {
+  "code": "AT_SportsCategoryEN",
+  "name": "Sports Category EN",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_GolfClubFlex",
+  "name": "Golf Club Flex",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_Fabric",
+  "name": "Fabric",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_EstimatedLandedCost",
+  "name": "Estimated Landed Cost",
+  "validation": "number"
+ },
+ {
+  "code": "AT_HeelHeight",
+  "name": "Heel Height",
+  "validation": "LOV"
+ },
+ {
+  "code": "AT_OriginalPrice",
+  "name": "Original Price",
+  "validation": "regexp"
+ },
+ {
+  "code": "AT_AISuggestedColor",
+  "name": "AI Suggested Color",
+  "validation": "text"
+ },
+ {
+  "code": "AT_LongDescriptionTH",
+  "name": "Ecom Long Description TH",
+  "validation": "text"
+ }
+]

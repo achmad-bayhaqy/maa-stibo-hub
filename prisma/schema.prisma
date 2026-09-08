@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  role         String    @default("VIEWER") // ADMIN | EDITOR | VIEWER
+  active       Boolean   @default(true)
+  passwordHash String
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Brand {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  name      String
+  division  String   @default("SPORTS")
+  status    String   @default("ACTIVE")
+  fileTypes String   @default("[]")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Attribute {
+  id         String   @id @default(cuid())
+  code       String   @unique
+  name       String
+  validation String   @default("text")
+  createdAt  DateTime @default(now())
+}
+
+model LovTable {
+  id        String     @id @default(cuid())
+  key       String     @unique
+  sheetName String
+  values    LovValue[]
+}
+
+model LovValue {
+  id       String   @id @default(cuid())
+  tableKey String
+  code     String
+  label    String
+  table    LovTable @relation(fields: [tableKey], references: [key])
+
+  @@index([tableKey])
+}
+
+model MappingRule {
+  id             String  @id @default(cuid())
+  brandSheet     String
+  brandCode      String  @default("")
+  attribute      String
+  attributeId    String
+  validation     String  @default("text")
+  cluster        String  @default("")
+  description    String  @default("")
+  mappingType    String // SYSTEM_FORMULA | DIRECT | MANUAL | MANUAL_PORTAL | MANUAL_DIRECT | AI_ASSIST | MAPPING | NOT_AVAILABLE | EXTERNAL_SOURCE | OTHER
+  mappingTypeRaw String  @default("")
+  sourceField    String  @default("")
+  logic          String  @default("")
+  active         Boolean @default(true)
+
+  @@index([brandSheet])
+  @@index([brandCode, mappingType])
+}
+
+model RnaLookup {
+  id                 String @id @default(cuid())
+  country            String
+  compCode           String
+  sbuGrouping        String
+  subSbu             String
+  sbu                String
+  brandGroup         String
+  brandCategory      String
+  brandType          String
+  brandName          String
+  brandCode          String
+  reportingBrandCode String
+  reportingBrandName String
+
+  @@index([compCode, sbu, brandCode])
+  @@index([brandCode])
+}
+
+model NamingRoute {
+  id       String @id @default(cuid())
+  brand    String
+  inline   String
+  fileType String
+  trigger  String
+  endpoint String
+  comment  String @default("")
+}
+
+model Upload {
+  id            String   @id @default(cuid())
+  filename      String
+  size          Int      @default(0)
+  compCode      String   @default("")
+  sbu           String   @default("")
+  brandCode     String   @default("")
+  brandName     String   @default("")
+  flow          String   @default("") // detected file type e.g. "Recap Sample"
+  gender        String   @default("")
+  season        String   @default("")
+  country       String   @default("")
+  seq           String   @default("")
+  filenameValid Boolean  @default(false)
+  status        String   @default("PARSED") // PARSED | MAPPED | SENT | FAILED
+  mode          String   @default("MOCK") // MOCK | LIVE
+  sheetName     String   @default("")
+  totalRows     Int      @default(0)
+  processedRows Int      @default(0)
+  mappedRows    Int      @default(0)
+  warnRows      Int      @default(0)
+  errorRows     Int      @default(0)
+  headers       String   @default("[]")
+  sampleRaw     String   @default("[]")
+  mappedSample  String   @default("[]")
+  issues        String   @default("[]")
+  wizard        String   @default("{}")
+  endpoint      String   @default("ARTICLE_PLANNING")
+  stepxml       String   @default("")
+  createdBy     String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model SendJob {
+  id              String   @id @default(cuid())
+  uploadId        String
+  filename        String
+  endpoint        String
+  mode            String
+  bgId            String   @default("")
+  status          String   @default("SUCCESS") // SUCCESS | FAILED
+  httpStatus      Int      @default(0)
+  responseSnippet String   @default("")
+  durationMs      Int      @default(0)
+  sentBy          String   @default("")
+  createdAt       DateTime @default(now())
+
+  @@index([uploadId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  target    String   @default("")
+  detail    String   @default("{}")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}

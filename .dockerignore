@@ -1,10 +1,7 @@
 node_modules
 .next
-out
-build
-next-env.d.ts
+.git
 .env
-.env*.local
 db
 upload
 download
@@ -18,7 +15,5 @@ examples
 skills
 mini-services
 Caddyfile
-scripts/docx_gen
+scripts
 *.log
-.DS_Store
-.zscripts

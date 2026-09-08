@@ -1,0 +1,56 @@
+# STIBO Hub — AWS all-in-one stack (app + Postgres)
+# Usage on the EC2 instance:  sudo DB_PASSWORD='<strong-password>' docker compose -f docker-compose.aws.yml up -d
+name: stibo-hub
+
+services:
+  stibo-hub-db:
+    image: postgres:16-alpine
+    container_name: stibo-hub-pg
+    environment:
+      POSTGRES_DB: stibohub
+      POSTGRES_USER: stibohub
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD required}
+    volumes:
+      - stibo-hub-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stibohub -d stibohub"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    labels:
+      project: stibo
+
+  stibo-hub-web:
+    build: .
+    image: stibo-hub-web:latest
+    container_name: stibo-hub-web
+    depends_on:
+      stibo-hub-db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://stibohub:${DB_PASSWORD}@stibo-hub-db:5432/stibohub
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET required}
+      SEED_ON_START: "1"
+      # Stibo IIEP (leave empty to stay in MOCK mode)
+      STIBO_TOKEN_URL: ${STIBO_TOKEN_URL:-}
+      STIBO_CLIENT_ID: ${STIBO_CLIENT_ID:-}
+      STIBO_CLIENT_SECRET: ${STIBO_CLIENT_SECRET:-}
+      STIBO_INBOUND_URL_ARTICLE_PLANNING: ${STIBO_INBOUND_URL_ARTICLE_PLANNING:-}
+      STIBO_INBOUND_URL_EAN_UPDATE: ${STIBO_INBOUND_URL_EAN_UPDATE:-}
+      STIBO_INBOUND_URL_ARTICLE_MAINTENANCE: ${STIBO_INBOUND_URL_ARTICLE_MAINTENANCE:-}
+    ports:
+      - "80:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    labels:
+      project: stibo
+
+volumes:
+  stibo-hub-pgdata:
+    labels:
+      project: stibo

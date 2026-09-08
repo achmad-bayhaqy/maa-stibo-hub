@@ -1,0 +1,706 @@
+[
+ {
+  "brand": "Adidas",
+  "inline": "Inline",
+  "fileType": "Line List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": "Multi Line list"
+ },
+ {
+  "brand": "Adidas",
+  "inline": "Inline",
+  "fileType": "Line List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": "Mono line list"
+ },
+ {
+  "brand": "Adidas",
+  "inline": "Inline",
+  "fileType": "Backlog",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Adidas",
+  "inline": "Inline",
+  "fileType": "TDD & Price List",
+  "trigger": "Hard Allocation, Price Maintenance",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": ""
+ },
+ {
+  "brand": "Adidas",
+  "inline": "Inline",
+  "fileType": "DTB",
+  "trigger": "Ecommerce Enrichment",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": "File Provided"
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Inline",
+  "fileType": "Line List (Apparel & Accessories)",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Inline",
+  "fileType": "Line List (Footwear)",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Inline",
+  "fileType": "EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "File Provided, open questions with Arry and Novia"
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Inline",
+  "fileType": "Eommerce File",
+  "trigger": "Ecommerce Enrichment",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": ""
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Licensed",
+  "fileType": "Line List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Licensed",
+  "fileType": "Order Sheet",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "File Provided, open questions with Arry and Novia"
+ },
+ {
+  "brand": "New Balance",
+  "inline": "Licensed",
+  "fileType": "Ecommerce File",
+  "trigger": "Ecommerce Enrichment",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": ""
+ },
+ {
+  "brand": "Diadora",
+  "inline": "Inline",
+  "fileType": "Price List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Diadora",
+  "inline": "Inline",
+  "fileType": "EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "Not needed. Variants will be created via BY Tools."
+ },
+ {
+  "brand": "Diadora",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Diadora",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Diadora",
+  "inline": "Licensed",
+  "fileType": "Order Sheet",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "Not needed. Variants will be created via BY Tools."
+ },
+ {
+  "brand": "Smiggle",
+  "inline": "Inline",
+  "fileType": "Linelist",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Smiggle",
+  "inline": "Inline",
+  "fileType": "Packing List",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Smiggle",
+  "inline": "Inline",
+  "fileType": "Ecommerce File",
+  "trigger": "Ecommerce Enrichment",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": ""
+ },
+ {
+  "brand": "Aldo",
+  "inline": "Inline",
+  "fileType": "Line list",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Aldo",
+  "inline": "Inline",
+  "fileType": "OOR",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Aldo",
+  "inline": "Inline",
+  "fileType": "Ecommerce File",
+  "trigger": "Ecommerce Enrichment",
+  "endpoint": "ARTICLE_MAINTENANCE",
+  "comment": ""
+ },
+ {
+  "brand": "2XU",
+  "inline": "Inline",
+  "fileType": "Product Bible",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "2XU",
+  "inline": "Inline",
+  "fileType": "Order Confirmation",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Crocs",
+  "inline": "Inline",
+  "fileType": "Line List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Crocs",
+  "inline": "Inline",
+  "fileType": "Order Form JBZ",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Crocs",
+  "inline": "Inline",
+  "fileType": "Shipment Confirmation",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Crocs",
+  "inline": "Inline",
+  "fileType": "Order Form FW",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Crocs",
+  "inline": "Inline",
+  "fileType": "Order Form ACCs BAG",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Lotto",
+  "inline": "Inline",
+  "fileType": "Order Form",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": "02/07/2026--Template Changed by MAA"
+ },
+ {
+  "brand": "Lotto",
+  "inline": "Inline",
+  "fileType": "Price List",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Lotto",
+  "inline": "Inline",
+  "fileType": "FOB Order",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Lotto",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Lotto",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "On Running",
+  "inline": "Inline",
+  "fileType": "Linesheet Footwear Planet Sports",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "On Running",
+  "inline": "Inline",
+  "fileType": "Linesheet Footwear TAF",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "On Running",
+  "inline": "Inline",
+  "fileType": "Packaging list Planet Sport",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "Planet Sport--Has been Renamed by MAA to Packaging list Planet Sport"
+ },
+ {
+  "brand": "On Running",
+  "inline": "Inline",
+  "fileType": "Packaging List TAF",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": "TAF--Has been renamed by MAA to Packaging List TAF"
+ },
+ {
+  "brand": "Nike",
+  "inline": "Inline",
+  "fileType": "LineList",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Nike",
+  "inline": "Inline",
+  "fileType": "LineList Rookie",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Nike",
+  "inline": "Inline",
+  "fileType": "Order Confirmation",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Nike",
+  "inline": "Inline",
+  "fileType": "Line List 360 Article Planning",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Nike",
+  "inline": "Inline",
+  "fileType": "Line List 360 EAN",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "DR. Martens",
+  "inline": "Inline",
+  "fileType": "Retail Price Master",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "DR. Martens",
+  "inline": "Inline",
+  "fileType": "EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Birkenstock",
+  "inline": "Inline",
+  "fileType": "OFS-FC-PT Mitra-SS27",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Birkenstock",
+  "inline": "Inline",
+  "fileType": "OOR",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Pazzion",
+  "inline": "Inline",
+  "fileType": "Order Form",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Pazzion",
+  "inline": "Inline",
+  "fileType": "Barcode",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Staccato",
+  "inline": "Inline",
+  "fileType": "Linesheet",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Clarks",
+  "inline": "Inline",
+  "fileType": "RAW Delivery Performance Clarks Footwear & Accs",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Clarks",
+  "inline": "Inline",
+  "fileType": "RAW Order Form Clarks Accs SS27",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Clarks",
+  "inline": "Inline",
+  "fileType": "RAW Order Form Clarks Footwear SS27",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "PTP",
+  "inline": "Inline",
+  "fileType": "V2 ASIA ORDER FORM USD FOB",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "PTP",
+  "inline": "Inline",
+  "fileType": "PTP_EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Ellesse",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Ellesse",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Astec",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Astec",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Airwalk",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Airwalk",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Steve Madden",
+  "inline": "Inline",
+  "fileType": "FOOTWEAR PO FORM",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Steve Madden",
+  "inline": "Inline",
+  "fileType": "HANDBAG PO FORM",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Steve Madden",
+  "inline": "Inline",
+  "fileType": "EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "K Swiss",
+  "inline": "Inline",
+  "fileType": "Buy2 update_KSWISS FW26 Global Line Order Form_Lifestyle",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "K Swiss",
+  "inline": "Inline",
+  "fileType": "FW26 UPC - PT.MAP",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "K Swiss",
+  "inline": "Licensed",
+  "fileType": "Recap Sample",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "K Swiss",
+  "inline": "Licensed",
+  "fileType": "Recap Sample 2nd Ingestion",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Balega Article Planning",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Balega EAN",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Harbinger Article Planning",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Harbinger EAN",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Sofsole Article Planning",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "IMPLUS",
+  "inline": "Inline",
+  "fileType": "IPL_Article Attributes Source_Sofsole EAN",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Asics",
+  "inline": "Inline",
+  "fileType": "OTB AW26 APEQ MAA",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Asics",
+  "inline": "Inline",
+  "fileType": "OTB AW26 P.RUN MAA",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Asics",
+  "inline": "Inline",
+  "fileType": "MAA_AW26 EAN CODE UPDATE_272026",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Asics",
+  "inline": "Inline",
+  "fileType": "ASICS_Article Attributes Source AW26",
+  "trigger": "",
+  "endpoint": "",
+  "comment": ""
+ },
+ {
+  "brand": "Reebok",
+  "inline": "Inline",
+  "fileType": "Reebok article master data with image - APPAREL (SS27) - Copy",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Reebok",
+  "inline": "Inline",
+  "fileType": "Reebok article master data with image - FOOTWEAR (SS27) - Copy",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Reebok",
+  "inline": "Inline",
+  "fileType": "REEBOK_Article Attributes EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "Anta",
+  "inline": "Inline",
+  "fileType": "Stibo Line List Template - Anta",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "Anta",
+  "inline": "Inline",
+  "fileType": "ANTA_EAN Source",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ },
+ {
+  "brand": "New Era",
+  "inline": "Inline",
+  "fileType": "Copy of Order form - APAC FW26 (ACC)_Revised Size",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Era",
+  "inline": "Inline",
+  "fileType": "Copy of Order form - APAC FW26 (APP) 1",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Era",
+  "inline": "Inline",
+  "fileType": "Copy of Order form - APAC FW26 (HW)_Revised Pricing",
+  "trigger": "Stibo Article Planning",
+  "endpoint": "ARTICLE_PLANNING",
+  "comment": ""
+ },
+ {
+  "brand": "New Era",
+  "inline": "Inline",
+  "fileType": "Delivery schedule 12.23.2025-PT MAP -",
+  "trigger": "SAP Article Creation",
+  "endpoint": "EAN_UPDATE",
+  "comment": ""
+ }
+]

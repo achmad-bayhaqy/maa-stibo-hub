@@ -1,0 +1,318 @@
+[
+ {
+  "code": "2XU",
+  "name": "2XU",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Order Confirmation",
+   "Product Bible"
+  ]
+ },
+ {
+  "code": "ADI",
+  "name": "ADIDAS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Backlog",
+   "DTB",
+   "Line List",
+   "TDD & Price List"
+  ]
+ },
+ {
+  "code": "AIW",
+  "name": "AIRWALK",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "AOD",
+  "name": "ALDO",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Ecommerce File",
+   "Line list",
+   "OOR"
+  ]
+ },
+ {
+  "code": "ATA",
+  "name": "ANTA",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "ANTA_EAN Source",
+   "Stibo Line List Template - Anta"
+  ]
+ },
+ {
+  "code": "ASI",
+  "name": "ASICS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "ASICS_Article Attributes Source AW26",
+   "MAA_AW26 EAN CODE UPDATE_272026",
+   "OTB AW26 APEQ MAA",
+   "OTB AW26 P.RUN MAA"
+  ]
+ },
+ {
+  "code": "ASC",
+  "name": "ASTEC",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "BCK",
+  "name": "BIRKENSTOCK",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "OFS-FC-PT Mitra-SS27",
+   "OOR"
+  ]
+ },
+ {
+  "code": "C4M",
+  "name": "CAMPER",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": []
+ },
+ {
+  "code": "CKS",
+  "name": "CLARKS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "RAW Delivery Performance Clarks Footwear & Accs",
+   "RAW Order Form Clarks Accs SS27",
+   "RAW Order Form Clarks Footwear SS27"
+  ]
+ },
+ {
+  "code": "CCR",
+  "name": "CROCS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Line List",
+   "Order Form ACCs BAG",
+   "Order Form FW",
+   "Order Form JBZ",
+   "Shipment Confirmation"
+  ]
+ },
+ {
+  "code": "DIA",
+  "name": "DIADORA",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "EAN Source",
+   "Order Sheet",
+   "Price List",
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "DRM",
+  "name": "DR. MARTENS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "EAN Source",
+   "Retail Price Master"
+  ]
+ },
+ {
+  "code": "ELL",
+  "name": "ELLESSE",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "HYD",
+  "name": "HEY DUDE",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": []
+ },
+ {
+  "code": "IPL",
+  "name": "IMPULS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": []
+ },
+ {
+  "code": "KSW",
+  "name": "K SWISS",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Buy2 update_KSWISS FW26 Global Line Order Form_Lifestyle",
+   "FW26 UPC - PT.MAP",
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "LOT",
+  "name": "LOTTO",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "FOB Order",
+   "Order Form",
+   "Price List",
+   "Recap Sample",
+   "Recap Sample 2nd Ingestion"
+  ]
+ },
+ {
+  "code": "NEW",
+  "name": "NEW BALANCE",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "EAN Source",
+   "Ecommerce File",
+   "Eommerce File",
+   "Line List",
+   "Line List (Apparel & Accessories)",
+   "Line List (Footwear)",
+   "Order Sheet"
+  ]
+ },
+ {
+  "code": "NRA",
+  "name": "NEW ERA",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Copy of Order form - APAC FW26 (ACC)_Revised Size",
+   "Copy of Order form - APAC FW26 (APP) 1",
+   "Copy of Order form - APAC FW26 (HW)_Revised Pricing",
+   "Delivery schedule 12.23.2025-PT MAP -"
+  ]
+ },
+ {
+  "code": "NIK",
+  "name": "NIKE",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Line List 360 Article Planning",
+   "Line List 360 EAN",
+   "LineList",
+   "LineList Rookie",
+   "Order Confirmation"
+  ]
+ },
+ {
+  "code": "ONR",
+  "name": "ON RUNNING",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Linesheet Footwear Planet Sports",
+   "Linesheet Footwear TAF",
+   "Packaging List TAF",
+   "Packaging list Planet Sport"
+  ]
+ },
+ {
+  "code": "ONT",
+  "name": "ONITSUKA TIGER",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": []
+ },
+ {
+  "code": "PZZ",
+  "name": "PAZZION",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Barcode",
+   "Order Form"
+  ]
+ },
+ {
+  "code": "PTP",
+  "name": "PTP",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "PTP_EAN Source",
+   "V2 ASIA ORDER FORM USD FOB"
+  ]
+ },
+ {
+  "code": "REE",
+  "name": "REEBOK",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "REEBOK_Article Attributes EAN Source",
+   "Reebok article master data with image - APPAREL (SS27) - Copy",
+   "Reebok article master data with image - FOOTWEAR (SS27) - Copy"
+  ]
+ },
+ {
+  "code": "IGL",
+  "name": "SMIGGLE",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Ecommerce File",
+   "Linelist",
+   "Packing List"
+  ]
+ },
+ {
+  "code": "SC7",
+  "name": "STACCATO",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "Linesheet"
+  ]
+ },
+ {
+  "code": "SVM",
+  "name": "STEVE MADDEN",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": [
+   "EAN Source",
+   "FOOTWEAR PO FORM",
+   "HANDBAG PO FORM"
+  ]
+ },
+ {
+  "code": "VVA",
+  "name": "VIVAIA",
+  "division": "SPORTS",
+  "status": "ACTIVE",
+  "fileTypes": []
+ }
+]
