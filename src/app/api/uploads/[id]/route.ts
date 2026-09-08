@@ -28,8 +28,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 /**
- * PATCH — apply user edits to the mapped sample after transform.
- * Body: { edits: [{ rowNo, attributeId, value }] }
+ * PATCH — apply user edits / row deletions to the mapped sample after transform.
+ * Body: { edits?: [{ rowNo, attributeId, value }], deleteRows?: number[] }
  * Only attributes that exist in the template contract are accepted; unknown
  * ids are ignored. Editing invalidates the cached STEPXML so the next
  * preview/send regenerates from the edited data.
@@ -38,9 +38,12 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const user = await requireRole("ADMIN", "EDITOR");
     const { id } = await params;
-    const body = (await req.json()) as { edits?: CellEdit[] };
+    const body = (await req.json()) as { edits?: CellEdit[]; deleteRows?: number[] };
     const edits = Array.isArray(body.edits) ? body.edits.slice(0, 500) : [];
-    if (edits.length === 0) return fail(400, "No edits provided");
+    const deleteRows = Array.isArray(body.deleteRows)
+      ? Array.from(new Set(body.deleteRows.filter((n) => typeof n === "number"))).slice(0, 500)
+      : [];
+    if (edits.length === 0 && deleteRows.length === 0) return fail(400, "No edits or deletions provided");
 
     const upload = await db.upload.findUnique({ where: { id } });
     if (!upload) return fail(404, "Upload not found");
@@ -70,22 +73,32 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       appliedDetails.push({ rowNo: edit.rowNo, attributeId: edit.attributeId, from, to: edit.value });
     }
 
-    if (applied === 0) return fail(400, "No valid edits applied — check rowNo/attributeId against the template");
+    let deleted = 0;
+    for (const rowNo of deleteRows) {
+      if (!byRow.has(rowNo)) continue;
+      byRow.delete(rowNo);
+      deleted += 1;
+    }
+    const remaining = rows.filter((r) => byRow.has(r.rowNo));
+
+    if (applied === 0 && deleted === 0) return fail(400, "No valid edits/deletions applied — check rowNo against the sample");
 
     await db.upload.update({
       where: { id },
       data: {
-        mappedSample: JSON.stringify(rows),
+        mappedSample: JSON.stringify(remaining),
+        processedRows: remaining.length,
+        mappedRows: remaining.length,
         stepxml: "", // invalidate cached STEPXML → regenerate from edited rows
         updatedAt: new Date(),
       },
     });
 
-    await audit(user.email, "UPLOAD_SAMPLE_EDITED", upload.filename, {
-      uploadId: id, applied, sample: appliedDetails.slice(0, 20),
+    await audit(user.email, deleted > 0 ? "UPLOAD_SAMPLE_EDITED_ROWS_DELETED" : "UPLOAD_SAMPLE_EDITED", upload.filename, {
+      uploadId: id, applied, deleted, remaining: remaining.length, sample: appliedDetails.slice(0, 20),
     });
 
-    return ok({ applied, rows: rows.length });
+    return ok({ applied, deleted, remaining: remaining.length });
   } catch (e) {
     return handleError(e);
   }

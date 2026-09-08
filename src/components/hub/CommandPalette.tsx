@@ -97,7 +97,7 @@ export function CommandPalette() {
         {brands.length > 0 && (
           <>
             <CommandSeparator />
-            <CommandGroup heading="Brands (pilih untuk lihat di Data Master)">
+            <CommandGroup heading="Brands (pick to open in Data Master)">
               {brands.map((b) => (
                 <CommandItem key={b.id} value={`brand ${b.label}`} onSelect={() => { setMasterTab("brands"); go("master"); }}>
                   <Hexagon className="h-4 w-4 mr-2 text-red-400" /> {b.label}
@@ -138,11 +138,11 @@ export function CommandPalette() {
             <CommandSeparator />
             <CommandGroup heading="Quick actions">
               <CommandItem onSelect={() => go("assistant")}>
-                <UploadCloud className="h-4 w-4 mr-2 text-red-500" /> Assistant — upload file atau tanya apa saja
+                <UploadCloud className="h-4 w-4 mr-2 text-red-500" /> Assistant — upload a file or ask anything
               </CommandItem>
               {(user.role === "ADMIN" || user.role === "EDITOR") && (
                 <CommandItem onSelect={() => { setSendMode(sendMode === "MOCK" ? "LIVE" : "MOCK"); setPaletteOpen(false); }}>
-                  <Send className="h-4 w-4 mr-2 text-slate-400" /> Ganti mode kirim → {sendMode === "MOCK" ? "LIVE" : "MOCK"}
+                  <Send className="h-4 w-4 mr-2 text-slate-400" /> Toggle send mode → {sendMode === "MOCK" ? "LIVE" : "MOCK"}
                 </CommandItem>
               )}
             </CommandGroup>

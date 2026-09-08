@@ -19,38 +19,39 @@ interface HubState {
   user: HubUser | null;
   view: ViewKey;
   masterTab: "brands" | "attributes" | "lov" | "rules" | "naming" | "rna";
-  assistantMode: "pipeline" | "qa";
   sendMode: "MOCK" | "LIVE";
   sidebarOpen: boolean;
   paletteOpen: boolean;
   docsSlug: string;
+  /** bumped by Topbar "New Transformation" — AssistantView resets its thread */
+  newChatNonce: number;
   setUser: (u: HubUser | null) => void;
   setView: (v: ViewKey) => void;
   setMasterTab: (t: HubState["masterTab"]) => void;
-  setAssistantMode: (m: HubState["assistantMode"]) => void;
   setSendMode: (m: "MOCK" | "LIVE") => void;
   toggleSidebar: () => void;
   setPaletteOpen: (o: boolean) => void;
   setDocsSlug: (s: string) => void;
+  bumpNewChat: () => void;
 }
 
 export const useHub = create<HubState>((set) => ({
   user: null,
   view: "assistant",
   masterTab: "brands",
-  assistantMode: "pipeline",
   sendMode: "MOCK",
   sidebarOpen: true,
   paletteOpen: false,
   docsSlug: "getting-started",
+  newChatNonce: 0,
   setUser: (user) => set({ user }),
   setView: (view) => set({ view, sidebarOpen: true }),
   setMasterTab: (masterTab) => set({ masterTab }),
-  setAssistantMode: (assistantMode) => set({ assistantMode }),
   setSendMode: (sendMode) => set({ sendMode }),
   toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
   setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
   setDocsSlug: (docsSlug) => set({ docsSlug }),
+  bumpNewChat: () => set((s) => ({ newChatNonce: s.newChatNonce + 1 })),
 }));
 
 export async function api<T>(path: string, init?: RequestInit): Promise<T> {

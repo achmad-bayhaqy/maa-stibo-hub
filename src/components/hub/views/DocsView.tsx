@@ -99,19 +99,19 @@ export function DocsView() {
       setEditing(null);
       await load();
     } catch (e) {
-      toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" });
+      toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" });
     } finally { setBusy(false); }
   };
 
   const remove = async (p: DocMeta) => {
-    if (!confirm(`Hapus halaman "${p.title}"?`)) return;
+    if (!confirm(`Delete halaman "${p.title}"?`)) return;
     try {
       await api(`/api/docs/${p.id}`, { method: "DELETE" });
-      toast({ title: "Halaman dihapus" });
+      toast({ title: "Page deleted" });
       if (current?.id === p.id) setCurrent(null);
       await load();
     } catch (e) {
-      toast({ title: "Gagal menghapus", description: (e as Error).message, variant: "destructive" });
+      toast({ title: "Delete failed", description: (e as Error).message, variant: "destructive" });
     }
   };
 
@@ -130,7 +130,7 @@ export function DocsView() {
         <div className="flex items-center gap-2">
           <div className="relative">
             <Search className="h-3.5 w-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari di semua halaman…" className="pl-8 h-9 w-52 md:w-64 text-xs" />
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search all pages…" className="pl-8 h-9 w-52 md:w-64 text-xs" />
           </div>
           {canEdit && (
             <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white h-9"
@@ -245,7 +245,7 @@ export function DocsView() {
             <div className="space-y-1"><Label className="text-xs">Ringkasan</Label>
               <Input value={editing?.summary ?? ""} onChange={(e) => setEditing((p) => ({ ...p!, summary: e.target.value }))} className="h-9 text-xs" /></div>
             <div className="space-y-1">
-              <Label className="text-xs">Konten (Markdown — heading, tabel, list, code block didukung)</Label>
+              <Label className="text-xs">Content (Markdown — headings, tables, lists, code blocks supported)</Label>
               <Textarea value={editing?.body ?? ""} onChange={(e) => setEditing((p) => ({ ...p!, body: e.target.value }))} rows={14} className="font-mono text-xs" />
             </div>
           </div>

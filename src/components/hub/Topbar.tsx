@@ -15,13 +15,13 @@ const ROLE_LABEL: Record<string, string> = {
 };
 
 export function Topbar() {
-  const { user, setUser, setView, sendMode, setPaletteOpen } = useHub();
+  const { user, setUser, setView, sendMode, setPaletteOpen, bumpNewChat } = useHub();
   if (!user) return null;
 
   const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-white/95 backdrop-blur border-b-2 border-black flex items-center justify-between px-4 md:px-6">
+    <header className="shrink-0 z-30 h-14 bg-white border-b-2 border-black flex items-center justify-between px-4 md:px-6">
       <div className="flex items-center gap-3 min-w-0">
         <h1 className="text-sm md:text-[15px] font-bold text-black tracking-tight truncate">Master Data Integration Portal</h1>
         <Badge
@@ -38,7 +38,7 @@ export function Topbar() {
         <button
           onClick={() => setPaletteOpen(true)}
           className="hidden md:flex items-center gap-2 rounded-lg border-2 border-black bg-white px-3 py-1.5 text-xs text-neutral-500 hover:border-[#DD1C24] hover:text-neutral-800 transition-colors"
-          aria-label="Buka quick search (Ctrl+K)"
+          aria-label="Open quick search (Ctrl+K)"
         >
           <Search className="h-3.5 w-3.5" />
           <span>Search…</span>
@@ -47,7 +47,7 @@ export function Topbar() {
         <Button variant="outline" size="sm" className="hidden sm:inline-flex border-2 border-black text-black hover:bg-neutral-100" onClick={() => setView("docs")}>
           <BookOpen className="h-4 w-4 mr-1" /> Docs
         </Button>
-        <Button variant="outline" size="sm" className="hidden lg:inline-flex border-slate-300 text-slate-700" onClick={() => setView("assistant")}>
+        <Button variant="outline" size="sm" className="hidden lg:inline-flex border-2 border-black text-black" onClick={() => { bumpNewChat(); setView("assistant"); }}>
           New Transformation
         </Button>
         <DropdownMenu>

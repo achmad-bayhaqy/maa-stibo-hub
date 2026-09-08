@@ -53,9 +53,9 @@ export function LoginScreen() {
             Upload brand files.<br />Get Stibo-ready <span className="text-[#DD1C24]">STEPXML</span> in minutes.
           </h1>
           <p className="mt-4 text-sm text-neutral-600 leading-relaxed">
-            Portal untuk transformasi master data ritel: naming-convention validation, auto-mapping
-            berbasis rule &amp; LOV, wizard Country/SBU/Brand/Season, lalu kirim ke Stibo STEP
-            setelah konfirmasi Anda.
+            Retail master-data transformation portal: naming-convention validation, rule &amp; LOV
+            based auto-mapping, a Country/SBU/Brand/Season wizard, then send to Stibo STEP
+            after your confirmation.
           </p>
           <div className="mt-8 space-y-5">
             {FEATURES.map((f) => (

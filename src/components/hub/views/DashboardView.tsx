@@ -77,7 +77,7 @@ export function DashboardView() {
         <Card className="border shadow-sm md:col-span-2">
           <CardHeader className="pb-2"><CardTitle className="text-sm">Uploads per brand</CardTitle></CardHeader>
           <CardContent className="space-y-2.5">
-            {data.byBrand.length === 0 && <Empty text="Belum ada data upload." />}
+            {data.byBrand.length === 0 && <Empty text="No upload data yet." />}
             {data.byBrand.map((b) => (
               <div key={b.brand} className="flex items-center gap-3">
                 <span className="w-14 text-xs font-mono font-semibold text-slate-600 truncate">{b.brand}</span>
@@ -110,7 +110,7 @@ export function DashboardView() {
           <Card className="border shadow-sm">
             <CardHeader className="pb-2"><CardTitle className="text-sm">IIEP endpoints</CardTitle></CardHeader>
             <CardContent className="space-y-2">
-              {data.byEndpoint.length === 0 && <Empty text="Belum ada pengiriman." />}
+              {data.byEndpoint.length === 0 && <Empty text="No sends yet." />}
               {data.byEndpoint.map((e) => (
                 <div key={e.endpoint} className="flex items-center justify-between text-xs border rounded-lg px-3 py-2">
                   <span className="font-mono text-[11px] text-slate-600">{e.endpoint}</span>
@@ -141,7 +141,7 @@ export function DashboardView() {
         <Card className="border shadow-sm">
           <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Send className="h-4 w-4 text-slate-400" /> Recent Stibo jobs</CardTitle></CardHeader>
           <CardContent className="divide-y">
-            {data.recentJobs.length === 0 && <Empty text="Belum ada job kirim." />}
+            {data.recentJobs.length === 0 && <Empty text="No send jobs yet." />}
             {data.recentJobs.map((j) => (
               <div key={j.id} className="py-2 flex items-center justify-between gap-3 text-xs">
                 <div className="min-w-0">

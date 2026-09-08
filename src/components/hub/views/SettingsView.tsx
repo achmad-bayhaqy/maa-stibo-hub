@@ -35,7 +35,7 @@ export function SettingsView() {
     try {
       await api("/api/settings", { method: "PUT", body: JSON.stringify({ sendMode: mode }) });
       setSendMode(mode);
-      toast({ title: `Send mode: ${mode}`, description: live ? "Hati-hati — kirim berikutnya akan POST ke Stibo IIEP." : "Kirim akan disimulasikan secara lokal." });
+      toast({ title: `Send mode: ${mode}`, description: live ? "Careful — the next send will POST to the Stibo IIEP." : "Sends will be simulated locally." });
     } catch (e) {
       toast({ title: "Update failed", description: (e as Error).message, variant: "destructive" });
     }
@@ -57,7 +57,7 @@ export function SettingsView() {
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between rounded-xl border p-4">
             <div>
-              <div className="text-sm font-semibold text-slate-700">{data.sendMode === "MOCK" ? "MOCK — simulasi lokal" : "LIVE — kirim ke Stibo"}</div>
+              <div className="text-sm font-semibold text-slate-700">{data.sendMode === "MOCK" ? "MOCK — local simulation" : "LIVE — send to Stibo"}</div>
               <p className="text-xs text-slate-500 mt-0.5 max-w-md">
                 Mock mode mensimulasikan OIDC + POST dan menghasilkan bgId lokal — aman untuk demo/training.
                 Live mode melakukan POST sungguhan ke IIEP endpoints.
@@ -68,7 +68,7 @@ export function SettingsView() {
           {!data.oidcConfigured && (
             <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
               <CircleAlert className="h-4 w-4 mt-0.5 shrink-0" />
-              Kredensial OIDC Stibo belum tersedia (env STIBO_* atau AWS Secrets Manager via STIBO_SECRET_ID). Live mode terkunci sampai kredensial dikonfigurasi.
+              Stibo OIDC credentials are not available yet (STIBO_* env vars or AWS Secrets Manager via STIBO_SECRET_ID). Live mode stays locked until credentials are configured.
             </div>
           )}
         </CardContent>
@@ -93,14 +93,14 @@ export function SettingsView() {
           </div>
           {data.stiboSecrets && data.stiboSecrets.source !== "none" && (
             <div className="rounded-lg border-2 border-black bg-neutral-50 p-3 text-xs space-y-1.5">
-              <div className="font-semibold text-neutral-700 flex items-center gap-1.5"><Lock className="h-3 w-3 text-[#DD1C24]" /> Kredensial (disimpan aman di server)</div>
+              <div className="font-semibold text-neutral-700 flex items-center gap-1.5"><Lock className="h-3 w-3 text-[#DD1C24]" /> Credentials (stored securely server-side)</div>
               <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1">
-                <div className="flex justify-between gap-2"><span className="text-neutral-400">Sumber</span><span className="font-mono">{data.stiboSecrets.source === "env" ? "environment variables" : "AWS Secrets Manager"}</span></div>
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Source</span><span className="font-mono">{data.stiboSecrets.source === "env" ? "environment variables" : "AWS Secrets Manager"}</span></div>
                 <div className="flex justify-between gap-2"><span className="text-neutral-400">Client ID</span><span className="font-mono">{data.stiboSecrets.clientIdMasked}</span></div>
                 <div className="flex justify-between gap-2"><span className="text-neutral-400">Token host</span><span className="font-mono">{data.stiboSecrets.tokenUrlHost || "—"}</span></div>
-                <div className="flex justify-between gap-2"><span className="text-neutral-400">Client secret</span><span className="font-mono">•••••••• (tidak pernah tampil)</span></div>
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Client secret</span><span className="font-mono">•••••••• (never displayed)</span></div>
               </div>
-              <div className="text-[10px] text-neutral-400">Secret tidak pernah dikirim ke browser — hanya status ter-mask yang diekspos oleh API.</div>
+              <div className="text-[10px] text-neutral-400">Secrets are never sent to the browser — the API only exposes masked status.</div>
             </div>
           )}
         </CardContent>

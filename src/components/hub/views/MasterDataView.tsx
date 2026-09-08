@@ -55,8 +55,8 @@ export function MasterDataView() {
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
       <h2 className="text-lg font-bold text-slate-800">Data Master</h2>
       <p className="text-xs text-slate-500 mt-0.5 mb-4">
-        Referensi yang memakai mesin pemetaan — diekstrak dari Brand Mapping Template, MDD, dan RNA workbook.
-        {canEdit ? " Anda dapat mengedit langsung; semua perubahan tercatat di Audit Log." : " Peran Anda hanya dapat melihat."}
+        Reference data that powers the mapping engine — extracted from the Brand Mapping Template, MDD, and RNA workbooks.
+        {canEdit ? " Edit inline; every change is recorded in the Audit Log." : " Your role is view-only."}
       </p>
       <div className="flex gap-1.5 mb-5 overflow-x-auto">
         {TABS.map((t) => (
@@ -103,14 +103,14 @@ function BrandsTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
       else await api("/api/brands", { method: "POST", body: JSON.stringify({ code: edit.code, name: edit.name, division: edit.division, status: edit.status }) });
       toast({ title: edit.id ? "Brand diperbarui" : "Brand dibuat" });
       setEdit(null); load();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
   return (
     <Panel
       title={`${items.length} brands`}
-      search={<SearchBox value={q} onChange={setQ} placeholder="Cari kode / nama brand…" />}
+      search={<SearchBox value={q} onChange={setQ} placeholder="Search brand code / name…" />}
       action={canEdit && (
         <div className="flex gap-1.5">
           <ImportButton onClick={() => setImportOpen(true)} />
@@ -131,7 +131,7 @@ function BrandsTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[220px]">{safeTypes(b.fileTypes).slice(0, 3).join(", ") || "—"}</td>
             <ActionsCell
               canEdit={canEdit} onEdit={() => setEdit(b)}
-              canDelete={isAdmin} onDelete={async () => { if (confirm(`Hapus brand ${b.code}?`)) { await api(`/api/brands/${b.id}`, { method: "DELETE" }); load(); } }}
+              canDelete={isAdmin} onDelete={async () => { if (confirm(`Delete brand ${b.code}?`)) { await api(`/api/brands/${b.id}`, { method: "DELETE" }); load(); } }}
             />
           </tr>
         ))}
@@ -191,14 +191,14 @@ function AttributesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolea
       else await api("/api/attributes", { method: "POST", body: JSON.stringify({ code: edit.code, name: edit.name, validation: edit.validation, description: edit.description }) });
       toast({ title: edit.id ? "Atribut diperbarui" : "Atribut dibuat" });
       setEdit(null); load();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
   return (
     <Panel
       title={`${data.total} attributes (MDD Core)`}
-      search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Cari AT_… / nama…" />}
+      search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Search AT_… / name…" />}
       action={canEdit && (
         <div className="flex gap-1.5">
           <ImportButton onClick={() => setImportOpen(true)} />
@@ -218,7 +218,7 @@ function AttributesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolea
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[200px]" title={a.description}>{a.description || "—"}</td>
             <ActionsCell
               canEdit={canEdit} onEdit={() => setEdit(a)}
-              canDelete={isAdmin} onDelete={async () => { if (confirm(`Hapus atribut ${a.code}?`)) { await api(`/api/attributes/${a.id}`, { method: "DELETE" }); load(); } }}
+              canDelete={isAdmin} onDelete={async () => { if (confirm(`Delete atribut ${a.code}?`)) { await api(`/api/attributes/${a.id}`, { method: "DELETE" }); load(); } }}
             />
           </tr>
         ))}
@@ -269,13 +269,18 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
 
   const loadTables = useCallback(async () => {
     setLoading(true);
-    try { setTables(await api<LovTableMeta[]>("/api/lov")); } finally { setLoading(false); }
+    try {
+      const list = await api<LovTableMeta[]>("/api/lov");
+      setTables(list);
+      // auto-select the first table so the tab never looks empty
+      setSel((cur) => cur || list[0]?.key || "");
+    } finally { setLoading(false); }
   }, []);
   useEffect(() => { loadTables(); }, [loadTables]);
 
   useEffect(() => {
     if (!sel) return;
-    api<{ items: LovValue[]; total: number }>(`/api/lov/${sel}?q=${encodeURIComponent(q)}&pageSize=60`).then(setValues).catch(() => undefined);
+    api<{ items: LovValue[]; total: number }>(`/api/lov/${sel}/values?q=${encodeURIComponent(q)}&pageSize=60`).then(setValues).catch(() => undefined);
   }, [sel, q]);
 
   const saveTable = async () => {
@@ -284,9 +289,9 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
     try {
       if (tableEdit.mode === "new") await api("/api/lov", { method: "POST", body: JSON.stringify({ key: tableEdit.keyInput, sheetName: tableEdit.sheetName }) });
       else if (tableEdit.key) await api(`/api/lov/${tableEdit.key}`, { method: "PATCH", body: JSON.stringify({ sheetName: tableEdit.sheetName }) });
-      toast({ title: "Tabel LOV disimpan" });
+      toast({ title: "LOV table saved" });
       setTableEdit(null); loadTables();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
@@ -296,11 +301,11 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
     try {
       if (valueEdit.id) await api(`/api/lov/values/${valueEdit.id}`, { method: "PATCH", body: JSON.stringify({ code: valueEdit.code, label: valueEdit.label }) });
       else await api(`/api/lov/${sel}/values`, { method: "POST", body: JSON.stringify({ code: valueEdit.code, label: valueEdit.label }) });
-      toast({ title: "Nilai LOV disimpan" });
+      toast({ title: "LOV value saved" });
       setValueEdit(null);
-      const d = await api<{ items: LovValue[]; total: number }>(`/api/lov/${sel}?pageSize=60`);
+      const d = await api<{ items: LovValue[]; total: number }>(`/api/lov/${sel}/values?pageSize=60`);
       setValues(d); loadTables();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
@@ -322,8 +327,8 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
         </div>
       </Panel>
       <Panel
-        title={sel ? `${values.total} values in ${sel}` : "Pilih tabel"}
-        search={<SearchBox value={q} onChange={setQ} placeholder="Cari code / label…" />}
+        title={sel ? `${values.total} values in ${sel}` : "Select a table"}
+        search={<SearchBox value={q} onChange={setQ} placeholder="Search code / label…" />}
         action={sel && canEdit && (
           <div className="flex gap-1.5">
             <ImportButton onClick={() => setImportOpen(true)} />
@@ -349,7 +354,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
                     {canEdit && (
                       <div className="flex gap-1 justify-end">
                         <Button variant="ghost" size="sm" className="h-6" onClick={() => setValueEdit(v)}><Pencil className="h-3 w-3" /></Button>
-                        {isAdmin && <Button variant="ghost" size="sm" className="h-6 text-red-500" onClick={async () => { if (confirm(`Hapus nilai ${v.code}?`)) { await api(`/api/lov/values/${v.id}`, { method: "DELETE" }); setValues((p) => ({ ...p, items: p.items.filter((x) => x.id !== v.id) })); } }}><Trash2 className="h-3 w-3" /></Button>}
+                        {isAdmin && <Button variant="ghost" size="sm" className="h-6 text-red-500" onClick={async () => { if (confirm(`Delete value ${v.code}?`)) { await api(`/api/lov/values/${v.id}`, { method: "DELETE" }); setValues((p) => ({ ...p, items: p.items.filter((x) => x.id !== v.id) })); } }}><Trash2 className="h-3 w-3" /></Button>}
                       </div>
                     )}
                   </td>
@@ -363,7 +368,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
       {/* table dialog */}
       <Dialog open={!!tableEdit} onOpenChange={(o) => !o && setTableEdit(null)}>
         <DialogContent className="sm:max-w-sm">
-          <DialogHeader><DialogTitle className="text-sm">{tableEdit?.mode === "new" ? "Tabel LOV baru" : `Rename ${tableEdit?.key}`}</DialogTitle></DialogHeader>
+          <DialogHeader><DialogTitle className="text-sm">{tableEdit?.mode === "new" ? "New LOV table" : `Rename ${tableEdit?.key}`}</DialogTitle></DialogHeader>
           <div className="space-y-3">
             {tableEdit?.mode === "new" && (
               <Field label="Key (A-Z, 0-9, underscore)"><Input value={tableEdit?.keyInput ?? ""} onChange={(e) => setTableEdit((p) => ({ ...p!, keyInput: e.target.value.toUpperCase() }))} className="h-9 font-mono" placeholder="SIZE_GRID" /></Field>
@@ -435,7 +440,7 @@ function RulesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) 
       }
       toast({ title: edit.id ? "Rule diperbarui" : "Rule dibuat" });
       setEdit(null); load();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
@@ -459,7 +464,7 @@ function RulesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) 
       </div>
       <Panel
         title={`${data?.total ?? 0} mapping rules`}
-        search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Cari atribut / source field…" />}
+        search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Search attribute / source field…" />}
         action={canEdit && (
           <div className="flex gap-1.5">
             <ImportButton onClick={() => setImportOpen(true)} />
@@ -486,7 +491,7 @@ function RulesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) 
               <td className="px-4 py-2.5 text-slate-500 truncate max-w-[220px]" title={r.logic}>{r.logic || "—"}</td>
               <ActionsCell
                 canEdit={canEdit} onEdit={() => setEdit(r)}
-                canDelete={isAdmin} onDelete={async () => { if (confirm(`Hapus rule ${r.brandCode}/${r.attributeId}?`)) { await api(`/api/rules/${r.id}`, { method: "DELETE" }); load(); } }}
+                canDelete={isAdmin} onDelete={async () => { if (confirm(`Delete rule ${r.brandCode}/${r.attributeId}?`)) { await api(`/api/rules/${r.id}`, { method: "DELETE" }); load(); } }}
               />
             </tr>
           )) ?? []}
@@ -561,14 +566,14 @@ function NamingTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
       else await api("/api/naming", { method: "POST", body: JSON.stringify(edit) });
       toast({ title: edit.id ? "Route diperbarui" : "Route dibuat" });
       setEdit(null); load();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
   return (
     <Panel
       title={`${data.total} naming routes`}
-      search={<SearchBox value={q} onChange={setQ} placeholder="Cari brand / flow / endpoint…" />}
+      search={<SearchBox value={q} onChange={setQ} placeholder="Search brand / flow / endpoint…" />}
       action={canEdit && (
         <div className="flex gap-1.5">
           <ExportButton
@@ -592,7 +597,7 @@ function NamingTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[140px]" title={r.comment}>{r.comment || "—"}</td>
             <ActionsCell
               canEdit={canEdit} onEdit={() => setEdit(r)}
-              canDelete={isAdmin} onDelete={async () => { if (confirm(`Hapus route ${r.brand}?`)) { await api(`/api/naming/${r.id}`, { method: "DELETE" }); load(); } }}
+              canDelete={isAdmin} onDelete={async () => { if (confirm(`Delete route ${r.brand}?`)) { await api(`/api/naming/${r.id}`, { method: "DELETE" }); load(); } }}
             />
           </tr>
         ))}
@@ -663,7 +668,7 @@ function RnaTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
       else await api("/api/rna", { method: "POST", body: JSON.stringify(edit) });
       toast({ title: edit.id ? "Baris RNA diperbarui" : "Baris RNA dibuat" });
       setEdit(null); load();
-    } catch (e) { toast({ title: "Gagal menyimpan", description: (e as Error).message, variant: "destructive" }); }
+    } catch (e) { toast({ title: "Save failed", description: (e as Error).message, variant: "destructive" }); }
     finally { setBusy(false); }
   };
 
@@ -679,7 +684,7 @@ function RnaTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
       </div>
       <Panel
         title={`${data.total.toLocaleString("id-ID")} baris RNA`}
-        search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Cari brand / SBU / comp…" />}
+        search={<SearchBox value={q} onChange={(v) => { setQ(v); setPage(1); }} placeholder="Search brand / SBU / comp…" />}
         action={canEdit && (
           <div className="flex gap-1.5">
             <ExportButton
@@ -704,7 +709,7 @@ function RnaTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
               <td className="px-4 py-2.5 font-mono text-[10px] text-slate-500">{r.reportingBrandCode || "—"}</td>
               <ActionsCell
                 canEdit={canEdit} onEdit={() => setEdit(r)}
-                canDelete={isAdmin} onDelete={async () => { if (confirm(`Hapus baris RNA ${r.country}/${r.brandCode}?`)) { await api(`/api/rna/${r.id}`, { method: "DELETE" }); load(); } }}
+                canDelete={isAdmin} onDelete={async () => { if (confirm(`Delete baris RNA ${r.country}/${r.brandCode}?`)) { await api(`/api/rna/${r.id}`, { method: "DELETE" }); load(); } }}
               />
             </tr>
           ))}
@@ -783,7 +788,7 @@ function ActionsCell({ canEdit, onEdit, canDelete, onDelete }: { canEdit: boolea
     <td className="px-4 py-2.5">
       <div className="flex gap-1 justify-end">
         {canEdit && <Button variant="ghost" size="sm" className="h-7" onClick={onEdit} aria-label="Edit"><Pencil className="h-3.5 w-3.5" /></Button>}
-        {canDelete && <Button variant="ghost" size="sm" className="h-7 text-red-500" onClick={onDelete} aria-label="Hapus"><Trash2 className="h-3.5 w-3.5" /></Button>}
+        {canDelete && <Button variant="ghost" size="sm" className="h-7 text-red-500" onClick={onDelete} aria-label="Delete"><Trash2 className="h-3.5 w-3.5" /></Button>}
       </div>
     </td>
   );

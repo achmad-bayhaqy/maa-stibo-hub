@@ -34,7 +34,7 @@ export function AuditView() {
         </div>
         <div className="relative">
           <Search className="h-3.5 w-3.5 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
-          <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Cari actor / action…" className="pl-8 h-9 w-56 text-xs" />
+          <Input value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} placeholder="Search actor / action…" className="pl-8 h-9 w-56 text-xs" />
         </div>
       </div>
 

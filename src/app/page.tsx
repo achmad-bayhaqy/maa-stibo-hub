@@ -42,24 +42,30 @@ export default function Home() {
   if (!user) return <LoginScreen />;
 
   return (
-    <div className="min-h-screen flex bg-neutral-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col min-w-0">
-        <Topbar />
-        <main className="flex-1 min-w-0">
-          {view === "assistant" && <AssistantView />}
-          {view === "dashboard" && <DashboardView />}
-          {view === "files" && <FilesView />}
-          {view === "master" && <MasterDataView />}
-          {view === "docs" && <DocsView />}
-          {view === "users" && <UsersView />}
-          {view === "audit" && <AuditView />}
-          {view === "settings" && <SettingsView />}
-        </main>
-        <footer className="mt-auto border-t-2 border-black bg-white px-6 py-3 text-[11px] text-neutral-500 flex flex-wrap items-center justify-between gap-2">
-          <span>Map Portal v2.1 · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
-          <span className="font-mono">resources tagged <span className="text-[#DD1C24] font-semibold">stibo</span> · AWS us-east-1</span>
-        </footer>
+    <div className="h-screen flex flex-col overflow-hidden bg-neutral-50">
+      <div className="flex flex-1 min-h-0">
+        <Sidebar />
+        <div className="flex-1 flex flex-col min-w-0">
+          <Topbar />
+          <main className="flex-1 min-h-0">
+            {view === "assistant" && <AssistantView />}
+            {view !== "assistant" && (
+              <div className="h-full overflow-y-auto">
+                {view === "dashboard" && <DashboardView />}
+                {view === "files" && <FilesView />}
+                {view === "master" && <MasterDataView />}
+                {view === "docs" && <DocsView />}
+                {view === "users" && <UsersView />}
+                {view === "audit" && <AuditView />}
+                {view === "settings" && <SettingsView />}
+              </div>
+            )}
+          </main>
+          <footer className="shrink-0 border-t-2 border-black bg-white px-6 py-2.5 text-[11px] text-neutral-500 flex flex-wrap items-center justify-between gap-2">
+            <span>Map Portal v2.2 · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
+            <span className="font-mono">resources tagged <span className="text-[#DD1C24] font-semibold">stibo</span> · AWS us-east-1</span>
+          </footer>
+        </div>
       </div>
       <CommandPalette />
     </div>
