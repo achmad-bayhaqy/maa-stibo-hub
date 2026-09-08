@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { api } from "@/lib/store";
+import { api, useHub } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { FileSpreadsheet, Send, CheckCircle2, XCircle, Users, Layers, Boxes, Activity, Loader2 } from "lucide-react";
+import { FileSpreadsheet, Send, CheckCircle2, XCircle, Users, Layers, Boxes, Activity, Loader2, Sparkles, CircleDashed } from "lucide-react";
 
 interface Dash {
   kpi: { uploads: number; sent: number; totalRows: number; successRate: number; users: number; rules: number; brands: number; successJobs: number; failedJobs: number };
@@ -18,11 +18,20 @@ interface Dash {
 
 export function DashboardView() {
   const [data, setData] = useState<Dash | null>(null);
+  const { setView, setMasterTab, setAssistantMode, user } = useHub();
 
   useEffect(() => { api<Dash>("/api/dashboard").then(setData).catch(() => undefined); }, []);
 
   if (!data) return <CenterLoading />;
   const k = data.kpi;
+
+  const checklist: Array<{ label: string; done: boolean; action: () => void }> = [
+    { label: "Pelajari panduan sistem di Documentation Center", done: true, action: () => setView("docs") },
+    { label: "Coba tanya Assistant mode Q&A", done: true, action: () => { setAssistantMode("qa"); setView("assistant"); } },
+    { label: "Lakukan upload + transform pertama (MOCK)", done: k.uploads > 0, action: () => { setAssistantMode("pipeline"); setView("assistant"); } },
+    { label: "Kirim data ke Stibo (bgId tercatat)", done: k.sent > 0, action: () => setView("files") },
+    ...(user?.role !== "VIEWER" ? [{ label: "Lengkapi master data (brand/atribut/rule)", done: k.brands > 0 && k.rules > 0, action: () => { setMasterTab("brands"); setView("master"); } }] : []),
+  ];
 
   return (
     <div className="p-4 md:p-6 space-y-6 max-w-6xl mx-auto">
@@ -30,6 +39,22 @@ export function DashboardView() {
         <h2 className="text-lg font-bold text-slate-800">Pipeline overview</h2>
         <p className="text-xs text-slate-500 mt-0.5">Aktivitas integrasi master data ke Stibo STEP · lingkungan dev.</p>
       </div>
+
+      {/* Onboarding checklist (btool onboarding-tour inspired) */}
+      {!checklist.every((c) => c.done) && (
+        <Card className="border shadow-sm">
+          <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Sparkles className="h-4 w-4 text-violet-500" /> Mulai dengan STIBO Hub</CardTitle></CardHeader>
+          <CardContent className="grid sm:grid-cols-2 gap-2">
+            {checklist.map((c) => (
+              <button key={c.label} onClick={c.action}
+                className={cn("flex items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-xs transition-colors hover:bg-slate-50", c.done ? "border-emerald-100 bg-emerald-50/40" : "bg-white")}>
+                {c.done ? <CheckCircle2 className="h-4 w-4 text-emerald-500 shrink-0" /> : <CircleDashed className="h-4 w-4 text-slate-300 shrink-0" />}
+                <span className={cn("font-medium", c.done ? "text-emerald-700 line-through" : "text-slate-700")}>{c.label}</span>
+              </button>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[

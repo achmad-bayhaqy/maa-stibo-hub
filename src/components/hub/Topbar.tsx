@@ -8,14 +8,14 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
-import { LogOut, User as UserIcon, ShieldCheck, CircleDot } from "lucide-react";
+import { LogOut, User as UserIcon, ShieldCheck, CircleDot, Search, BookOpen } from "lucide-react";
 
 const ROLE_LABEL: Record<string, string> = {
   ADMIN: "Administrator", EDITOR: "Editor (MD CoE)", VIEWER: "Viewer",
 };
 
 export function Topbar() {
-  const { user, setUser, setView, sendMode } = useHub();
+  const { user, setUser, setView, sendMode, setPaletteOpen } = useHub();
   if (!user) return null;
 
   const initials = user.name.split(" ").map((p) => p[0]).slice(0, 2).join("").toUpperCase();
@@ -34,8 +34,20 @@ export function Topbar() {
         </Badge>
       </div>
 
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" className="hidden sm:inline-flex border-slate-300 text-slate-700" onClick={() => setView("assistant")}>
+      <div className="flex items-center gap-2.5">
+        <button
+          onClick={() => setPaletteOpen(true)}
+          className="hidden md:flex items-center gap-2 rounded-lg border bg-white px-3 py-1.5 text-xs text-slate-400 hover:border-orange-300 hover:text-slate-600 transition-colors"
+          aria-label="Buka quick search (Ctrl+K)"
+        >
+          <Search className="h-3.5 w-3.5" />
+          <span>Search…</span>
+          <kbd className="rounded border bg-slate-50 px-1.5 py-0.5 text-[9px] font-mono text-slate-400">⌘K</kbd>
+        </button>
+        <Button variant="outline" size="sm" className="hidden sm:inline-flex border-violet-200 text-violet-700 hover:bg-violet-50" onClick={() => setView("docs")}>
+          <BookOpen className="h-4 w-4 mr-1" /> Docs
+        </Button>
+        <Button variant="outline" size="sm" className="hidden lg:inline-flex border-slate-300 text-slate-700" onClick={() => setView("assistant")}>
           New Transformation
         </Button>
         <DropdownMenu>

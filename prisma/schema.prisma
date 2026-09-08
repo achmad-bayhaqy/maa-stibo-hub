@@ -31,11 +31,12 @@ model Brand {
 }
 
 model Attribute {
-  id         String   @id @default(cuid())
-  code       String   @unique
-  name       String
-  validation String   @default("text")
-  createdAt  DateTime @default(now())
+  id          String   @id @default(cuid())
+  code        String   @unique
+  name        String
+  validation  String   @default("text")
+  description String   @default("")
+  createdAt   DateTime @default(now())
 }
 
 model LovTable {
@@ -169,4 +170,29 @@ model Setting {
   key       String   @id
   value     String
   updatedAt DateTime @updatedAt
+}
+
+model DocPage {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  title     String
+  category  String   @default("Guide") // Guide | Reference | Integration | Governance
+  order     Int      @default(100)
+  summary   String   @default("")
+  body      String   @default("") // markdown-ish content
+  updatedBy String   @default("system")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userEmail String
+  role      String // user | assistant
+  content   String
+  mode      String   @default("qa") // qa | pipeline
+  meta      String   @default("{}") // JSON: intent, sources, data cards
+  createdAt DateTime @default(now())
+
+  @@index([userEmail, createdAt])
 }

@@ -13,6 +13,8 @@ import { MasterDataView } from "@/components/hub/views/MasterDataView";
 import { UsersView } from "@/components/hub/views/UsersView";
 import { AuditView } from "@/components/hub/views/AuditView";
 import { SettingsView } from "@/components/hub/views/SettingsView";
+import { DocsView } from "@/components/hub/views/DocsView";
+import { CommandPalette } from "@/components/hub/CommandPalette";
 import { Loader2, Hexagon } from "lucide-react";
 
 export default function Home() {
@@ -49,15 +51,17 @@ export default function Home() {
           {view === "dashboard" && <DashboardView />}
           {view === "files" && <FilesView />}
           {view === "master" && <MasterDataView />}
+          {view === "docs" && <DocsView />}
           {view === "users" && <UsersView />}
           {view === "audit" && <AuditView />}
           {view === "settings" && <SettingsView />}
         </main>
         <footer className="mt-auto border-t bg-white px-6 py-3 text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2">
-          <span>STIBO Hub · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
+          <span>STIBO Hub v2.0 · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
           <span className="font-mono">resources tagged <span className="text-orange-600">stibo</span> · AWS us-east-1</span>
         </footer>
       </div>
+      <CommandPalette />
     </div>
   );
 }

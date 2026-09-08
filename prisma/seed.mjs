@@ -8,6 +8,7 @@ import { createHash, randomBytes, scryptSync } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { DOCS } from "./seed-data/docs.mjs";
 
 const prisma = new PrismaClient();
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -143,6 +144,15 @@ async function main() {
     for (const c of chunk(load("naming.json"), 200)) await prisma.namingRoute.createMany({ data: c });
     console.log("  naming routes:", await prisma.namingRoute.count());
   }
+
+  for (const d of DOCS) {
+    await prisma.docPage.upsert({
+      where: { slug: d.slug },
+      update: { title: d.title, category: d.category, order: d.order, summary: d.summary, body: d.body },
+      create: { ...d },
+    });
+  }
+  console.log("  doc pages:", DOCS.length);
 
   console.log(`Seed done in ${((Date.now() - t0) / 1000).toFixed(1)}s`);
 }

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useHub, api } from "@/lib/store";
+import { QaChat } from "@/components/hub/views/QaChat";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -59,7 +60,7 @@ const TYPE_STYLE: Record<string, { label: string; cls: string }> = {
 
 /* ─────────────────────────── component ─────────────────────────── */
 
-export function AssistantView() {
+function PipelineAssistant() {
   const { user } = useHub();
   const { toast } = useToast();
   const [items, setItems] = useState<ChatItem[]>([
@@ -155,7 +156,7 @@ export function AssistantView() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem-41px)]">
+    <div className="flex h-full min-h-0">
       {/* history rail */}
       <div className="hidden xl:flex w-[220px] shrink-0 border-r bg-white flex-col">
         <div className="px-4 py-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Recent uploads</div>
@@ -607,6 +608,37 @@ function SentCard({ job, filename }: { job: Job; filename: string }) {
         ))}
       </div>
       {job.responseSnippet && <pre className="mx-5 mb-4 rounded-lg bg-slate-900 text-slate-200 p-3 text-[10px] font-mono overflow-auto max-h-32 whitespace-pre-wrap">{job.responseSnippet}</pre>}
+    </div>
+  );
+}
+
+/* ─────────────────────────── mode wrapper (v2) ─────────────────────────── */
+
+export function AssistantView() {
+  const { assistantMode, setAssistantMode } = useHub();
+
+  return (
+    <div className="flex flex-col h-[calc(100vh-4rem-41px)]">
+      <div className="flex items-center justify-center gap-1 px-4 py-2 border-b bg-white/70 backdrop-blur shrink-0">
+        <div className="flex rounded-full bg-slate-100 p-0.5 border">
+          {([
+            { key: "pipeline", label: "Pipeline", icon: UploadCloud, hint: "Upload → Map → Send" },
+            { key: "qa", label: "Q&A", icon: Sparkles, hint: "Tanya apa saja" },
+          ] as const).map((t) => (
+            <button key={t.key} onClick={() => setAssistantMode(t.key)}
+              className={cn(
+                "flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold transition-all",
+                assistantMode === t.key ? "bg-[#0B1626] text-white shadow-sm" : "text-slate-500 hover:text-slate-800"
+              )}
+              title={t.hint}>
+              <t.icon className="h-3.5 w-3.5" /> {t.label}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="flex-1 min-h-0">
+        {assistantMode === "pipeline" ? <PipelineAssistant /> : <QaChat />}
+      </div>
     </div>
   );
 }
