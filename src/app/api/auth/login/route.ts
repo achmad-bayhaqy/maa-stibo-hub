@@ -19,7 +19,8 @@ export async function POST(req: NextRequest) {
     const res = NextResponse.json({ user: sessionUser });
     res.cookies.set(SESSION_COOKIE, token, {
       httpOnly: true, sameSite: "lax", path: "/", maxAge: 12 * 60 * 60,
-      secure: process.env.NODE_ENV === "production",
+      // enable only when serving over HTTPS (set COOKIE_SECURE=true behind ALB/CloudFront)
+      secure: process.env.COOKIE_SECURE === "true",
     });
     return res;
   } catch (e) {
