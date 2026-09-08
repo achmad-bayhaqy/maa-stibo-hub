@@ -142,7 +142,7 @@ if DOCS:
     with sftp2.open("/tmp/docs-sync.sql", "w") as f:
         f.write(sql)
     sftp2.close()
-    code, out = run(c, "cd /opt/stibo-hub && sudo docker compose --project-directory repo --env-file /opt/stibo-hub/.env exec -T stibo-hub-db psql -U stibohub -d stibohub -f - < /tmp/docs-sync.sql 2>&1 | tail -3; rm -f /tmp/docs-sync.sql")
+    code, out = run(c, "cd /opt/stibo-hub && sudo docker compose --project-directory repo -f repo/docker-compose.aws.yml --env-file /opt/stibo-hub/.env exec -T stibo-hub-db psql -U stibohub -d stibohub < /tmp/docs-sync.sql 2>&1 | tail -3; rm -f /tmp/docs-sync.sql")
     print(out)
 else:
     print("no DOCS parsed — skipping")
