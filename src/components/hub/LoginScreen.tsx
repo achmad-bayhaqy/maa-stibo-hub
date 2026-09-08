@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Hexagon, Loader2, ArrowRight, Lock, Database, Send, BarChart3 } from "lucide-react";
-
 const FEATURES = [
   { icon: Database, title: "Auto-mapping engine", desc: "5,925 mapping rules · 47 LOV tables · RNA master lookup extracted from the Brand mapping Template & MDD." },
   { icon: Send, title: "Stibo IIEP integration", desc: "STEPXML preview → explicit user confirmation → OIDC client-credentials POST to Article Planning / EAN Update / Article Maintenance." },
@@ -37,24 +36,23 @@ export function LoginScreen() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col lg:flex-row bg-[#0B1626]">
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white">
       {/* Brand panel */}
-      <div className="lg:flex-1 flex flex-col justify-between p-8 lg:p-14 text-slate-200">
-        <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-xl bg-orange-500/15 border border-orange-500/40 flex items-center justify-center">
-            <Hexagon className="h-6 w-6 text-orange-400" />
-          </div>
+      <div className="lg:flex-1 flex flex-col justify-between p-8 lg:p-14 text-neutral-800 border-b-2 lg:border-b-0 lg:border-r-2 border-black">
+        <div className="flex items-center gap-4">
+          <img src="/map-active-logo.svg" alt="MAP Active" className="h-12 w-auto" />
+          <div className="h-9 w-px bg-neutral-200" />
           <div>
-            <div className="text-lg font-semibold text-white">STIBO Hub</div>
-            <div className="text-xs text-slate-400">PT. MAP Aktif Adiperkasa Tbk · 0888</div>
+            <div className="text-lg font-bold text-black tracking-tight">Map Portal</div>
+            <div className="text-xs text-neutral-500">PT. MAP Aktif Adiperkasa Tbk · 0888</div>
           </div>
         </div>
 
         <div className="my-10 max-w-lg">
-          <h1 className="text-3xl lg:text-4xl font-bold text-white leading-tight">
-            Upload brand files.<br />Get Stibo-ready <span className="text-orange-400">STEPXML</span> in minutes.
+          <h1 className="text-3xl lg:text-4xl font-bold text-black leading-tight tracking-tight">
+            Upload brand files.<br />Get Stibo-ready <span className="text-[#DD1C24]">STEPXML</span> in minutes.
           </h1>
-          <p className="mt-4 text-sm text-slate-400 leading-relaxed">
+          <p className="mt-4 text-sm text-neutral-600 leading-relaxed">
             Portal untuk transformasi master data ritel: naming-convention validation, auto-mapping
             berbasis rule &amp; LOV, wizard Country/SBU/Brand/Season, lalu kirim ke Stibo STEP
             setelah konfirmasi Anda.
@@ -62,26 +60,26 @@ export function LoginScreen() {
           <div className="mt-8 space-y-5">
             {FEATURES.map((f) => (
               <div key={f.title} className="flex gap-3.5">
-                <div className="h-9 w-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                  <f.icon className="h-4.5 w-4.5 h-5 w-5 text-orange-400" />
+                <div className="h-9 w-9 rounded-lg bg-[#DD1C24]/10 border border-[#DD1C24]/25 flex items-center justify-center shrink-0">
+                  <f.icon className="h-4.5 w-4.5 h-5 w-5 text-[#DD1C24]" />
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-white">{f.title}</div>
-                  <div className="text-xs text-slate-400 leading-relaxed mt-0.5">{f.desc}</div>
+                  <div className="text-sm font-semibold text-black">{f.title}</div>
+                  <div className="text-xs text-neutral-500 leading-relaxed mt-0.5">{f.desc}</div>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-500">
-          Internal use only · All AWS resources are tagged <span className="text-orange-500 font-mono">stibo</span> · AWS us-east-1
+        <div className="text-[11px] text-neutral-400">
+          Internal use only · All AWS resources are tagged <span className="text-[#DD1C24] font-mono font-semibold">stibo</span> · AWS us-east-1
         </div>
       </div>
 
       {/* Login panel */}
       <div className="lg:w-[440px] bg-white p-8 lg:p-12 flex flex-col justify-center">
-        <h2 className="text-xl font-bold text-slate-900">Sign in</h2>
+        <h2 className="text-xl font-bold text-black">Sign in</h2>
         <p className="text-sm text-slate-500 mt-1">Master Data CoE accounts only.</p>
 
         <form onSubmit={submit} className="mt-8 space-y-4">
@@ -98,7 +96,7 @@ export function LoginScreen() {
             <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">{error}</div>
           )}
 
-          <Button type="submit" disabled={busy} className="w-full bg-orange-500 hover:bg-orange-600 text-white h-10">
+          <Button type="submit" disabled={busy} className="w-full bg-[#DD1C24] hover:bg-[#b9151c] text-white h-10">
             {busy ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Lock className="h-4 w-4 mr-2" />}
             Sign in
           </Button>

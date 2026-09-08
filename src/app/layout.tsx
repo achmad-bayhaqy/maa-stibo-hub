@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "STIBO Hub — MAP Master Data Integration Portal",
+  title: "Map Portal — MAP Master Data Integration (Stibo STEP)",
   description:
-    "Interactive portal for MAP Aktif Adiperkasa: upload brand files, auto-map to Stibo STEP attributes, preview STEPXML and send to Stibo IIEP endpoints.",
+    "Interactive portal for MAP Aktif Adiperkasa: upload brand files, auto-map to Stibo STEP attributes, preview & edit all template columns, ask the data assistant, and send to Stibo IIEP endpoints.",
   keywords: ["Stibo", "STEP", "MAP Active Adiperkasa", "master data", "STEPXML"],
   authors: [{ name: "MAP CoE Team" }],
 };

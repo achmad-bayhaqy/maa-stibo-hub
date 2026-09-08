@@ -26,7 +26,7 @@ const CATEGORY_ORDER = ["Guide", "Reference", "Integration", "Governance"];
 const CATEGORY_BADGE: Record<string, string> = {
   Guide: "border-emerald-200 bg-emerald-50 text-emerald-700",
   Reference: "border-sky-200 bg-sky-50 text-sky-700",
-  Integration: "border-violet-200 bg-violet-50 text-violet-700",
+  Integration: "border-neutral-200 bg-neutral-50 text-neutral-700",
   Governance: "border-amber-200 bg-amber-50 text-amber-700",
 };
 
@@ -119,8 +119,8 @@ export function DocsView() {
     <div className="p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="h-9 w-9 rounded-lg bg-violet-100 border border-violet-200 flex items-center justify-center">
-            <BookOpen className="h-5 w-5 text-violet-600" />
+          <div className="h-9 w-9 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center">
+            <BookOpen className="h-5 w-5 text-neutral-600" />
           </div>
           <div>
             <h2 className="text-lg font-bold text-slate-800 leading-tight">Documentation Center</h2>
@@ -133,7 +133,7 @@ export function DocsView() {
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari di semua halaman…" className="pl-8 h-9 w-52 md:w-64 text-xs" />
           </div>
           {canEdit && (
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white h-9"
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white h-9"
               onClick={() => setEditing({ category: "Guide", order: 200, title: "", slug: "", summary: "", body: "" })}>
               <Plus className="h-4 w-4 mr-1" /> New page
             </Button>
@@ -157,11 +157,11 @@ export function DocsView() {
                     onClick={() => setDocsSlug(p.slug)}
                     className={cn(
                       "w-full text-left px-3.5 py-2 text-xs flex items-start gap-2 hover:bg-slate-50 group",
-                      (current?.slug === p.slug) && "bg-violet-50 border-l-2 border-violet-500"
+                      (current?.slug === p.slug) && "bg-neutral-50 border-l-2 border-neutral-500"
                     )}>
-                    <FileText className="h-3.5 w-3.5 mt-0.5 shrink-0 text-slate-400 group-hover:text-violet-500" />
+                    <FileText className="h-3.5 w-3.5 mt-0.5 shrink-0 text-slate-400 group-hover:text-neutral-500" />
                     <span className="min-w-0">
-                      <span className={cn("block font-medium leading-snug", current?.slug === p.slug ? "text-violet-800" : "text-slate-700")}>{p.title}</span>
+                      <span className={cn("block font-medium leading-snug", current?.slug === p.slug ? "text-neutral-800" : "text-slate-700")}>{p.title}</span>
                       {p.summary && <span className="block text-[10px] text-slate-400 leading-snug line-clamp-2">{p.summary}</span>}
                     </span>
                   </button>
@@ -250,7 +250,7 @@ export function DocsView() {
             </div>
           </div>
           <DialogFooter>
-            <Button onClick={save} disabled={busy || !editing?.title} className="bg-orange-500 hover:bg-orange-600 text-white">
+            <Button onClick={save} disabled={busy || !editing?.title} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}
             </Button>
           </DialogFooter>

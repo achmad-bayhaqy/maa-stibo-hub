@@ -32,10 +32,10 @@ const TABS: Array<{ key: Tab; label: string }> = [
 const TYPE_BADGE: Record<string, string> = {
   SYSTEM_FORMULA: "border-sky-200 bg-sky-50 text-sky-700",
   DIRECT: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  MANUAL_PORTAL: "border-orange-200 bg-orange-50 text-orange-700",
+  MANUAL_PORTAL: "border-red-200 bg-red-50 text-red-700",
   MANUAL: "border-amber-200 bg-amber-50 text-amber-700",
   MANUAL_DIRECT: "border-amber-200 bg-amber-50 text-amber-700",
-  AI_ASSIST: "border-violet-200 bg-violet-50 text-violet-700",
+  AI_ASSIST: "border-neutral-200 bg-neutral-50 text-neutral-700",
   MAPPING: "border-teal-200 bg-teal-50 text-teal-700",
   NOT_AVAILABLE: "border-slate-200 bg-slate-50 text-slate-500",
   EXTERNAL_SOURCE: "border-rose-200 bg-rose-50 text-rose-700",
@@ -62,7 +62,7 @@ export function MasterDataView() {
         {TABS.map((t) => (
           <button key={t.key} onClick={() => setMasterTab(t.key)}
             className={cn("px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors",
-              masterTab === t.key ? "bg-[#0B1626] text-white" : "bg-white border text-slate-600 hover:bg-slate-50")}>
+              masterTab === t.key ? "bg-[#141414] text-white" : "bg-white border text-slate-600 hover:bg-slate-50")}>
             {t.label}
           </button>
         ))}
@@ -115,7 +115,7 @@ function BrandsTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
         <div className="flex gap-1.5">
           <ImportButton onClick={() => setImportOpen(true)} />
           <ExportButton filename="brands" columns={["code", "name", "division", "status"]} rows={items.map((b) => [b.code, b.name, b.division, b.status])} />
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setEdit({ division: "SPORTS", status: "ACTIVE" })}><Plus className="h-4 w-4 mr-1" /> Add brand</Button>
+          <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setEdit({ division: "SPORTS", status: "ACTIVE" })}><Plus className="h-4 w-4 mr-1" /> Add brand</Button>
         </div>
       )}
     >
@@ -152,7 +152,7 @@ function BrandsTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
               </Field>
             </div>
           </div>
-          <DialogFooter><Button onClick={save} disabled={busy || !edit?.code || !edit?.name} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={save} disabled={busy || !edit?.code || !edit?.name} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -203,7 +203,7 @@ function AttributesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolea
         <div className="flex gap-1.5">
           <ImportButton onClick={() => setImportOpen(true)} />
           <ExportButton filename="attributes" columns={["code", "name", "validation", "description"]} rows={data.items.map((a) => [a.code, a.name, a.validation, a.description])} />
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setEdit({ validation: "text" })}><Plus className="h-4 w-4 mr-1" /> Add attribute</Button>
+          <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setEdit({ validation: "text" })}><Plus className="h-4 w-4 mr-1" /> Add attribute</Button>
         </div>
       )}
     >
@@ -242,7 +242,7 @@ function AttributesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolea
             </div>
             <Field label="Description"><Textarea value={edit?.description ?? ""} onChange={(e) => setEdit((p) => ({ ...p!, description: e.target.value }))} rows={2} className="text-xs" /></Field>
           </div>
-          <DialogFooter><Button onClick={save} disabled={busy || !edit?.code || !edit?.name} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={save} disabled={busy || !edit?.code || !edit?.name} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -314,7 +314,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
           {loading && <div className="py-8 text-center"><Loader2 className="h-5 w-5 animate-spin mx-auto text-slate-300" /></div>}
           {tables.map((t) => (
             <button key={t.id} onClick={() => setSel(t.key)}
-              className={cn("w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-slate-50", sel === t.key && "bg-orange-50 border-l-2 border-orange-500")}>
+              className={cn("w-full text-left px-4 py-2.5 text-xs flex items-center justify-between hover:bg-slate-50", sel === t.key && "bg-red-50 border-l-2 border-red-500")}>
               <span className="font-mono font-semibold text-slate-700 truncate">{t.sheetName}</span>
               <span className="text-[10px] text-slate-400 shrink-0 ml-2">{t.valueCount}</span>
             </button>
@@ -333,7 +333,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
                 <Pencil className="h-3 w-3 mr-1" /> Rename
               </Button>
             )}
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white h-8 text-[11px]" onClick={() => setValueEdit({})}><Plus className="h-3 w-3 mr-1" /> Value</Button>
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white h-8 text-[11px]" onClick={() => setValueEdit({})}><Plus className="h-3 w-3 mr-1" /> Value</Button>
           </div>
         )}
       >
@@ -370,7 +370,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
             )}
             <Field label="Sheet name"><Input value={tableEdit?.sheetName ?? ""} onChange={(e) => setTableEdit((p) => ({ ...p!, sheetName: e.target.value }))} className="h-9" /></Field>
           </div>
-          <DialogFooter><Button onClick={saveTable} disabled={busy || !tableEdit?.sheetName} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={saveTable} disabled={busy || !tableEdit?.sheetName} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -382,7 +382,7 @@ function LovTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
             <Field label="Code"><Input value={valueEdit?.code ?? ""} onChange={(e) => setValueEdit((p) => ({ ...p!, code: e.target.value.toUpperCase() }))} className="h-9 font-mono" /></Field>
             <Field label="Label"><Input value={valueEdit?.label ?? ""} onChange={(e) => setValueEdit((p) => ({ ...p!, label: e.target.value }))} className="h-9" /></Field>
           </div>
-          <DialogFooter><Button onClick={saveValue} disabled={busy || !valueEdit?.code} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={saveValue} disabled={busy || !valueEdit?.code} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -467,7 +467,7 @@ function RulesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) 
               filename="mapping-rules" columns={["brand", "attributeId", "attribute", "type", "sourceField", "logic"]}
               rows={(data?.items ?? []).map((r) => [r.brandCode, r.attributeId, r.attribute, r.mappingType, r.sourceField, r.logic])}
             />
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setEdit({ mappingType: "DIRECT", validation: "text" })}><Plus className="h-4 w-4 mr-1" /> Add rule</Button>
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setEdit({ mappingType: "DIRECT", validation: "text" })}><Plus className="h-4 w-4 mr-1" /> Add rule</Button>
           </div>
         )}
       >
@@ -524,7 +524,7 @@ function RulesTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) 
               </div>
             )}
           </div>
-          <DialogFooter><Button onClick={save} disabled={busy} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={save} disabled={busy} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
 
@@ -575,7 +575,7 @@ function NamingTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
             filename="naming-routes" columns={["brand", "inline", "fileType", "trigger", "endpoint"]}
             rows={data.items.map((r) => [r.brand, r.inline, r.fileType, r.trigger, r.endpoint])}
           />
-          <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setEdit({ endpoint: "ARTICLE_PLANNING" })}><Plus className="h-4 w-4 mr-1" /> Add route</Button>
+          <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setEdit({ endpoint: "ARTICLE_PLANNING" })}><Plus className="h-4 w-4 mr-1" /> Add route</Button>
         </div>
       )}
     >
@@ -588,7 +588,7 @@ function NamingTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[110px]">{r.inline || "—"}</td>
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[110px]">{r.fileType || "—"}</td>
             <td className="px-4 py-2.5 text-slate-500">{r.trigger || "—"}</td>
-            <td className="px-4 py-2.5"><Badge variant="outline" className="border-violet-200 bg-violet-50 text-violet-700 font-mono text-[10px]">{r.endpoint}</Badge></td>
+            <td className="px-4 py-2.5"><Badge variant="outline" className="border-neutral-200 bg-neutral-50 text-neutral-700 font-mono text-[10px]">{r.endpoint}</Badge></td>
             <td className="px-4 py-2.5 text-slate-500 truncate max-w-[140px]" title={r.comment}>{r.comment || "—"}</td>
             <ActionsCell
               canEdit={canEdit} onEdit={() => setEdit(r)}
@@ -615,7 +615,7 @@ function NamingTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean })
             </Field>
             <Field label="Comment"><Input value={edit?.comment ?? ""} onChange={(e) => setEdit((p) => ({ ...p!, comment: e.target.value }))} className="h-9 text-xs" /></Field>
           </div>
-          <DialogFooter><Button onClick={save} disabled={busy || !edit?.brand || !edit?.endpoint} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={save} disabled={busy || !edit?.brand || !edit?.endpoint} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
     </Panel>
@@ -686,7 +686,7 @@ function RnaTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
               filename="rna" columns={RNA_FIELDS.map((f) => f.key)}
               rows={data.items.map((r) => RNA_FIELDS.map((f) => r[f.key]))}
             />
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setEdit({ country: "ID", compCode: "0888" })}><Plus className="h-4 w-4 mr-1" /> Add row</Button>
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setEdit({ country: "ID", compCode: "0888" })}><Plus className="h-4 w-4 mr-1" /> Add row</Button>
           </div>
         )}
       >
@@ -722,7 +722,7 @@ function RnaTab({ canEdit, isAdmin }: { canEdit: boolean; isAdmin: boolean }) {
               </Field>
             ))}
           </div>
-          <DialogFooter><Button onClick={save} disabled={busy || !edit?.country || !edit?.compCode || !edit?.brandCode} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={save} disabled={busy || !edit?.country || !edit?.compCode || !edit?.brandCode} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
@@ -769,7 +769,7 @@ function Pager({ page, total, onChange }: { page: number; total: number; onChang
 function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button onClick={onClick} className={cn("px-2.5 py-1.5 rounded-full border text-[11px] font-medium transition-colors",
-      active ? "bg-orange-500 border-orange-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50")}>
+      active ? "bg-[#DD1C24] border-red-500 text-white" : "bg-white text-slate-600 hover:bg-slate-50")}>
       {children}
     </button>
   );

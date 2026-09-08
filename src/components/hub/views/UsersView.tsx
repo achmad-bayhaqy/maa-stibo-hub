@@ -14,8 +14,8 @@ import { Plus, Loader2, ShieldCheck, Trash2, Search } from "lucide-react";
 interface HubUserRow { id: string; email: string; name: string; role: "ADMIN" | "EDITOR" | "VIEWER"; active: boolean; lastLoginAt: string | null; createdAt: string }
 
 const ROLE_META: Record<string, { label: string; cls: string; desc: string }> = {
-  ADMIN: { label: "Admin", cls: "border-violet-200 bg-violet-50 text-violet-700", desc: "Full access incl. user management" },
-  EDITOR: { label: "Editor", cls: "border-orange-200 bg-orange-50 text-orange-700", desc: "Upload, transform & send to Stibo" },
+  ADMIN: { label: "Admin", cls: "border-neutral-200 bg-neutral-50 text-neutral-700", desc: "Full access incl. user management" },
+  EDITOR: { label: "Editor", cls: "border-red-200 bg-red-50 text-red-700", desc: "Upload, transform & send to Stibo" },
   VIEWER: { label: "Viewer", cls: "border-slate-200 bg-slate-50 text-slate-600", desc: "Read-only dashboards & masters" },
 };
 
@@ -67,7 +67,7 @@ export function UsersView() {
             <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Cari user…" className="pl-8 h-9 w-52 text-xs" />
           </div>
           {isAdmin && (
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white" onClick={() => setCreateOpen(true)}>
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white" onClick={() => setCreateOpen(true)}>
               <Plus className="h-4 w-4 mr-1" /> Add user
             </Button>
           )}
@@ -138,7 +138,7 @@ export function UsersView() {
               <div className="space-y-1"><Label className="text-xs">Temp password</Label><Input type="password" value={form.password} onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))} className="h-9" /></div>
             </div>
           </div>
-          <DialogFooter><Button onClick={create} disabled={busy || !form.email || !form.name || !form.password} className="bg-orange-500 hover:bg-orange-600 text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create user"}</Button></DialogFooter>
+          <DialogFooter><Button onClick={create} disabled={busy || !form.email || !form.name || !form.password} className="bg-[#DD1C24] hover:bg-[#b9151c] text-white">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create user"}</Button></DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

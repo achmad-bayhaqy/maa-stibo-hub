@@ -15,7 +15,7 @@ interface MasterItem { id: string; label: string; sub: string }
  * cross-entity search (brands / attributes / LOV / users).
  */
 export function CommandPalette() {
-  const { paletteOpen, setPaletteOpen, setView, setMasterTab, setDocsSlug, user, sendMode, setSendMode, setAssistantMode } = useHub();
+  const { paletteOpen, setPaletteOpen, setView, setMasterTab, setDocsSlug, user, sendMode, setSendMode } = useHub();
   const [brands, setBrands] = useState<MasterItem[]>([]);
   const [attrs, setAttrs] = useState<MasterItem[]>([]);
   const [docs, setDocs] = useState<MasterItem[]>([]);
@@ -100,7 +100,7 @@ export function CommandPalette() {
             <CommandGroup heading="Brands (pilih untuk lihat di Data Master)">
               {brands.map((b) => (
                 <CommandItem key={b.id} value={`brand ${b.label}`} onSelect={() => { setMasterTab("brands"); go("master"); }}>
-                  <Hexagon className="h-4 w-4 mr-2 text-orange-400" /> {b.label}
+                  <Hexagon className="h-4 w-4 mr-2 text-red-400" /> {b.label}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -126,7 +126,7 @@ export function CommandPalette() {
             <CommandGroup heading="Dokumentasi">
               {docs.map((d) => (
                 <CommandItem key={d.id} value={`doc ${d.label} ${d.sub}`} onSelect={() => { setDocsSlug(d.id); go("docs"); }}>
-                  <BookOpen className="h-4 w-4 mr-2 text-violet-400" /> {d.label}
+                  <BookOpen className="h-4 w-4 mr-2 text-neutral-400" /> {d.label}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -137,11 +137,8 @@ export function CommandPalette() {
           <>
             <CommandSeparator />
             <CommandGroup heading="Quick actions">
-              <CommandItem onSelect={() => { setAssistantMode("pipeline"); go("assistant"); }}>
-                <UploadCloud className="h-4 w-4 mr-2 text-orange-500" /> Transformasi baru (upload file)
-              </CommandItem>
-              <CommandItem onSelect={() => { setAssistantMode("qa"); go("assistant"); }}>
-                <Sparkles className="h-4 w-4 mr-2 text-violet-500" /> Tanya Assistant (Q&A)
+              <CommandItem onSelect={() => go("assistant")}>
+                <UploadCloud className="h-4 w-4 mr-2 text-red-500" /> Assistant — upload file atau tanya apa saja
               </CommandItem>
               {(user.role === "ADMIN" || user.role === "EDITOR") && (
                 <CommandItem onSelect={() => { setSendMode(sendMode === "MOCK" ? "LIVE" : "MOCK"); setPaletteOpen(false); }}>

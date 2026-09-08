@@ -76,7 +76,7 @@ export function ImportDialog({ entity, open, onOpenChange, onDone }: {
       <DialogContent className="sm:max-w-2xl" onOpenAutoFocus={(e) => e.preventDefault()}>
         <DialogHeader>
           <DialogTitle className="text-sm flex items-center gap-2">
-            <UploadCloud className="h-4 w-4 text-orange-500" /> Bulk Import — {ENTITY_LABEL[entity]}
+            <UploadCloud className="h-4 w-4 text-red-500" /> Bulk Import — {ENTITY_LABEL[entity]}
           </DialogTitle>
           <DialogDescription className="text-xs">
             Alur dua fase: <b>Preview</b> memvalidasi tanpa menulis, lalu <b>Apply</b> menerapkan baris valid.
@@ -86,7 +86,7 @@ export function ImportDialog({ entity, open, onOpenChange, onDone }: {
         {!result ? (
           <div className="space-y-3">
             <div
-              className={cn("rounded-xl border-2 border-dashed p-6 text-center transition-colors", csv ? "border-emerald-300 bg-emerald-50/50" : "border-slate-300 hover:border-orange-300 hover:bg-orange-50/30")}
+              className={cn("rounded-xl border-2 border-dashed p-6 text-center transition-colors", csv ? "border-emerald-300 bg-emerald-50/50" : "border-slate-300 hover:border-red-300 hover:bg-red-50/30")}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => {
                 e.preventDefault();
@@ -161,7 +161,7 @@ export function ImportDialog({ entity, open, onOpenChange, onDone }: {
             <Button variant="outline" size="sm" className="text-xs" onClick={() => setResult(null)}>← Kembali edit</Button>
           )}
           {!result ? (
-            <Button size="sm" className="bg-orange-500 hover:bg-orange-600 text-white text-xs" disabled={busy || !csv.trim()}
+            <Button size="sm" className="bg-[#DD1C24] hover:bg-[#b9151c] text-white text-xs" disabled={busy || !csv.trim()}
               onClick={() => run("preview")}>
               {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Eye className="h-4 w-4 mr-1" /> Preview</>}
             </Button>

@@ -3,14 +3,14 @@
 import { useHub, type ViewKey } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import {
-  Hexagon, LayoutDashboard, MessagesSquare, FolderOpen, Database,
+  LayoutDashboard, MessagesSquare, FolderOpen, Database,
   Users, ScrollText, Settings, ChevronLeft, BookOpen,
 } from "lucide-react";
 
 type Section = "main" | "data" | "governance";
 
 const NAV: Array<{ key: ViewKey; label: string; sub: string; icon: React.ElementType; roles?: string[]; section: Section }> = [
-  { key: "assistant", label: "Assistant", sub: "Upload → Map → Send", icon: MessagesSquare, section: "main" },
+  { key: "assistant", label: "Assistant", sub: "Upload · Ask · Send", icon: MessagesSquare, section: "main" },
   { key: "dashboard", label: "Dashboard", sub: "Pipeline KPIs", icon: LayoutDashboard, section: "main" },
   { key: "files", label: "Uploads", sub: "Transform history", icon: FolderOpen, section: "main" },
   { key: "master", label: "Data Master", sub: "Brands · Rules · LOV · RNA", icon: Database, section: "data" },
@@ -34,22 +34,20 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col bg-[#0B1626] text-slate-300 transition-all duration-200 shrink-0",
+        "hidden md:flex flex-col bg-white text-neutral-800 border-r-2 border-black transition-all duration-200 shrink-0",
         sidebarOpen ? "w-[248px]" : "w-[68px]"
       )}
     >
       <button
-        className="flex items-center gap-2.5 px-4 h-16 border-b border-white/10 text-left w-full hover:bg-white/5 transition-colors"
+        className="flex items-center gap-3 px-4 h-16 border-b-2 border-black text-left w-full hover:bg-neutral-50 transition-colors"
         onClick={() => { setView("assistant"); }}
-        aria-label="STIBO Hub home"
+        aria-label="Map Portal home"
       >
-        <div className="h-9 w-9 rounded-lg bg-orange-500/15 border border-orange-500/40 flex items-center justify-center shrink-0">
-          <Hexagon className="h-5 w-5 text-orange-400" />
-        </div>
+        <img src="/map-active-logo.svg" alt="MAP Active" className="h-8 w-auto shrink-0" />
         {sidebarOpen && (
           <div className="min-w-0">
-            <div className="text-[15px] font-semibold text-white leading-tight">STIBO Hub</div>
-            <div className="text-[10px] text-slate-400 truncate">MAP Aktif Adiperkasa · 0888</div>
+            <div className="text-[14px] font-bold text-black leading-tight tracking-tight">Map Portal</div>
+            <div className="text-[10px] text-neutral-500 truncate">Principal file upload center</div>
           </div>
         )}
       </button>
@@ -61,7 +59,7 @@ export function Sidebar() {
           return (
             <div key={section}>
               {sidebarOpen && (
-                <div className="px-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-slate-600">{SECTION_LABEL[section]}</div>
+                <div className="px-3 pb-1 text-[9px] font-bold uppercase tracking-widest text-neutral-400">{SECTION_LABEL[section]}</div>
               )}
               <div className="space-y-0.5">
                 {items.map((item) => {
@@ -72,17 +70,19 @@ export function Sidebar() {
                       key={item.key}
                       onClick={() => setView(item.key)}
                       className={cn(
-                        "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors group",
-                        active ? "bg-orange-500/15 text-white" : "hover:bg-white/5 hover:text-white text-slate-400"
+                        "w-full flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors group relative",
+                        active
+                          ? "bg-[#DD1C24] text-white shadow-sm"
+                          : "hover:bg-neutral-100 hover:text-black text-neutral-600"
                       )}
                       aria-current={active ? "page" : undefined}
                       title={item.label}
                     >
-                      <Icon className={cn("h-[18px] w-[18px] shrink-0", active && "text-orange-400")} />
+                      <Icon className={cn("h-[18px] w-[18px] shrink-0", active ? "text-white" : "text-neutral-500 group-hover:text-[#DD1C24]")} />
                       {sidebarOpen && (
                         <span className="min-w-0">
                           <span className="block text-[13px] font-medium leading-tight">{item.label}</span>
-                          <span className="block text-[10px] text-slate-500 group-hover:text-slate-400 truncate">{item.sub}</span>
+                          <span className={cn("block text-[10px] truncate", active ? "text-white/75" : "text-neutral-400 group-hover:text-neutral-600")}>{item.sub}</span>
                         </span>
                       )}
                     </button>
@@ -94,31 +94,31 @@ export function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-white/10 p-2 space-y-0.5">
+      <div className="border-t-2 border-black p-2 space-y-0.5">
         <button
           onClick={() => setPaletteOpen(true)}
-          className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-slate-400 hover:text-white hover:bg-white/5 text-xs"
+          className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-neutral-600 hover:text-black hover:bg-neutral-100 text-xs"
           aria-label="Buka command palette"
         >
           <SearchIcon className="h-4 w-4 shrink-0" />
           {sidebarOpen && (
             <span className="flex-1 flex items-center justify-between">
               <span>Quick search</span>
-              <kbd className="rounded border border-white/20 bg-white/5 px-1.5 py-0.5 text-[9px] font-mono">⌘K</kbd>
+              <kbd className="rounded border-2 border-black bg-white px-1.5 py-0.5 text-[9px] font-mono">⌘K</kbd>
             </span>
           )}
         </button>
         <button
           onClick={toggleSidebar}
-          className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-slate-500 hover:text-white hover:bg-white/5 text-xs"
+          className="w-full flex items-center gap-3 rounded-lg px-3 py-2 text-neutral-500 hover:text-black hover:bg-neutral-100 text-xs"
           aria-label="Toggle sidebar"
         >
           <ChevronLeft className={cn("h-4 w-4 transition-transform", !sidebarOpen && "rotate-180")} />
           {sidebarOpen && <span>Collapse</span>}
         </button>
         {sidebarOpen && (
-          <div className="px-3 pt-1 pb-2 text-[10px] leading-relaxed text-slate-600">
-            v2.0 · env <span className="text-slate-500">stibo-hub-dev</span>
+          <div className="px-3 pt-1 pb-2 text-[10px] leading-relaxed text-neutral-400">
+            v2.1 · env <span className="text-neutral-500 font-mono">stibo-hub-dev</span>
           </div>
         )}
       </div>

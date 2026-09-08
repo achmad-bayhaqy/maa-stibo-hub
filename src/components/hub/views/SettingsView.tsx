@@ -6,12 +6,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { CircleCheck, CircleAlert, CloudCog, KeyRound, Send, Tag } from "lucide-react";
+import { CircleCheck, CircleAlert, CloudCog, KeyRound, Send, Tag, Lock } from "lucide-react";
 
 interface SettingsData {
   sendMode: "MOCK" | "LIVE";
   stiboEndpoints: Record<string, string>;
   oidcConfigured: boolean;
+  stiboSecrets: {
+    source: "env" | "secrets-manager" | "none";
+    clientIdMasked: string;
+    tokenUrlHost: string;
+    endpointsReady: string[];
+  };
   awsRegion: string;
   resourcePrefix: string;
 }
@@ -62,7 +68,7 @@ export function SettingsView() {
           {!data.oidcConfigured && (
             <div className="flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-800">
               <CircleAlert className="h-4 w-4 mt-0.5 shrink-0" />
-              Kredensial OIDC Stibo belum diset di environment (STIBO_TOKEN_URL, STIBO_CLIENT_ID, STIBO_CLIENT_SECRET + 3 endpoint URLs). Live mode terkunci sampai env tersedia.
+              Kredensial OIDC Stibo belum tersedia (env STIBO_* atau AWS Secrets Manager via STIBO_SECRET_ID). Live mode terkunci sampai kredensial dikonfigurasi.
             </div>
           )}
         </CardContent>
@@ -85,6 +91,18 @@ export function SettingsView() {
             {data.oidcConfigured ? <CircleCheck className="h-4 w-4 text-emerald-500" /> : <CircleAlert className="h-4 w-4 text-amber-500" />}
             <span className="text-slate-500">OIDC client credentials: {data.oidcConfigured ? "configured" : "missing (mock only)"}</span>
           </div>
+          {data.stiboSecrets && data.stiboSecrets.source !== "none" && (
+            <div className="rounded-lg border-2 border-black bg-neutral-50 p-3 text-xs space-y-1.5">
+              <div className="font-semibold text-neutral-700 flex items-center gap-1.5"><Lock className="h-3 w-3 text-[#DD1C24]" /> Kredensial (disimpan aman di server)</div>
+              <div className="grid sm:grid-cols-2 gap-x-4 gap-y-1">
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Sumber</span><span className="font-mono">{data.stiboSecrets.source === "env" ? "environment variables" : "AWS Secrets Manager"}</span></div>
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Client ID</span><span className="font-mono">{data.stiboSecrets.clientIdMasked}</span></div>
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Token host</span><span className="font-mono">{data.stiboSecrets.tokenUrlHost || "—"}</span></div>
+                <div className="flex justify-between gap-2"><span className="text-neutral-400">Client secret</span><span className="font-mono">•••••••• (tidak pernah tampil)</span></div>
+              </div>
+              <div className="text-[10px] text-neutral-400">Secret tidak pernah dikirim ke browser — hanya status ter-mask yang diekspos oleh API.</div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

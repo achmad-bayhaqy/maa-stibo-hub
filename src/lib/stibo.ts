@@ -4,7 +4,13 @@
  * `{IIEP_URL}?fileName=...&context=Context1&workspace=Main` with
  * Content-Type: application/octet-stream. Retries 3x exponential backoff.
  * MOCK mode simulates the whole flow for safe demos.
+ *
+ * Credentials resolve via src/lib/stibo-config.ts (env vars → AWS Secrets
+ * Manager). They never reach the client bundle.
  */
+
+import "server-only";
+import { getStiboConfig } from "@/lib/stibo-config";
 
 export type Endpoint = "ARTICLE_PLANNING" | "EAN_UPDATE" | "ARTICLE_MAINTENANCE";
 
@@ -21,33 +27,30 @@ export interface SendResult {
   error?: string;
 }
 
-const ENDPOINT_ENV: Record<Endpoint, string> = {
-  ARTICLE_PLANNING: "STIBO_INBOUND_URL_ARTICLE_PLANNING",
-  EAN_UPDATE: "STIBO_INBOUND_URL_EAN_UPDATE",
-  ARTICLE_MAINTENANCE: "STIBO_INBOUND_URL_ARTICLE_MAINTENANCE",
-};
-
 let tokenCache: { token: string; exp: number } | null = null;
 
+/** @deprecated use getStiboStatus()/getStiboConfig() for accurate async resolution */
 export function isLiveConfigured(): boolean {
   return Boolean(
     process.env.STIBO_TOKEN_URL &&
     process.env.STIBO_CLIENT_ID &&
     process.env.STIBO_CLIENT_SECRET &&
-    Object.values(ENDPOINT_ENV).every((k) => process.env[k])
+    process.env.STIBO_INBOUND_URL_ARTICLE_PLANNING &&
+    process.env.STIBO_INBOUND_URL_EAN_UPDATE &&
+    process.env.STIBO_INBOUND_URL_ARTICLE_MAINTENANCE
   );
 }
 
-async function getOidcToken(): Promise<string> {
+async function getOidcToken(tokenUrl: string, clientId: string, clientSecret: string, grantType: string): Promise<string> {
   const now = Date.now();
   if (tokenCache && tokenCache.exp > now + 30_000) return tokenCache.token;
-  const res = await fetch(process.env.STIBO_TOKEN_URL!, {
+  const res = await fetch(tokenUrl, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
-      grant_type: process.env.STIBO_GRANT_TYPE || "client_credentials",
-      client_id: process.env.STIBO_CLIENT_ID!,
-      client_secret: process.env.STIBO_CLIENT_SECRET!,
+      grant_type: grantType,
+      client_id: clientId,
+      client_secret: clientSecret,
     }),
   });
   if (!res.ok) throw new Error(`OIDC token request failed: ${res.status}`);
@@ -91,10 +94,11 @@ export async function sendToStibo(
   mode: "MOCK" | "LIVE"
 ): Promise<SendResult> {
   const t0 = Date.now();
-  const envUrl = process.env[ENDPOINT_ENV[endpoint]] || "";
-  const url = envUrl || `https://<stibo-iiep-${endpoint.toLowerCase()}>/upload-direct`;
+  const config = await getStiboConfig();
+  const liveMode = mode === "LIVE" && config !== null;
+  const url = config?.endpoints[endpoint] || process.env[`STIBO_INBOUND_URL_${endpoint}`] || `https://<stibo-iiep-${endpoint.toLowerCase()}>/upload-direct`;
 
-  if (mode === "MOCK" || !isLiveConfigured()) {
+  if (!liveMode || !config) {
     // simulated bgId receipt like the Lambda saves to processed/stepxml/bgid/
     const bgId = `MOCK-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
     await new Promise((r) => setTimeout(r, 700));
@@ -106,8 +110,8 @@ export async function sendToStibo(
   }
 
   try {
-    const token = await getOidcToken();
-    const { status, body } = await postXml(envUrl, token, xml, fileName);
+    const token = await getOidcToken(config.tokenUrl, config.clientId, config.clientSecret, config.grantType);
+    const { status, body } = await postXml(url, token, xml, fileName);
     const bgMatch = body.match(/bgId["=:]\s*"?([\w-]+)/i);
     return {
       mode: "LIVE", endpoint, url, fileName,

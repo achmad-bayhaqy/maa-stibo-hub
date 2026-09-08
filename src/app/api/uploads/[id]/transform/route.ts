@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireRole } from "@/lib/auth";
 import { audit, fail, handleError, ok } from "@/lib/api-helpers";
 import { runMappingEngine, type EngineRule, type WizardContext } from "@/lib/mapping";
+import { getStiboConfig } from "@/lib/stibo-config";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -18,6 +19,7 @@ export async function POST(req: NextRequest, { params }: Params) {
     const body = (await req.json()) as {
       compCode?: string; sbu?: string; brandCode?: string; brandName?: string;
       season?: string; seasonYear?: string; country?: string; endpoint?: string;
+      flow?: string; licenseType?: string; multiMono?: string;
     };
 
     const ctx: WizardContext = {
@@ -28,9 +30,13 @@ export async function POST(req: NextRequest, { params }: Params) {
       season: body.season ?? upload.season,
       seasonYear: body.seasonYear ?? (body.season ?? upload.season).replace(/^[A-Z]+/i, ""),
       country: body.country ?? upload.country,
-      flow: upload.flow,
+      flow: body.flow ?? upload.flow,
       endpoint: body.endpoint ?? upload.endpoint,
       actor: user.email,
+    };
+    const extraWizard = {
+      licenseType: body.licenseType ?? "",
+      multiMono: body.multiMono ?? "",
     };
 
     if (!ctx.brandCode) return fail(400, "Brand is required — set it in the wizard");
@@ -79,8 +85,8 @@ export async function POST(req: NextRequest, { params }: Params) {
       where: { id },
       data: {
         compCode: ctx.compCode, sbu: ctx.sbu, brandCode: ctx.brandCode, brandName: ctx.brandName,
-        season: ctx.season, country: ctx.country, endpoint: ctx.endpoint,
-        wizard: JSON.stringify(ctx),
+        season: ctx.season, country: ctx.country, endpoint: ctx.endpoint, flow: ctx.flow,
+        wizard: JSON.stringify({ ...ctx, ...extraWizard }),
         status: "MAPPED",
         processedRows: stats.mappedRows,
         mappedRows: stats.mappedRows,
@@ -88,7 +94,7 @@ export async function POST(req: NextRequest, { params }: Params) {
         errorRows: stats.rowsWithError,
         mappedSample: JSON.stringify(mapped.slice(0, 200)),
         issues: JSON.stringify(stats.topIssues),
-        mode: process.env.STIBO_CLIENT_ID ? "LIVE-READY" : "MOCK",
+        mode: (await getStiboConfig()) !== null ? "LIVE-READY" : "MOCK",
       },
     });
 

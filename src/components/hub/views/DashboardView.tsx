@@ -18,7 +18,7 @@ interface Dash {
 
 export function DashboardView() {
   const [data, setData] = useState<Dash | null>(null);
-  const { setView, setMasterTab, setAssistantMode, user } = useHub();
+  const { setView, setMasterTab, user } = useHub();
 
   useEffect(() => { api<Dash>("/api/dashboard").then(setData).catch(() => undefined); }, []);
 
@@ -27,8 +27,8 @@ export function DashboardView() {
 
   const checklist: Array<{ label: string; done: boolean; action: () => void }> = [
     { label: "Pelajari panduan sistem di Documentation Center", done: true, action: () => setView("docs") },
-    { label: "Coba tanya Assistant mode Q&A", done: true, action: () => { setAssistantMode("qa"); setView("assistant"); } },
-    { label: "Lakukan upload + transform pertama (MOCK)", done: k.uploads > 0, action: () => { setAssistantMode("pipeline"); setView("assistant"); } },
+    { label: "Tanya Assistant (data master, LOV, naming)", done: true, action: () => setView("assistant") },
+    { label: "Lakukan upload + transform pertama (MOCK)", done: k.uploads > 0, action: () => setView("assistant") },
     { label: "Kirim data ke Stibo (bgId tercatat)", done: k.sent > 0, action: () => setView("files") },
     ...(user?.role !== "VIEWER" ? [{ label: "Lengkapi master data (brand/atribut/rule)", done: k.brands > 0 && k.rules > 0, action: () => { setMasterTab("brands"); setView("master"); } }] : []),
   ];
@@ -43,7 +43,7 @@ export function DashboardView() {
       {/* Onboarding checklist (btool onboarding-tour inspired) */}
       {!checklist.every((c) => c.done) && (
         <Card className="border shadow-sm">
-          <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Sparkles className="h-4 w-4 text-violet-500" /> Mulai dengan STIBO Hub</CardTitle></CardHeader>
+          <CardHeader className="pb-2"><CardTitle className="text-sm flex items-center gap-2"><Sparkles className="h-4 w-4 text-neutral-500" /> Mulai dengan STIBO Hub</CardTitle></CardHeader>
           <CardContent className="grid sm:grid-cols-2 gap-2">
             {checklist.map((c) => (
               <button key={c.label} onClick={c.action}
@@ -82,7 +82,7 @@ export function DashboardView() {
               <div key={b.brand} className="flex items-center gap-3">
                 <span className="w-14 text-xs font-mono font-semibold text-slate-600 truncate">{b.brand}</span>
                 <div className="flex-1 h-2.5 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-orange-400 to-orange-500" style={{ width: `${(b.count / Math.max(...data.byBrand.map((x) => x.count))) * 100}%` }} />
+                  <div className="h-full rounded-full bg-gradient-to-r from-red-400 to-red-500" style={{ width: `${(b.count / Math.max(...data.byBrand.map((x) => x.count))) * 100}%` }} />
                 </div>
                 <span className="text-xs text-slate-500 w-6 text-right">{b.count}</span>
               </div>
@@ -114,7 +114,7 @@ export function DashboardView() {
               {data.byEndpoint.map((e) => (
                 <div key={e.endpoint} className="flex items-center justify-between text-xs border rounded-lg px-3 py-2">
                   <span className="font-mono text-[11px] text-slate-600">{e.endpoint}</span>
-                  <Badge variant="outline" className="border-orange-200 bg-orange-50 text-orange-700">{e.count}</Badge>
+                  <Badge variant="outline" className="border-red-200 bg-red-50 text-red-700">{e.count}</Badge>
                 </div>
               ))}
             </CardContent>

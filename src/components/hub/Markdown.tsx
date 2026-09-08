@@ -112,13 +112,13 @@ function MarkdownBlock({ block, onNavigate }: { block: Block; onNavigate?: (slug
       );
     case "quote":
       return (
-        <blockquote className="border-l-4 border-orange-400 bg-orange-50/60 rounded-r-lg px-4 py-2.5 text-slate-700">
+        <blockquote className="border-l-4 border-red-400 bg-red-50/60 rounded-r-lg px-4 py-2.5 text-slate-700">
           <Inline text={block.text} onNavigate={onNavigate} />
         </blockquote>
       );
     case "code":
       return (
-        <pre className="bg-[#0B1626] text-slate-200 rounded-lg p-3.5 overflow-x-auto text-xs font-mono leading-relaxed">
+        <pre className="bg-[#141414] text-slate-200 rounded-lg p-3.5 overflow-x-auto text-xs font-mono leading-relaxed">
           {block.text}
         </pre>
       );
@@ -165,7 +165,7 @@ export function Inline({ text, onNavigate, className }: { text: string; onNaviga
           if (slugMatch && onNavigate) {
             out.push(
               <button key={key++} onClick={() => onNavigate(slugMatch[1])}
-                className="text-orange-600 font-medium hover:underline">
+                className="text-red-600 font-medium hover:underline">
                 {label}
               </button>
             );

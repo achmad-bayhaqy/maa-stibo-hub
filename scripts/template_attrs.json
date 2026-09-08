@@ -1,0 +1,1874 @@
+[
+  {
+    "row": 3,
+    "name": "Country",
+    "id": "AT_Country",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 4,
+    "name": "Company",
+    "id": "AT_CompanyCode",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 5,
+    "name": "SBU",
+    "id": "AT_SBU",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 6,
+    "name": "Brand",
+    "id": "AT_Brand",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 7,
+    "name": "Brand Group",
+    "id": "AT_BrandGroup",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 8,
+    "name": "Brand Type",
+    "id": "AT_BrandType",
+    "validation": "LOV",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 9,
+    "name": "Brand Category",
+    "id": "AT_BrandCategory",
+    "validation": "LOV",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 10,
+    "name": "Brand Status",
+    "id": "AT_BrandStatus",
+    "validation": "LOV",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 11,
+    "name": "BY Indicator",
+    "id": "AT_BYIndicator",
+    "validation": "LOV",
+    "cluster": "System indicator",
+    "grouping": ""
+  },
+  {
+    "row": 12,
+    "name": "SAP Indicator",
+    "id": "AT_SAPIndicator",
+    "validation": "LOV",
+    "cluster": "System indicator",
+    "grouping": ""
+  },
+  {
+    "row": 13,
+    "name": "Ecom Indicator",
+    "id": "AT_EcomIndicator",
+    "validation": "LOV",
+    "cluster": "System indicator",
+    "grouping": ""
+  },
+  {
+    "row": 14,
+    "name": "Principal Style Code",
+    "id": "AT_PrincipalStyleCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 15,
+    "name": "Principal Style Description",
+    "id": "AT_PrincipalStyleDescription",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Description"
+  },
+  {
+    "row": 16,
+    "name": "Principal Color Code",
+    "id": "AT_PrincipalColorCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Color"
+  },
+  {
+    "row": 17,
+    "name": "Principal Color Description",
+    "id": "AT_PrincipalColorName",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Color"
+  },
+  {
+    "row": 18,
+    "name": "Principal Gender Code",
+    "id": "AT_PrincipalGenderCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Gender"
+  },
+  {
+    "row": 19,
+    "name": "Principal Gender Description",
+    "id": "AT_PrincipalGenderDescription",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Gender"
+  },
+  {
+    "row": 20,
+    "name": "Principal Age Code",
+    "id": "AT_PrincipalAgeCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Age"
+  },
+  {
+    "row": 21,
+    "name": "Principal Age Description",
+    "id": "AT_PrincipalAgeDescription",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Age"
+  },
+  {
+    "row": 22,
+    "name": "Principal Size",
+    "id": "AT_PrincipalSize",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Sizing"
+  },
+  {
+    "row": 23,
+    "name": "SAP Style Code",
+    "id": "AT_SAPStyleCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 24,
+    "name": "Generic",
+    "id": "AT_Generic",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 25,
+    "name": "Generic Description",
+    "id": "AT_GenericDescription",
+    "validation": "regexp",
+    "cluster": "Basic",
+    "grouping": "Description"
+  },
+  {
+    "row": 26,
+    "name": "Variant",
+    "id": "AT_Variant",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 27,
+    "name": "Variant Description",
+    "id": "AT_VariantDescription",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Description"
+  },
+  {
+    "row": 28,
+    "name": "SAP Color",
+    "id": "AT_Color",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Color"
+  },
+  {
+    "row": 29,
+    "name": "SAP Size",
+    "id": "AT_Size",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Sizing"
+  },
+  {
+    "row": 30,
+    "name": "Created on",
+    "id": "AT_Createdon",
+    "validation": "legacyisodatetime",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 31,
+    "name": "Created by",
+    "id": "AT_Createdby",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 32,
+    "name": "Musical Box Article Code",
+    "id": "AT_MusicalBoxArticleCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 33,
+    "name": "MB Style code",
+    "id": "AT_MBStyleCode",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 34,
+    "name": "MB Assortment Code",
+    "id": "AT_MBAssortmentCode",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 35,
+    "name": "Musical Box Article Description",
+    "id": "AT_MusicalBoxArticleDescription",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": "Description"
+  },
+  {
+    "row": 36,
+    "name": "Musical Box Components Qty",
+    "id": "AT_MusicalBoxComponentsQty",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 37,
+    "name": "Musical Box UOM",
+    "id": "AT_MusicalBoxUOM",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 38,
+    "name": "SAP Age",
+    "id": "AT_SAPAge",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Age"
+  },
+  {
+    "row": 39,
+    "name": "SAP Gender",
+    "id": "AT_Gender",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Gender"
+  },
+  {
+    "row": 40,
+    "name": "Season",
+    "id": "AT_Season",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 41,
+    "name": "Season Year",
+    "id": "AT_SeasonYear",
+    "validation": "number",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 42,
+    "name": "Country of Origin",
+    "id": "AT_CountryOrigin",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 43,
+    "name": "Vendor",
+    "id": "AT_Vendor",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 44,
+    "name": "Main Vendor Identification",
+    "id": "AT_MainVendorIdentification",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 45,
+    "name": "Exchange Rate",
+    "id": "AT_ExchangeRate",
+    "validation": "number",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 46,
+    "name": "Pricing Distribution Channel",
+    "id": "AT_PricingDistributionChannel",
+    "validation": "LOV",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 47,
+    "name": "Retail Price Currency",
+    "id": "AT_RetailPriceCurrency",
+    "validation": "LOV",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 48,
+    "name": "Original Price",
+    "id": "AT_OriginalPrice",
+    "validation": "regexp",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 49,
+    "name": "Valid From",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 50,
+    "name": "Valid To",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 51,
+    "name": "Created on",
+    "id": "AT_Createdon",
+    "validation": "legacyisodatetime",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 52,
+    "name": "Created by",
+    "id": "AT_Createdby",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 53,
+    "name": "Current price",
+    "id": "AT_CurrentPrice",
+    "validation": "regexp",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 54,
+    "name": "Valid From",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 55,
+    "name": "Valid To",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 56,
+    "name": "Created on",
+    "id": "AT_Createdon",
+    "validation": "legacyisodatetime",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 57,
+    "name": "Created by",
+    "id": "AT_Createdby",
+    "validation": "text",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 58,
+    "name": "Discount Bucket",
+    "id": "AT_DiscountBucket",
+    "validation": "number",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 59,
+    "name": "Discount Bucket (Rounded)",
+    "id": "AT_DiscountBucketRounded",
+    "validation": "number",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 60,
+    "name": "Estimated Landed Cost",
+    "id": "AT_EstimatedLandedCost",
+    "validation": "number",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 61,
+    "name": "FOB",
+    "id": "AT_FOB",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 62,
+    "name": "FOB Currency",
+    "id": "AT_FOBCurrency",
+    "validation": "LOV",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 63,
+    "name": "Freight Cost",
+    "id": "AT_FreightCost",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 64,
+    "name": "Royalty",
+    "id": "AT_Royalty",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 65,
+    "name": "Royalty Deduction",
+    "id": "AT_RoyaltyDeduction",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 66,
+    "name": "Commision",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 67,
+    "name": "SGS",
+    "id": "AT_SGS",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 68,
+    "name": "Marketing Fee",
+    "id": "AT_MarketingFee",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 69,
+    "name": "Haddad Office Charge",
+    "id": "AT_HaddadOfficeCharge",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 70,
+    "name": "Haddad Office Charge - Deduction",
+    "id": "AT_HaddadOfficeChargeDeduction",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 71,
+    "name": "Safeguard Duty (ID Only)",
+    "id": "AT_SafeguardDutyIdOnly",
+    "validation": "number",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 72,
+    "name": "Label Cost",
+    "id": "AT_LabelCost",
+    "validation": "regexp",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 73,
+    "name": "Others",
+    "id": "AT_Others",
+    "validation": "number",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 74,
+    "name": "MC Structure (Merchandise Category)",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "MC",
+    "grouping": ""
+  },
+  {
+    "row": 75,
+    "name": "SAP Product Division",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "MC",
+    "grouping": ""
+  },
+  {
+    "row": 76,
+    "name": "SAP Product Group",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "MC",
+    "grouping": ""
+  },
+  {
+    "row": 77,
+    "name": "SAP Product Category",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "MC",
+    "grouping": ""
+  },
+  {
+    "row": 78,
+    "name": "SAP Product Flag",
+    "id": "AT_SAPProductFlag",
+    "validation": "LOV",
+    "cluster": "MC",
+    "grouping": ""
+  },
+  {
+    "row": 79,
+    "name": "Principal Merchandise Hierarchy L1",
+    "id": "AT_PrincipalMerchandiseHierarchyL1",
+    "validation": "text",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 80,
+    "name": "Principal Merchandise Hierarchy L2",
+    "id": "AT_PrincipalMerchandiseHierarchyL2",
+    "validation": "text",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 81,
+    "name": "Principal Merchandise Hierarchy L3",
+    "id": "AT_PrincipalMerchandiseHierarchyL3",
+    "validation": "text",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 82,
+    "name": "Principal Merchandise Hierarchy L4",
+    "id": "AT_PrincipalMerchandiseHierarchyL4",
+    "validation": "text",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 83,
+    "name": "Principal Merchandise Hierarchy L5",
+    "id": "AT_PrincipalMerchandiseHierarchyL5",
+    "validation": "text",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 84,
+    "name": "Material Type",
+    "id": "AT_MaterialType",
+    "validation": "LOV",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 85,
+    "name": "Article Category",
+    "id": "AT_SAPArticleCategory",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 86,
+    "name": "Internal Barcode",
+    "id": "AT_InternalBarcode",
+    "validation": "regexp",
+    "cluster": "Basic",
+    "grouping": "Barcode"
+  },
+  {
+    "row": 87,
+    "name": "Principal Barcode",
+    "id": "AT_PrincipalBarcode",
+    "validation": "regexp",
+    "cluster": "Basic",
+    "grouping": "Barcode"
+  },
+  {
+    "row": 88,
+    "name": "FG Barcode",
+    "id": "AT_FGBarcode",
+    "validation": "regexp",
+    "cluster": "Basic",
+    "grouping": "Barcode"
+  },
+  {
+    "row": 89,
+    "name": "Main EAN Indicator",
+    "id": "AT_MainEANIndicator",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Barcode"
+  },
+  {
+    "row": 90,
+    "name": "EAN Category",
+    "id": "AT_EANCategory",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Barcode"
+  },
+  {
+    "row": 91,
+    "name": "Unit of Measurement (UoM)",
+    "id": "AT_UOM",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 92,
+    "name": "HS Code",
+    "id": "AT_HSCode",
+    "validation": "text",
+    "cluster": "Cost",
+    "grouping": ""
+  },
+  {
+    "row": 93,
+    "name": "Nature of Article (NOA)",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 94,
+    "name": "Article Type",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Commercial",
+    "grouping": ""
+  },
+  {
+    "row": 95,
+    "name": "Thumbnail Image",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (BY)",
+    "grouping": "Images"
+  },
+  {
+    "row": 96,
+    "name": "BY Age",
+    "id": "AT_BYAge",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 97,
+    "name": "BY Gender",
+    "id": "AT_BYGender",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": "Gender"
+  },
+  {
+    "row": 98,
+    "name": "BCI",
+    "id": "AT_BCI",
+    "validation": "LOV",
+    "cluster": "Image (BY)",
+    "grouping": ""
+  },
+  {
+    "row": 99,
+    "name": "BY Color Group",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Basic",
+    "grouping": "Color"
+  },
+  {
+    "row": 100,
+    "name": "BY Standardized Color",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Basic",
+    "grouping": "Color"
+  },
+  {
+    "row": 101,
+    "name": "Price Range",
+    "id": "AT_PriceRange",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 102,
+    "name": "Silhouette",
+    "id": "AT_Silhouette",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 103,
+    "name": "Width",
+    "id": "AT_Width",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 104,
+    "name": "Material - Upper",
+    "id": "AT_MaterialUpper",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 105,
+    "name": "Fastening",
+    "id": "AT_Fastening",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 106,
+    "name": "Franchise",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 107,
+    "name": "Content",
+    "id": "AT_Content",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 108,
+    "name": "Fabric",
+    "id": "AT_Fabric",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 109,
+    "name": "Pattern/Print",
+    "id": "AT_PatternPrint",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 110,
+    "name": "Fit",
+    "id": "AT_Fit",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 111,
+    "name": "Style",
+    "id": "AT_Style",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 112,
+    "name": "Material",
+    "id": "AT_Material",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 113,
+    "name": "Pack Details",
+    "id": "AT_PackDetails",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 114,
+    "name": "Style Type",
+    "id": "AT_StyleType",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 115,
+    "name": "Golf Club Flex",
+    "id": "AT_GolfClubFlex",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 116,
+    "name": "Golf Club Loft",
+    "id": "AT_GolfClubLoft",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 117,
+    "name": "Golf Club Length",
+    "id": "AT_GolfClubLength",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 118,
+    "name": "Heel Height",
+    "id": "AT_HeelHeight",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 119,
+    "name": "Heel Type",
+    "id": "AT_HeelType",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 120,
+    "name": "Occasion",
+    "id": "AT_Occasion",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 121,
+    "name": "Interest",
+    "id": "AT_Interest",
+    "validation": "LOV",
+    "cluster": "Basic",
+    "grouping": ""
+  },
+  {
+    "row": 122,
+    "name": "Sports Category EN",
+    "id": "AT_SportsCategoryEN",
+    "validation": "LOV",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 123,
+    "name": "Collection 1",
+    "id": "AT_Collection1",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 124,
+    "name": "Collection 2",
+    "id": "AT_Collection2",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 125,
+    "name": "Principal Color Description ID",
+    "id": "AT_ColorDescriptionID",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 126,
+    "name": "Principal Color Description PH",
+    "id": "AT_ColorDescriptionPH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 127,
+    "name": "Principal Color Description MY",
+    "id": "AT_ColorDescriptionMY",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 128,
+    "name": "Principal Color Description VN",
+    "id": "AT_ColorDescriptionVN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 129,
+    "name": "Principal Color Description TH",
+    "id": "AT_ColorDescriptionTH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 130,
+    "name": "Principal Color Description KH",
+    "id": "AT_ColorDescriptionKH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Color"
+  },
+  {
+    "row": 131,
+    "name": "Country Size",
+    "id": "AT_CountrySize",
+    "validation": "LOV",
+    "cluster": "Online",
+    "grouping": "Sizing"
+  },
+  {
+    "row": 132,
+    "name": "E-com Size",
+    "id": "AT_EComSize",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": "Sizing"
+  },
+  {
+    "row": 133,
+    "name": "E-com Ages Category",
+    "id": "AT_EComAgesCategory",
+    "validation": "LOV",
+    "cluster": "Online",
+    "grouping": "Age"
+  },
+  {
+    "row": 134,
+    "name": "Ecom Gender Description EN",
+    "id": "AT_EcomGenderDescriptionEN",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": "Gender"
+  },
+  {
+    "row": 135,
+    "name": "Ecom Product Name EN",
+    "id": "AT_EComProductNameEN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 136,
+    "name": "Ecom Product Name ID",
+    "id": "AT_EComProductNameID",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 137,
+    "name": "Ecom Product Name PH",
+    "id": "AT_EComProductNamePH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 138,
+    "name": "Ecom Product Name MY",
+    "id": "AT_EComProductNameMY",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 139,
+    "name": "Ecom Product Name VN",
+    "id": "AT_EComProductNameVN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 140,
+    "name": "Ecom Product Name TH",
+    "id": "AT_EComProductNameTH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 141,
+    "name": "Ecom Product Name KH",
+    "id": "AT_EComProductNameKH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 142,
+    "name": "Ecom Short Description EN",
+    "id": "AT_ShortDescriptionEN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 143,
+    "name": "Ecom Short Description ID",
+    "id": "AT_ShortDescriptionID",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 144,
+    "name": "Ecom Short Description PH",
+    "id": "AT_ShortDescriptionPH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 145,
+    "name": "Ecom Short Description MY",
+    "id": "AT_ShortDescriptionMY",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 146,
+    "name": "Ecom Short Description VN",
+    "id": "AT_ShortDescriptionVN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 147,
+    "name": "Ecom Short Description TH",
+    "id": "AT_ShortDescriptionTH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 148,
+    "name": "Ecom Short Description KH",
+    "id": "AT_ShortDescriptionKH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 149,
+    "name": "Ecom Long Description EN",
+    "id": "AT_LongDescriptionEN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 150,
+    "name": "Ecom Long Description ID",
+    "id": "AT_LongDescriptionID",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 151,
+    "name": "Ecom Long Description PH",
+    "id": "AT_LongDescriptionPH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 152,
+    "name": "Ecom Long Description MY",
+    "id": "AT_LongDescriptionMY",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 153,
+    "name": "Ecom Long DescriptionVN",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 154,
+    "name": "Ecom Long DescriptionTH",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 155,
+    "name": "Ecom Long Description KH",
+    "id": "AT_LongDescriptionKH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": "Description"
+  },
+  {
+    "row": 156,
+    "name": "SPU Grouping",
+    "id": "AT_SPUGrouping",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 157,
+    "name": "SPU Grouping Name",
+    "id": "AT_SPUGroupingName",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 158,
+    "name": "Certificate No ( SNI , K3L , UTTP )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 159,
+    "name": "Technology Used",
+    "id": "AT_TechnologyUsed",
+    "validation": "text",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 160,
+    "name": "Care Instruction EN",
+    "id": "AT_CareInstructionEN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 161,
+    "name": "Care Instruction ID",
+    "id": "AT_CareInstructionID",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 162,
+    "name": "Care Instruction PH",
+    "id": "AT_CareInstructionPH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 163,
+    "name": "Care Instruction MY",
+    "id": "AT_CareInstructionMY",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 164,
+    "name": "Care Instruction VN",
+    "id": "AT_CareInstructionVN",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 165,
+    "name": "Care Instruction TH",
+    "id": "AT_CareInstructionTH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 166,
+    "name": "Care Instruction KH",
+    "id": "AT_CareInstructionKH",
+    "validation": "text",
+    "cluster": "Translation (Online)",
+    "grouping": ""
+  },
+  {
+    "row": 167,
+    "name": "Launching Date",
+    "id": "AT_LaunchingDate",
+    "validation": "date",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 168,
+    "name": "Product Length X Width X Height ( in CM )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 169,
+    "name": "Product Weight ( In Gram )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 170,
+    "name": "Packaging Length ( in CM )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 171,
+    "name": "Packaging Width ( in CM )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 172,
+    "name": "Packaging Height ( in CM )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 173,
+    "name": "Packaging Weight ( In Gram )",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 174,
+    "name": "Images Source",
+    "id": "AT_ImagesSource",
+    "validation": "LOV",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 175,
+    "name": "Images 1",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 176,
+    "name": "Images 2",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 177,
+    "name": "Images 3",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 178,
+    "name": "Images 4",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 179,
+    "name": "Images 5",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 180,
+    "name": "Images 6",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 181,
+    "name": "Images 7",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 182,
+    "name": "Images 8",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 183,
+    "name": "Images 9",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 184,
+    "name": "Images 10",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 185,
+    "name": "Images 11",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 186,
+    "name": "Images 12",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 187,
+    "name": "Images 13",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 188,
+    "name": "Images 14",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 189,
+    "name": "Images 15",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 190,
+    "name": "Images 16",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 191,
+    "name": "Images 17",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 192,
+    "name": "Images 18",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 193,
+    "name": "Images 19",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 194,
+    "name": "Images 20",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 195,
+    "name": "Images 21",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 196,
+    "name": "Images 22",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 197,
+    "name": "Images 23",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 198,
+    "name": "Images 24",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 199,
+    "name": "Images 25",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 200,
+    "name": "Images 26",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 201,
+    "name": "Images 27",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 202,
+    "name": "Images 28",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 203,
+    "name": "Images 29",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 204,
+    "name": "Images 30",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 205,
+    "name": "Images 31",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 206,
+    "name": "Images 32",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 207,
+    "name": "Images 33",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 208,
+    "name": "Images 34",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 209,
+    "name": "Images 35",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 210,
+    "name": "Images 36",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 211,
+    "name": "Images 37",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 212,
+    "name": "Images 38",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 213,
+    "name": "Images 39",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 214,
+    "name": "Images 40",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 215,
+    "name": "Images 41",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 216,
+    "name": "Images 42",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 217,
+    "name": "Images 43",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 218,
+    "name": "Images 44",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 219,
+    "name": "Images 45",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 220,
+    "name": "Images 46",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 221,
+    "name": "Images 47",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 222,
+    "name": "Images 48",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 223,
+    "name": "Images 49",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 224,
+    "name": "Images 50",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Image (Online)",
+    "grouping": "Images"
+  },
+  {
+    "row": 225,
+    "name": "BY SBU",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 226,
+    "name": "BY Brand",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 227,
+    "name": "BY Division",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 228,
+    "name": "BY Sub Division",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 229,
+    "name": "BY Category",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 230,
+    "name": "BY Sub Category",
+    "id": "#N/A",
+    "validation": "#N/A",
+    "cluster": "Hierarchy",
+    "grouping": ""
+  },
+  {
+    "row": 231,
+    "name": "Ecomm Concept",
+    "id": "AT_EcommConcept",
+    "validation": "LOV",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 232,
+    "name": "Ecomm Sales Channel",
+    "id": "AT_EcommSalesChannel",
+    "validation": "LOV",
+    "cluster": "Online",
+    "grouping": ""
+  },
+  {
+    "row": 233,
+    "name": "Article Status",
+    "id": "AT_ArticleStatus",
+    "validation": "LOV",
+    "cluster": "System indicator",
+    "grouping": ""
+  },
+  {
+    "row": 234,
+    "name": "Incoming month",
+    "id": "AT_IncomingMonth",
+    "validation": "regexp",
+    "cluster": "",
+    "grouping": ""
+  },
+  {
+    "row": 235,
+    "name": "Suggested Retail Price",
+    "id": "AT_SuggestedRetailPrice",
+    "validation": "number",
+    "cluster": "Price",
+    "grouping": ""
+  },
+  {
+    "row": 236,
+    "name": "Proposed Retail Price",
+    "id": "AT_ProposedRetailPrice",
+    "validation": "number",
+    "cluster": "Price",
+    "grouping": ""
+  }
+]

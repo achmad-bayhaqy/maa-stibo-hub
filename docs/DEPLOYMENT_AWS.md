@@ -46,6 +46,38 @@ STIBO_INBOUND_URL_ARTICLE_MAINTENANCE=https://.../IIEP_ArticleMaintenance/upload
 
 Selama env ini kosong, portal tetap berjalan di **MOCK mode** (bgId disimulasikan, tidak ada data keluar).
 
+### Opsi produksi (rekomendasi): AWS Secrets Manager
+
+Alih-alih menaruh secret di `.env`, portal mendukung resolusi kredensial langsung
+dari AWS Secrets Manager (`src/lib/stibo-config.ts`):
+
+1. Buat secret (us-east-1, tag `stibo` sesuai naming policy):
+
+```bash
+aws secretsmanager create-secret \
+  --name stibo/map-portal/iiep-credentials \
+  --region us-east-1 \
+  --tags Key=stibo,Value=true \
+  --secret-string '{
+    "STIBO_CLIENT_ID": "AP-IIEP",
+    "STIBO_CLIENT_SECRET": "<client-secret>",
+    "STIBO_GRANT_TYPE": "client_credentials",
+    "STIBO_TOKEN_URL": "https://auth-jaea01.mdm.stibosystems.com/auth/realms/mapactive-dev/protocol/openid-connect/token",
+    "STIBO_INBOUND_URL_ARTICLE_PLANNING": "https://mapactive-dev.mdm.stibosystems.com/restapiv2/inbound-integration-endpoints/IIEP_ArticlePlanning/upload-direct",
+    "STIBO_INBOUND_URL_ARTICLE_MAINTENANCE": "https://mapactive-dev.mdm.stibosystems.com/restapiv2/inbound-integration-endpoints/IIEP_ArticleMaintenance/upload-direct",
+    "STIBO_INBOUND_URL_EAN_UPDATE": "https://mapactive-dev.mdm.stibosystems.com/restapiv2/inbound-integration-endpoints/IIEP_EANUpdate/upload-direct"
+  }'
+```
+
+2. Beri hanya `secretsmanager:GetSecretValue` pada secret ARN tersebut ke task/instance role:
+   (`aws:ResourceTag/stibo` condition optional untuk mempersempit).
+3. Set satu env di server: `STIBO_SECRET_ID=stibo/map-portal/iiep-credentials`.
+
+Portal membaca env var terlebih dahulu; jika tidak lengkap, ia fallback ke Secrets
+Manager (cache 5 menit). Status kredensial tampil ter-mask di halaman Settings —
+client secret tidak pernah dikirim ke browser. Rotasi: `aws secretsmanager rotate-secret`
+lalu tunggu ≤5 menit (cache) — tanpa redeploy.
+
 ## Upgrade path produksi
 
 - **ECS Fargate** task `stibo-hub-web` (2 AZ) + ALB `stibo-hub-alb` + ECR repo `stibo-hub/web`.

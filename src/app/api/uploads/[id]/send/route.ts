@@ -4,6 +4,7 @@ import { requireRole } from "@/lib/auth";
 import { audit, fail, handleError, ok } from "@/lib/api-helpers";
 import { buildStepxml, xmlFileName } from "@/lib/stepxml";
 import { sendToStibo, type Endpoint } from "@/lib/stibo";
+import { getStiboConfig } from "@/lib/stibo-config";
 import type { MappedRow, WizardContext } from "@/lib/mapping";
 
 type Params = { params: Promise<{ id: string }> };
@@ -48,8 +49,8 @@ export async function POST(req: NextRequest, { params }: Params) {
     const xml = upload.stepxml || buildStepxml(mapped, ctx, upload.endpoint, upload.filename);
     const fileName = xmlFileName(upload.filename, upload.endpoint);
 
-    const mode: "MOCK" | "LIVE" =
-      body.mode === "LIVE" && process.env.STIBO_CLIENT_ID && process.env.STIBO_TOKEN_URL ? "LIVE" : "MOCK";
+    const resolved = await getStiboConfig();
+    const mode: "MOCK" | "LIVE" = body.mode === "LIVE" && resolved !== null ? "LIVE" : "MOCK";
 
     const result = await sendToStibo(xml, fileName, upload.endpoint as Endpoint, mode);
 
