@@ -117,5 +117,38 @@ print("== 6. verify ==")
 time.sleep(6)
 code, out = run(c, "curl -sf http://localhost/api/health && echo && curl -sf -o /dev/null -w 'root http %{http_code}\\n' http://localhost/")
 print(out)
+
+print("== 7. sync English doc pages into prod DB ==")
+dump = subprocess.run(
+    ["bun", "-e",
+     "import('./prisma/seed-data/docs.mjs').then(m => console.log(JSON.stringify(m.DOCS)))"],
+    cwd=PROJECT, capture_output=True, text=True, check=True,
+)
+DOCS = __import__("json").loads(dump.stdout.strip().splitlines()[-1])
+if DOCS:
+    def esc(s: str) -> str:
+        return s.replace("'", "''")
+    values = []
+    for d in DOCS:
+        values.append(
+            f"('{esc(d['slug'])}', '{esc(d['title'])}', '{esc(d['category'])}', {int(d['order'])}, "
+            f"'{esc(d['summary'])}', '{esc(d['body'])}', 'system')"
+        )
+    sql = (
+        "INSERT INTO \"DocPage\" (slug, title, category, \"order\", summary, body, \"updatedBy\") VALUES\n"
+        + ",\n".join(values)
+        + "\nON CONFLICT (slug) DO UPDATE SET title=EXCLUDED.title, category=EXCLUDED.category, "
+        "\"order\"=EXCLUDED.\"order\", summary=EXCLUDED.summary, body=EXCLUDED.body, "
+        "\"updatedBy\"=EXCLUDED.\"updatedBy\", \"updatedAt\"=now();"
+    )
+    sftp2 = c.open_sftp()
+    with sftp2.open("/tmp/docs-sync.sql", "w") as f:
+        f.write(sql)
+    sftp2.close()
+    code, out = run(c, "cd /opt/stibo-hub && sudo docker compose --project-directory repo --env-file /opt/stibo-hub/.env exec -T stibo-hub-db psql -U stibohub -d stibohub -f - < /tmp/docs-sync.sql 2>&1 | tail -3; rm -f /tmp/docs-sync.sql")
+    print(out)
+else:
+    print("no DOCS parsed — skipping")
+
 c.close()
 print("DEPLOY DONE")
