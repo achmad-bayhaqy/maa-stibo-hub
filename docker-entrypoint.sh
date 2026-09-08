@@ -13,7 +13,7 @@ if [ -n "$DATABASE_URL" ]; then
     || npx --no-install prisma db push --schema prisma/schema.prisma --accept-data-loss --skip-generate
   if [ "$SEED_ON_START" != "0" ]; then
     echo "[stibo-hub] seeding reference data (idempotent)…"
-    node prisma/seed.bundle.cjs || echo "[stibo-hub] seed skipped: $?"
+    node prisma/seed.bundle.cjs 2>/dev/null || node prisma/seed.bundle.mjs || echo "[stibo-hub] seed skipped"
   fi
 fi
 

@@ -1,6 +1,7 @@
 # ── STIBO Hub — production image (Next.js 16 standalone + Prisma/Postgres) ──
 FROM node:22-bookworm-slim AS builder
 WORKDIR /app
+RUN apt-get update -y && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 RUN npm install -g bun@1
 
 COPY package.json bun.lock ./
@@ -11,7 +12,9 @@ COPY . .
 RUN sed 's/provider = "sqlite"/provider = "postgres"/' prisma/schema.prisma > prisma/schema.aws.prisma \
  && npx prisma generate --schema prisma/schema.aws.prisma
 # compile seed for plain-node runtime (keep prisma client external — engine lives in node_modules)
-RUN bun build prisma/seed.mjs --target=node --external @prisma/client --external prisma --outfile=prisma/seed.bundle.cjs
+RUN bun build prisma/seed.mjs --target=node --format=cjs --external @prisma/client --external prisma --outfile=prisma/seed.bundle.cjs \
+ || bun build prisma/seed.mjs --target=node --external @prisma/client --external prisma --outfile=prisma/seed.bundle.mjs
+RUN if [ ! -f prisma/seed.bundle.cjs ]; then mv prisma/seed.bundle.mjs prisma/seed.bundle.cjs; fi
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
