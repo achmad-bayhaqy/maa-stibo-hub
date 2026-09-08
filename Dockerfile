@@ -27,6 +27,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
 COPY --from=builder /app/prisma/schema.aws.prisma ./prisma/schema.prisma
 COPY --from=builder /app/prisma/seed-data ./prisma/seed-data
 COPY --from=builder /app/prisma/seed.bundle.cjs ./prisma/seed.bundle.cjs
