@@ -23,11 +23,8 @@ ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
-# prisma CLI + generated postgres client for db push / seed at start-up
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/.bin ./node_modules/.bin
+# full node_modules (standalone's own modules get merged) — prisma CLI needs its runtime deps (effect, etc.)
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma/schema.aws.prisma ./prisma/schema.prisma
 COPY --from=builder /app/prisma/seed-data ./prisma/seed-data
 COPY --from=builder /app/prisma/seed.bundle.cjs ./prisma/seed.bundle.cjs
