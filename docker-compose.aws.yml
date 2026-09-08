@@ -41,6 +41,10 @@ services:
       STIBO_INBOUND_URL_ARTICLE_MAINTENANCE: ${STIBO_INBOUND_URL_ARTICLE_MAINTENANCE:-}
     ports:
       - "80:3000"
+    volumes:
+      # Z-AI SDK credentials for the vision pipeline (server-side only;
+      # file lives outside the repo at /opt/stibo-hub/.z-ai-config, chmod 600)
+      - /opt/stibo-hub/.z-ai-config:/app/.z-ai-config:ro
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://localhost:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
