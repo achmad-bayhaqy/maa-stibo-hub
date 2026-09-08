@@ -68,21 +68,35 @@ export async function POST(req: NextRequest) {
     const mime = file.type || "image/png";
     const dataUrl = `data:${mime};base64,${buf.toString("base64")}`;
 
-    const zai = await ZAI.create();
-    const completion = (await zai.chat.completions.createVision({
-      model: "glm-4.5v",
-      messages: [
-        { role: "system", content: SYSTEM_PROMPT },
-        {
-          role: "user",
-          content: [
-            { type: "text", text: "Extract the table from this image as JSON." },
-            { type: "image_url", image_url: { url: dataUrl } },
-          ],
-        },
-      ],
-      thinking: { type: "disabled" },
-    })) as { choices?: Array<{ message?: { content?: string } }> };
+    const zai = await ZAI.create().catch((cfgErr: Error) => {
+      throw new Error(
+        "AI image extraction is not available on this deployment (Z-AI credentials not configured for this server). Please upload Excel/CSV instead, or ask your admin to configure the vision credentials."
+      );
+    });
+    if (!zai) return handleError(new Error("Z-AI SDK unavailable"));
+    let completion: { choices?: Array<{ message?: { content?: string } }> };
+    try {
+      completion = (await zai.chat.completions.createVision({
+        model: "glm-4.5v",
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: "Extract the table from this image as JSON." },
+              { type: "image_url", image_url: { url: dataUrl } },
+            ],
+          },
+        ],
+        thinking: { type: "disabled" },
+      })) as { choices?: Array<{ message?: { content?: string } }> };
+    } catch (visionErr) {
+      const msg = (visionErr as Error).message || "";
+      if (/fetch failed|timeout|ECONN|ENOTFOUND|Connect/i.test(msg)) {
+        return handleError(new Error("The AI vision service is unreachable from this server — image extraction is unavailable here. Please upload Excel/CSV instead."));
+      }
+      throw visionErr;
+    }
 
     const raw = completion.choices?.[0]?.message?.content ?? "";
     let table: ExtractedTable;
