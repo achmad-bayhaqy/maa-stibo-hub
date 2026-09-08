@@ -128,19 +128,16 @@ DOCS = __import__("json").loads(dump.stdout.strip().splitlines()[-1])
 if DOCS:
     def esc(s: str) -> str:
         return s.replace("'", "''")
-    values = []
+    # container entrypoint already seeds DocPages (idempotent); this is an
+    # UPDATE-only safety net — never inserts (id is generated client-side)
+    stmts = []
     for d in DOCS:
-        values.append(
-            f"('{esc(d['slug'])}', '{esc(d['title'])}', '{esc(d['category'])}', {int(d['order'])}, "
-            f"'{esc(d['summary'])}', '{esc(d['body'])}', 'system')"
+        stmts.append(
+            f"UPDATE \"DocPage\" SET title='{esc(d['title'])}', category='{esc(d['category'])}', "
+            f"\"order\"={int(d['order'])}, summary='{esc(d['summary'])}', body='{esc(d['body'])}', "
+            f"\"updatedAt\"=now() WHERE slug='{esc(d['slug'])}';"
         )
-    sql = (
-        "INSERT INTO \"DocPage\" (slug, title, category, \"order\", summary, body, \"updatedBy\") VALUES\n"
-        + ",\n".join(values)
-        + "\nON CONFLICT (slug) DO UPDATE SET title=EXCLUDED.title, category=EXCLUDED.category, "
-        "\"order\"=EXCLUDED.\"order\", summary=EXCLUDED.summary, body=EXCLUDED.body, "
-        "\"updatedBy\"=EXCLUDED.\"updatedBy\", \"updatedAt\"=now();"
-    )
+    sql = "\n".join(stmts)
     sftp2 = c.open_sftp()
     with sftp2.open("/tmp/docs-sync.sql", "w") as f:
         f.write(sql)
