@@ -10,8 +10,8 @@ COPY . .
 # switch Prisma datasource to PostgreSQL for the container build
 RUN sed 's/provider = "sqlite"/provider = "postgres"/' prisma/schema.prisma > prisma/schema.aws.prisma \
  && npx prisma generate --schema prisma/schema.aws.prisma
-# compile seed for plain-node runtime
-RUN bun build prisma/seed.mjs --target=node --outfile=prisma/seed.bundle.cjs
+# compile seed for plain-node runtime (keep prisma client external — engine lives in node_modules)
+RUN bun build prisma/seed.mjs --target=node --external @prisma/client --external prisma --outfile=prisma/seed.bundle.cjs
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN bun run build
 
