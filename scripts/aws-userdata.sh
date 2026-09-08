@@ -24,15 +24,15 @@ mkdir -p /opt/stibo-hub && cd /opt/stibo-hub
 curl -sSL "__PRESIGN_URL__" -o release.tar.gz
 mkdir -p repo && tar -xzf release.tar.gz -C repo && cd repo
 
-# secrets generated ON the instance, never committed
+# secrets generated ON the instance, never committed — stored OUTSIDE repo for safe redeploys
 DB_PASSWORD="$(openssl rand -hex 16)"
 AUTH_SECRET="$(openssl rand -hex 32)"
-printf 'DB_PASSWORD=%s\nAUTH_SECRET=%s\n' "$DB_PASSWORD" "$AUTH_SECRET" > .env
-chmod 600 .env
+printf 'DB_PASSWORD=%s\nAUTH_SECRET=%s\n' "$DB_PASSWORD" "$AUTH_SECRET" > /opt/stibo-hub/.env
+chmod 600 /opt/stibo-hub/.env
 
-docker compose -f docker-compose.aws.yml up -d --build
+docker compose --project-directory repo --env-file /opt/stibo-hub/.env -f repo/docker-compose.aws.yml up -d --build
 touch /opt/stibo-hub/.deploy-done
 echo "=== STIBO Hub deploy finished $(date -u +%FT%TZ) ==="
 # stream container logs to the console for post-mortem visibility
-nohup sh -c 'cd /opt/stibo-hub/repo && docker compose -f docker-compose.aws.yml logs -f --tail=60 >/dev/console 2>&1' &
+nohup sh -c 'cd /opt/stibo-hub && docker compose --project-directory repo --env-file /opt/stibo-hub/.env -f repo/docker-compose.aws.yml logs -f --tail=60 >/dev/console 2>&1' &
 echo "=== console log streamer started ==="

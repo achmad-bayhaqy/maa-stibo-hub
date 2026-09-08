@@ -13,5 +13,6 @@ PRESIGN=$(aws s3 presign s3://stibo-hub-artifacts-010526264107/releases/stibo-hu
 
 IP="18.232.147.244"
 RESET_VOLUME="${1:-}"
-python3 scripts/ssh_ec2.py "cd /opt/stibo-hub && sudo curl -sSL '$PRESIGN' -o release.tar.gz && sudo rm -rf repo && sudo mkdir repo && sudo tar -xzf release.tar.gz -C repo && cd repo && sudo sh -c '[ -f /opt/stibo-hub/repo/.env ] || printf \"DB_PASSWORD=%s\nAUTH_SECRET=%s\n\" \"\$(openssl rand -hex 16)\" \"\$(openssl rand -hex 32)\" > /opt/stibo-hub/repo/.env' && sudo chmod 600 .env && if [ '$RESET_VOLUME' = 'reset' ]; then sudo docker compose -f docker-compose.aws.yml down -v; fi && sudo docker compose -f docker-compose.aws.yml up -d --build 2>&1 | tail -8" 900
+# .env lives OUTSIDE the repo dir so redeploys never lose it
+python3 scripts/ssh_ec2.py "cd /opt/stibo-hub && sudo sh -c '[ -f /opt/stibo-hub/.env ] || printf \"DB_PASSWORD=%s\nAUTH_SECRET=%s\n\" \"\$(openssl rand -hex 16)\" \"\$(openssl rand -hex 32)\" > /opt/stibo-hub/.env' && sudo chmod 600 .env && sudo curl -sSL '$PRESIGN' -o release.tar.gz && sudo rm -rf repo && sudo mkdir repo && sudo tar -xzf release.tar.gz -C repo && if [ '$RESET_VOLUME' = 'reset' ]; then sudo docker compose --env-file /opt/stibo-hub/.env -f repo/docker-compose.aws.yml down -v; fi && sudo docker compose --project-directory repo --env-file /opt/stibo-hub/.env -f repo/docker-compose.aws.yml up -d --build 2>&1 | tail -8" 900
 echo "=== redeploy triggered ==="
