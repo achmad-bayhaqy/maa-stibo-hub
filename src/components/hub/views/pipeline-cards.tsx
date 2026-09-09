@@ -85,7 +85,7 @@ export function UploadCard({ upload, nameInfo, preview }: { upload: UploadRecord
     <div className="rounded-2xl border-2 border-black bg-white shadow-sm overflow-hidden">
       <div className="flex items-center gap-3 px-5 py-4 border-b-2 border-black bg-neutral-50">
         <div className="h-10 w-10 rounded-lg bg-[#DD1C24]/10 border border-[#DD1C24]/30 flex items-center justify-center shrink-0">
-          {preview.sheetName === "AI image extraction"
+          {preview.sheetName.startsWith("AI image extraction")
             ? <FileImage className="h-5 w-5 text-[#DD1C24]" />
             : <Table2 className="h-5 w-5 text-[#DD1C24]" />}
         </div>

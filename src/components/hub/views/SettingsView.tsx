@@ -20,6 +20,11 @@ interface SettingsData {
   };
   awsRegion: string;
   resourcePrefix: string;
+  aiProvider?: {
+    primary: string;
+    fallback: string;
+    model: string;
+  };
 }
 
 export function SettingsView() {
@@ -111,8 +116,10 @@ export function SettingsView() {
         <CardContent className="grid sm:grid-cols-2 gap-3 text-xs">
           {[
             ["Region", data.awsRegion], ["Resource prefix / tag", data.resourcePrefix],
-            ["Deploy target", "ECS Fargate + ALB (stibo-hub)"], ["Database", "Amazon RDS PostgreSQL (stibo-hub-pg)"],
+            ["Deploy target", "EC2 t3.medium (stibo-hub-ec2) + docker compose"], ["Database", "PostgreSQL (stibo-hub-pg container)"],
             ["Secrets", "Env vars / Secrets Manager (stibo/prod/*)"], ["Repository", "github.com/achmad-bayhaqy/maa-stibo-hub"],
+            ["AI vision provider", `${data.aiProvider?.primary ?? "aws-bedrock"} (fallback: ${data.aiProvider?.fallback ?? "z-ai"})`],
+            ["Bedrock model", data.aiProvider?.model ?? "us.amazon.nova-lite-v1:0"],
           ].map(([k, v]) => (
             <div key={k} className="rounded-lg border px-3 py-2.5">
               <div className="text-[10px] text-slate-400">{k}</div>

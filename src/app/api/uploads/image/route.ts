@@ -4,54 +4,22 @@ import { requireRole } from "@/lib/auth";
 import { audit, handleError, ok } from "@/lib/api-helpers";
 import { isAllowedImage, type SheetInfo } from "@/lib/parse-file";
 import { parseFilename } from "@/lib/naming";
-import ZAI from "z-ai-web-dev-sdk";
+import {
+  bedrockEnabled, bedrockExtract, zaiExtract, safeParseTable,
+  type ProviderResult, type ExtractedTable,
+} from "@/lib/bedrock";
 
 export const maxDuration = 120;
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
-const MAX_EXTRACTED_ROWS = 200;
-
-const SYSTEM_PROMPT = `You are a precise data-extraction engine for a retail master-data portal.
-The user uploads a photo/screenshot of a product list, price list, line sheet or table.
-Extract EVERY row of tabular data you can see into JSON.
-
-Rules:
-- Respond with VALID JSON only — no markdown fences, no commentary.
-- Shape: {"headers": ["Col A", "Col B", ...], "rows": [["v1","v2",...], ...]}
-- headers: the column titles; if the image has no header row, invent short ones (e.g. "Style Code", "Color", "Size", "Price").
-- rows: all data rows, cell values as plain strings (numbers included), preserving order.
-- Never merge or invent extra rows; skip decorative text, logos and page headers/footers.
-- If the image contains no table at all, respond {"headers": [], "rows": []}.`;
-
-interface ExtractedTable {
-  headers: string[];
-  rows: string[][];
-}
-
-function safeParseTable(raw: string): ExtractedTable {
-  let text = raw.trim();
-  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/i);
-  if (fence) text = fence[1].trim();
-  const start = text.indexOf("{");
-  const end = text.lastIndexOf("}");
-  if (start >= 0 && end > start) text = text.slice(start, end + 1);
-  const parsed = JSON.parse(text) as { headers?: unknown; rows?: unknown };
-  const headers = Array.isArray(parsed.headers)
-    ? parsed.headers.map((h) => String(h ?? "").trim()).filter(Boolean).slice(0, 40)
-    : [];
-  const rows = Array.isArray(parsed.rows)
-    ? parsed.rows
-        .slice(0, MAX_EXTRACTED_ROWS)
-        .map((r) => (Array.isArray(r) ? r.map((c) => String(c ?? "").trim()) : []))
-        .filter((r) => r.some((c) => c !== ""))
-    : [];
-  return { headers, rows };
-}
 
 /**
  * POST — extract tabular data from an uploaded image (photo/screenshot of a
- * product list) via a vision model, then create a regular Upload record so the
- * image enters the same pipeline as Excel files (wizard → transform → send).
+ * product list) via a vision model, then create a regular Upload record so
+ * the image enters the same pipeline as Excel files (wizard → transform → send).
+ *
+ * AI provider chain: AWS Bedrock (default, authenticated via the EC2 instance
+ * role) → Z-AI SDK (fallback). AI_PROVIDER=zai flips the order.
  */
 export async function POST(req: NextRequest) {
   try {
@@ -66,42 +34,45 @@ export async function POST(req: NextRequest) {
 
     const buf = Buffer.from(await file.arrayBuffer());
     const mime = file.type || "image/png";
-    const dataUrl = `data:${mime};base64,${buf.toString("base64")}`;
 
-    const zai = await ZAI.create().catch((cfgErr: Error) => {
-      throw new Error(
-        "AI image extraction is not available on this deployment (Z-AI credentials not configured for this server). Please upload Excel/CSV instead, or ask your admin to configure the vision credentials."
-      );
-    });
-    if (!zai) return handleError(new Error("Z-AI SDK unavailable"));
-    let completion: { choices?: Array<{ message?: { content?: string } }> };
+    /* provider chain — primary from AI_PROVIDER (default bedrock), the other
+       one as automatic fallback so the feature degrades gracefully */
+    const primary = bedrockEnabled()
+      ? bedrockExtract(buf, mime)
+      : zaiExtract(buf, mime).catch((e: Error) => {
+          if (/credentials|not configured|apiKey|API key/i.test(e.message)) {
+            throw new Error("Z-AI credentials are not configured on this server");
+          }
+          throw e;
+        });
+    // lazy — only invoked (once) when the primary provider fails
+    const runFallback = () =>
+      bedrockEnabled()
+        ? zaiExtract(buf, mime).catch(() => null)
+        : bedrockExtract(buf, mime).catch(() => null);
+
+    let result: ProviderResult;
+    let primaryErr: Error | null = null;
     try {
-      completion = (await zai.chat.completions.createVision({
-        model: "glm-4.5v",
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Extract the table from this image as JSON." },
-              { type: "image_url", image_url: { url: dataUrl } },
-            ],
-          },
-        ],
-        thinking: { type: "disabled" },
-      })) as { choices?: Array<{ message?: { content?: string } }> };
-    } catch (visionErr) {
-      const msg = (visionErr as Error).message || "";
-      if (/fetch failed|timeout|ECONN|ENOTFOUND|Connect/i.test(msg)) {
-        return handleError(new Error("The AI vision service is unreachable from this server — image extraction is unavailable here. Please upload Excel/CSV instead."));
+      result = await primary;
+    } catch (e) {
+      primaryErr = e as Error;
+      console.error("[image-extract] primary provider failed:", primaryErr.message);
+      const fb = await runFallback();
+      if (!fb) {
+        const detail = primaryErr.message.includes("Bedrock models failed")
+          ? primaryErr.message.slice(0, 300)
+          : "both AWS Bedrock and Z-AI vision providers are unavailable";
+        return handleError(new Error(
+          `AI image extraction is unavailable: ${detail}. Please upload Excel/CSV instead.`,
+        ));
       }
-      throw visionErr;
+      result = fb;
     }
 
-    const raw = completion.choices?.[0]?.message?.content ?? "";
     let table: ExtractedTable;
     try {
-      table = safeParseTable(raw);
+      table = safeParseTable(result.raw);
     } catch {
       return handleError(new Error("Could not read a table from this image — try a clearer photo/screenshot"));
     }
@@ -133,28 +104,31 @@ export async function POST(req: NextRequest) {
         filenameValid: nameInfo.valid,
         endpoint: nameInfo.endpoint,
         status: "PARSED",
-        sheetName: "AI image extraction",
+        sheetName: `AI image extraction (${result.provider}: ${result.model})`,
         totalRows: rows.length,
         headers: JSON.stringify(table.headers.slice(0, 40)),
-        sampleRaw: JSON.stringify(rows.slice(0, MAX_EXTRACTED_ROWS)),
+        sampleRaw: JSON.stringify(rows.slice(0, 200)),
         createdBy: user.email,
       },
     });
 
     await audit(user.email, "UPLOAD_IMAGE_EXTRACTED", file.name, {
       uploadId: upload.id, rows: rows.length, cols: table.headers.length,
+      provider: result.provider, model: result.model,
     });
 
     return ok({
       upload,
       nameInfo,
       ocr: true,
+      provider: result.provider,
+      model: result.model,
       preview: {
         headers: table.headers.slice(0, 40),
         rows: rows.slice(0, 8),
         totalRows: rows.length,
-        sheetName: "AI image extraction",
-        sheets: ["AI image extraction"] as unknown as SheetInfo["name"][],
+        sheetName: upload.sheetName,
+        sheets: [upload.sheetName] as unknown as SheetInfo["name"][],
       },
     }, 201);
   } catch (e) {

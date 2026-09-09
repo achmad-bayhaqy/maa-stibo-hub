@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireRole, requireUser } from "@/lib/auth";
 import { audit, handleError, ok } from "@/lib/api-helpers";
 import { getStiboStatus } from "@/lib/stibo-config";
+import { bedrockEnabled } from "@/lib/bedrock";
 
 export async function GET() {
   try {
@@ -22,6 +23,11 @@ export async function GET() {
       },
       awsRegion: process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION || "us-east-1",
       resourcePrefix: "stibo-",
+      aiProvider: {
+        primary: bedrockEnabled() ? "aws-bedrock" : "z-ai",
+        fallback: bedrockEnabled() ? "z-ai" : "aws-bedrock",
+        model: process.env.BEDROCK_MODEL?.trim() || "us.amazon.nova-lite-v1:0 (auto-fallback chain)",
+      },
     });
   } catch (e) {
     return handleError(e);

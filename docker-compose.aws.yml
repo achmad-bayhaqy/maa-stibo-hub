@@ -39,6 +39,11 @@ services:
       STIBO_INBOUND_URL_ARTICLE_PLANNING: ${STIBO_INBOUND_URL_ARTICLE_PLANNING:-}
       STIBO_INBOUND_URL_EAN_UPDATE: ${STIBO_INBOUND_URL_EAN_UPDATE:-}
       STIBO_INBOUND_URL_ARTICLE_MAINTENANCE: ${STIBO_INBOUND_URL_ARTICLE_MAINTENANCE:-}
+      # AWS Bedrock AI vision (default provider) — authenticates via the
+      # EC2 instance role (IMDSv2); no static keys inside the container.
+      AWS_REGION: ${AWS_REGION:-us-east-1}
+      AI_PROVIDER: ${AI_PROVIDER:-bedrock}
+      BEDROCK_MODEL: ${BEDROCK_MODEL:-}
     ports:
       - "80:3000"
     volumes:
