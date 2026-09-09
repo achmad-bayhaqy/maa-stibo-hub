@@ -13,8 +13,8 @@ export function fail(status: number, message: string) {
 export function handleError(e: unknown) {
   if (e instanceof HttpError) return fail(e.status, e.message);
   console.error("[api]", e);
-  const msg = e instanceof Error ? e.message : "Internal server error";
-  return fail(500, msg);
+  // never leak internal error details (Prisma/DB/stack) to the client
+  return fail(500, "Internal server error — check server logs for details");
 }
 
 export async function audit(actor: string, action: string, target = "", detail: unknown = {}) {

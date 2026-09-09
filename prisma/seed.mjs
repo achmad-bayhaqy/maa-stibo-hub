@@ -68,6 +68,9 @@ async function main() {
   console.log("Seeding…");
   const t0 = Date.now();
 
+  // NOTE: the update branch deliberately does NOT touch passwordHash —
+  // re-seeding (every container start) must never roll back passwords
+  // changed from the portal UI. Passwords are set on create only.
   for (const u of [
     { email: "admin@map.co.id", name: "Admin COE", role: "ADMIN", pw: "Stibo@2026" },
     { email: "md.coe@map.co.id", name: "MD CoE Analyst", role: "EDITOR", pw: "Stibo@2026" },
@@ -75,7 +78,7 @@ async function main() {
   ]) {
     await prisma.user.upsert({
       where: { email: u.email },
-      update: { passwordHash: hashPassword(u.pw), role: u.role, active: true },
+      update: { role: u.role, active: true },
       create: { email: u.email, name: u.name, role: u.role, passwordHash: hashPassword(u.pw) },
     });
   }

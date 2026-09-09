@@ -11,19 +11,56 @@ Steps:
 Usage: python3 scripts/deploy_eic.py [reset]
   reset — also wipe the docker volume (fresh DB + re-seed)
 """
+import json
 import os
 import subprocess
 import sys
 import time
+import urllib.request
 
 import paramiko
 
 HOST = "18.232.147.244"
 INSTANCE = "i-0952d6a47dc43aa16"
+SG_ID = "sg-09c4e4fdc14e5f9cc"
 KEY = os.path.expanduser("~/.ssh/stibo-eic")
 PROJECT = "/home/z/my-project"
 SECRET_SRC = "/tmp/stibo-env.secret"  # optional: STIBO_* lines to merge into server .env
 RESET = len(sys.argv) > 1 and sys.argv[1] == "reset"
+
+
+def aws_cli():
+    return os.path.expanduser("~/.local/bin/aws")
+
+
+def ensure_ssh_ingress():
+    """Keep port 22 locked to the deployer's current egress IP (best practice):
+    revoke stale /32 rules, authorize the current one. No-op when identical."""
+    env = os.environ.copy()
+    env.setdefault("AWS_DEFAULT_REGION", "us-east-1")
+    try:
+        egress_ip = urllib.request.urlopen(
+            "https://api.ipify.org", timeout=10).read().decode().strip()
+        out = subprocess.run(
+            [aws_cli(), "ec2", "describe-security-groups", "--group-ids", SG_ID,
+             "--query", "SecurityGroups[0].IpPermissions[?FromPort==`22`].IpRanges[].CidrIp",
+             "--output", "json"],
+            check=True, capture_output=True, text=True, env=env).stdout
+        cidrs = json.loads(out) if out.strip() else []
+        for cidr in cidrs:
+            if cidr != f"{egress_ip}/32":
+                subprocess.run(
+                    [aws_cli(), "ec2", "revoke-security-group-ingress", "--group-id", SG_ID,
+                     "--protocol", "tcp", "--port", "22", "--cidr", cidr],
+                    check=True, capture_output=True, env=env)
+        if f"{egress_ip}/32" not in cidrs:
+            subprocess.run(
+                [aws_cli(), "ec2", "authorize-security-group-ingress", "--group-id", SG_ID,
+                 "--protocol", "tcp", "--port", "22", "--cidr", f"{egress_ip}/32"],
+                check=True, capture_output=True, env=env)
+        print(f"ssh ingress ok (22 -> {egress_ip}/32)")
+    except Exception as e:  # never block a deploy on SG hygiene
+        print(f"ssh ingress auto-manage skipped: {e}")
 
 
 def push_key():
@@ -62,6 +99,7 @@ print("== 1. create release archive (git archive main) ==")
 subprocess.run(["git", "archive", "main", "-o", "/tmp/stibo-hub-release.tar.gz"], cwd=PROJECT, check=True)
 print("archive:", os.path.getsize("/tmp/stibo-hub-release.tar.gz"), "bytes")
 
+ensure_ssh_ingress()
 c = connect()
 
 print("== 2. upload release ==")

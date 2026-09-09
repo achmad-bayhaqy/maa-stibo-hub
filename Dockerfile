@@ -24,16 +24,18 @@ WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=3000 HOSTNAME=0.0.0.0
 RUN apt-get update -y && apt-get install -y --no-install-recommends openssl && rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+# run as the unprivileged `node` user (files writable: .next/cache only)
+COPY --from=builder --chown=node:node /app/.next/standalone ./
+COPY --from=builder --chown=node:node /app/.next/static ./.next/static
+COPY --from=builder --chown=node:node /app/public ./public
 # full node_modules (standalone's own modules get merged) — prisma CLI needs its runtime deps (effect, etc.)
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/prisma/schema.aws.prisma ./prisma/schema.prisma
-COPY --from=builder /app/prisma/seed-data ./prisma/seed-data
-COPY --from=builder /app/prisma/seed.bundle.cjs ./prisma/seed.bundle.cjs
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/prisma/schema.aws.prisma ./prisma/schema.prisma
+COPY --from=builder --chown=node:node /app/prisma/seed-data ./prisma/seed-data
+COPY --from=builder --chown=node:node /app/prisma/seed.bundle.cjs ./prisma/seed.bundle.cjs
+COPY --chown=node:node docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+USER node
 EXPOSE 3000
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
