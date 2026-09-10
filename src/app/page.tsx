@@ -62,7 +62,7 @@ export default function Home() {
             )}
           </main>
           <footer className="shrink-0 border-t-2 border-black bg-white px-6 py-2.5 text-[11px] text-neutral-500 flex flex-wrap items-center justify-between gap-2">
-            <span>Map Portal v2.3 · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
+            <span>Map Portal v2.4 · PT. MAP Aktif Adiperkasa Tbk (0888) — Master Data CoE</span>
             <span className="font-mono">resources tagged <span className="text-[#DD1C24] font-semibold">stibo</span> · AWS us-east-1</span>
           </footer>
         </div>

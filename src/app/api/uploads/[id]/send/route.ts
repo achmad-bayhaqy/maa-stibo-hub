@@ -46,7 +46,9 @@ export async function POST(req: NextRequest, { params }: Params) {
 
     const ctx = JSON.parse(upload.wizard || "{}") as WizardContext;
     const mapped = JSON.parse(upload.mappedSample || "[]") as MappedRow[];
-    const xml = upload.stepxml || buildStepxml(mapped, ctx, upload.endpoint, upload.filename);
+    // Always regenerate — guarantees the current generator format is what is
+    // sent (never a stale preview stored by an older portal version).
+    const xml = buildStepxml(mapped, ctx, upload.endpoint, upload.filename);
     const fileName = xmlFileName(upload.filename, upload.endpoint);
 
     const resolved = await getStiboConfig();

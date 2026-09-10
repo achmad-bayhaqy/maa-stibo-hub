@@ -11,6 +11,7 @@
 
 import "server-only";
 import { getStiboConfig } from "@/lib/stibo-config";
+import { blankSeasonClassificationIds } from "@/lib/stepxml";
 
 export type Endpoint = "ARTICLE_PLANNING" | "EAN_UPDATE" | "ARTICLE_MAINTENANCE";
 
@@ -111,7 +112,9 @@ export async function sendToStibo(
 
   try {
     const token = await getOidcToken(config.tokenUrl, config.clientId, config.clientSecret, config.grantType);
-    const { status, body } = await postXml(url, token, xml, fileName);
+    // Mirror lambda send-to-step: season CLH_ Classification IDs are blanked
+    // right before upload — the IIEP resolves season nodes by name.
+    const { status, body } = await postXml(url, token, blankSeasonClassificationIds(xml), fileName);
     const bgMatch = body.match(/bgId["=:]\s*"?([\w-]+)/i);
     return {
       mode: "LIVE", endpoint, url, fileName,
